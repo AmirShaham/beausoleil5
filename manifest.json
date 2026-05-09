@@ -1,16 +1,16 @@
 {
   "name": "Maison Beausoleil 5",
   "short_name": "Beausoleil 5",
-  "description": "Tableau de bord de rénovation — Maison Beausoleil 5",
-  "start_url": "/",
+  "description": "Tableau de bord de rénovation",
+  "start_url": "/beausoleil5/",
+  "scope": "/beausoleil5/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#D85A30",
   "orientation": "any",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
   ],
-  "categories": ["productivity", "utilities"],
   "lang": "fr"
 }
