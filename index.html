@@ -159,6 +159,19 @@
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
   .search-inp { width: 100%; font-size: 13px; padding: 8px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); margin-bottom: 12px; }
   .arrow { font-size: 12px; color: var(--text3); flex-shrink: 0; }
+  .choix-group { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 10px; overflow: hidden; }
+  .choix-group-hdr { display: flex; align-items: center; gap: 10px; padding: 11px 14px; cursor: pointer; }
+  .choix-group-hdr:hover { background: var(--bg2); }
+  .choix-group-letter { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .choix-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 14px; border-top: 1px solid var(--border); }
+  .choix-item.is-done { background: var(--bg2); }
+  .choix-check { width: 20px; height: 20px; border: 1.5px solid var(--border2); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; font-weight: 700; color: transparent; margin-top: 1px; }
+  .choix-check.on { background: var(--green); border-color: var(--green); color: #fff; }
+  .choix-name { font-size: 13px; flex: 1; }
+  .choix-name.done-name { color: var(--text3); text-decoration: line-through; }
+  .choix-tag { font-size: 10px; padding: 2px 7px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
+  .chrono-phase { font-size: 12px; font-weight: 600; color: var(--text2); padding: 12px 0 6px; border-top: 1px solid var(--border); margin-top: 6px; }
+  .chrono-phase:first-child { border-top: none; margin-top: 0; }
 </style>
 </head>
 <body>
@@ -190,6 +203,7 @@
       <button class="nav-tab on" onclick="sv('dash',this)">Vue générale</button>
       <button class="nav-tab" onclick="sv('lots',this)">Devis & Lots</button>
       <button class="nav-tab" onclick="sv('sources',this)">Financement</button>
+      <button class="nav-tab" onclick="sv('choix',this)">Choix à faire</button>
       <button class="nav-tab" onclick="sv('travaux',this)">Travaux</button>
       <button class="nav-tab" onclick="sv('achats',this)">Achats</button>
       <button class="nav-tab" onclick="sv('ambiances',this)">Ambiances</button>
@@ -222,6 +236,24 @@
     </div>
     <div class="metrics" id="src-metrics"></div>
     <div id="sources-list"></div>
+  </div>
+
+  <div class="view" id="v-choix">
+    <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
+      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Choix & sélections à faire</p>
+      <p style="font-size:12px;color:var(--text2);">Tous les éléments à choisir avant commandes · Cochez quand c'est validé</p>
+    </div>
+    <div class="metrics" id="choix-metrics"></div>
+    <div class="filters" id="choix-mode">
+      <button class="fpill on" onclick="setChoixMode('group',this)">Par catégorie (A→H)</button>
+      <button class="fpill" onclick="setChoixMode('chrono',this)">Ordre chronologique</button>
+    </div>
+    <div class="filters" id="choix-filters">
+      <button class="fpill on" onclick="setChoixFilter('all',this)">Tous</button>
+      <button class="fpill" onclick="setChoixFilter('todo',this)">À choisir</button>
+      <button class="fpill" onclick="setChoixFilter('done',this)">Validés</button>
+    </div>
+    <div id="choix-list"></div>
   </div>
 
   <div class="view" id="v-travaux">
@@ -419,7 +451,7 @@ const DEFAULT_ARTISANS = [
 // ═══ STATE ═══════════════════════════════════════════════════════════════
 const DEFAULT_STATE = {
   budget: 150000,
-  tasks: {}, shop: {}, lots: {}, sources: {},
+  tasks: {}, shop: {}, lots: {}, sources: {}, choix: {},
   openCats: {}, openArtisans: {}, openRooms: {}, mb: {},
   artisans: JSON.parse(JSON.stringify(DEFAULT_ARTISANS)),
   addArtForm: false,
@@ -489,6 +521,7 @@ function mergeState(remote) {
   // Ensure new fields exist for older saves
   if (!S.lots) S.lots = {};
   if (!S.sources) S.sources = {};
+  if (!S.choix) S.choix = {};
   if (!S.artisans || S.artisans.length <= 1) S.artisans = JSON.parse(JSON.stringify(DEFAULT_ARTISANS));
 }
 
@@ -521,7 +554,7 @@ function sv(v, btn) {
   document.querySelectorAll('.view').forEach(el => el.classList.remove('on'));
   if (btn) btn.classList.add('on');
   document.getElementById('v-' + v)?.classList.add('on');
-  ({dash:rDash, lots:rLots, sources:rSources, travaux:rTravaux, achats:rAchats, ambiances:rAmbiances}[v] || (()=>{}))();
+  ({dash:rDash, lots:rLots, sources:rSources, choix:rChoix, travaux:rTravaux, achats:rAchats, ambiances:rAmbiances}[v] || (()=>{}))();
 }
 
 // ═══ HELPERS ═════════════════════════════════════════════════════════════
@@ -763,6 +796,193 @@ function rTimelineHTML() {
   const np = Math.round(now/tot*100);
   h += `<div style="display:flex;gap:6px;margin-top:4px;"><div style="width:68px;flex-shrink:0;"></div><div style="flex:1;position:relative;height:16px;"><div style="position:absolute;left:${np}%;top:-6px;width:1px;height:22px;background:var(--text);opacity:.3;"></div><div style="position:absolute;left:${np}%;transform:translateX(-50%);top:14px;font-size:10px;color:var(--text2);">Auj.</div></div></div>`;
   return h;
+}
+
+// ═══ CHOIX À FAIRE ═══════════════════════════════════════════════════════
+const CHOIX_GROUPS = [
+  {id:'A',letter:'A',nm:'Maçonnerie / ITE / Façade',c:'#D85A30',bg:'#FDECE6',prio:1,items:[
+    {id:'cx01',n:'Couleur enduit de finition Thermolook (ravalement)',prio:1},
+    {id:'cx02',n:'Teinte peinture soubassement façade',prio:1},
+    {id:'cx03',n:'Traitement / couleur appuis de fenêtres',prio:1},
+  ]},
+  {id:'B',letter:'B',nm:'Menuiseries extérieures (SAB + Lemoine)',c:'#0F6E56',bg:'#E5F4EE',prio:2,items:[
+    {id:'cx04',n:'Couleur porte d\'entrée (conserver / repeindre ?)',prio:2},
+    {id:'cx05',n:'Finition intérieure Velux GGL MK06 (bois blanc/brut)',prio:2},
+    {id:'cx06',n:'Coloris volet roulant cuisine (RAL 9016 blanc par défaut)',prio:2},
+    {id:'cx07',n:'Configuration centralisation volets Somfy io',prio:3},
+  ]},
+  {id:'C',letter:'C',nm:'Électricité (M2T)',c:'#EF9F27',bg:'#FDF5E6',prio:3,items:[
+    {id:'cx08',n:'Validation plans : emplacements prises & interrupteurs',prio:3},
+    {id:'cx09',n:'Modèle et couleur interrupteurs / prises (blanc, alu, noir…)',prio:3},
+    {id:'cx10',n:'Modèle spots SLV Universal (cuisine, SdB, ch. 1)',prio:3},
+    {id:'cx11',n:'Modèle appliques murales (salon, chambres, SdB)',prio:3},
+    {id:'cx12',n:'Emplacement et modèle kit carillon radio',prio:3},
+    {id:'cx13',n:'VMC hygro complète : activer l\'option ? (1 157 € HT)',prio:3},
+    {id:'cx14',n:'Emplacements prises USB (cuisine, salle de jeux…)',prio:3},
+  ]},
+  {id:'D',letter:'D',nm:'Plomberie / Sanitaires (Aerochauffe)',c:'#378ADD',bg:'#E6F1FB',prio:4,items:[
+    {id:'cx15',n:'Confirmer meuble vasque SdB RDC : Séducta 90 cm Olive Mat',prio:4},
+    {id:'cx16',n:'Confirmer meuble double vasque R+1 : Séducta 120 cm Olive Mat',prio:4},
+    {id:'cx17',n:'Cuvettes WC × 3 : Alterna Concerto — confirmer modèle',prio:4},
+    {id:'cx18',n:'Mitigeurs lavabo : Alterna Daily chromé ou upgrade Hansgrohe ?',prio:4},
+    {id:'cx19',n:'Robinetterie douche R+1 : Grohé Tempesta 110 — confirmer',prio:4},
+    {id:'cx20',n:'Modèle radiateur sèche-serviettes SdB haut (Acova Atol)',prio:4},
+    {id:'cx21',n:'Confirmer 14 radiateurs Finimétal Reggane — dimensions',prio:4},
+    {id:'cx22',n:'Miroir SdB R+1 : Alterna Milan LED 50 cm — confirmer',prio:4},
+    {id:'cx23',n:'Lave-main WC RDC : Alterna Concerto chêne Tek',prio:4},
+    {id:'cx24',n:'Lave-main WC R+1 : Alterna Concerto céramique',prio:4},
+    {id:'cx25',n:'Paroi de douche R+1 : Alterna pivotante L70×H195',prio:4},
+  ]},
+  {id:'E',letter:'E',nm:'Carrelage & Faïence (Bizeul)',c:'#1D9E75',bg:'#E5F4EE',prio:5,items:[
+    {id:'cx26',n:'Carrelage sol RDC 80×80 — modèle + couleur (budget 75 €/m²)',prio:5},
+    {id:'cx27',n:'Carrelage sols R+1 (WC + SdB) 60×60 — modèle + couleur',prio:5},
+    {id:'cx28',n:'Faïence murale SdE R+1 : format 20×50, 30×60 ou 30×90',prio:5},
+    {id:'cx29',n:'Faïence crédences 5 vasques — format + couleur',prio:5},
+    {id:'cx30',n:'Couleur joints (sol et mural) — gris moyen / blanc / autre',prio:5},
+    {id:'cx31',n:'Profilé de finition JOLLY-P : confirmer PVC blanc brillant',prio:5},
+    {id:'cx32',n:'Barre de seuil / profilé transition Schluter RENO-MU',prio:5},
+  ]},
+  {id:'F',letter:'F',nm:'Placo & menuiseries int. (Vidal)',c:'#7F77DD',bg:'#EDEAFB',prio:6,items:[
+    {id:'cx33',n:'Emplacement et dimensions verrières (2 réservations)',prio:6},
+    {id:'cx34',n:'Modèle blocs-portes intérieurs (âme pleine 93/204 — finition)',prio:6},
+    {id:'cx35',n:'Modèle et couleur poignées de porte (rosace)',prio:6},
+    {id:'cx36',n:'Position des trappes de visite isolantes',prio:6},
+    {id:'cx37',n:'Finition placo marine (pièces humides) — confirmer zones',prio:6},
+  ]},
+  {id:'G',letter:'G',nm:'Ambiances par pièce (choix Amir & Céline)',c:'#D4537E',bg:'#FBE8EF',prio:7,items:[
+    {id:'cx38',n:'Palette couleurs Salon / Séjour',prio:7},
+    {id:'cx39',n:'Palette couleurs Cuisine',prio:7},
+    {id:'cx40',n:'Palette couleurs Chambre parents',prio:7},
+    {id:'cx41',n:'Palette couleurs Chambre enfant 1',prio:7},
+    {id:'cx42',n:'Palette couleurs Chambre enfant 2',prio:7},
+    {id:'cx43',n:'Palette couleurs Chambres haut',prio:7},
+    {id:'cx44',n:'Palette couleurs SdB bas + haut',prio:7},
+    {id:'cx45',n:'Style général de la maison (moderne / scandinave / naturel…)',prio:7},
+  ]},
+  {id:'H',letter:'H',nm:'Achats hors devis',c:'#5F5E5A',bg:'#F1EFE8',prio:8,items:[
+    {id:'cx46',n:'Fournisseur cuisine (Cuisinella / Ixina / Schmidt / IKEA…)',prio:8},
+    {id:'cx47',n:'Modèle et marque électroménager (Bosch / Siemens / Samsung…)',prio:8},
+    {id:'cx48',n:'Marque et modèle parquets chambres',prio:8},
+    {id:'cx49',n:'Marque peinture intérieure (Farrow & Ball / Little Greene…)',prio:8},
+    {id:'cx50',n:'Prestataire peinture intérieure (artisan à trouver)',prio:8},
+  ]},
+];
+
+const CHRONO_PHASES = [
+  {nm:'🔴 Urgent — bloquent démarrage ITE (juillet)', prio:1, ids:['cx01','cx02','cx03']},
+  {nm:'🟠 Court terme — menuiseries ext. à commander', prio:2, ids:['cx04','cx05','cx06','cx07']},
+  {nm:'🟡 Avant saignées — électricité (M2T)', prio:3, ids:['cx08','cx09','cx10','cx11','cx12','cx13','cx14']},
+  {nm:'🔵 Avant commande — plomberie / sanitaires', prio:4, ids:['cx15','cx16','cx17','cx18','cx19','cx20','cx21','cx22','cx23','cx24','cx25']},
+  {nm:'🟢 Avant commande matière — carrelage', prio:5, ids:['cx26','cx27','cx28','cx29','cx30','cx31','cx32']},
+  {nm:'🟣 Pendant placo — menuiseries int.', prio:6, ids:['cx33','cx34','cx35','cx36','cx37']},
+  {nm:'💜 En parallèle — choix d\'ambiance', prio:7, ids:['cx38','cx39','cx40','cx41','cx42','cx43','cx44','cx45']},
+  {nm:'⚫ À planifier — achats hors devis', prio:8, ids:['cx46','cx47','cx48','cx49','cx50']},
+];
+
+let choixMode = 'group';
+let choixFilter = 'all';
+
+function cxDone(id) { return S.choix[id] === true; }
+function allCx() { return CHOIX_GROUPS.flatMap(g => g.items); }
+function cxItem(id) { for (const g of CHOIX_GROUPS) { const it = g.items.find(i => i.id === id); if (it) return it; } return null; }
+function cxGroup(id) { return CHOIX_GROUPS.find(g => g.items.some(i => i.id === id)); }
+
+function toggleCx(id) {
+  S.choix[id] = !cxDone(id);
+  persist(); rChoix();
+}
+
+function setChoixMode(m, btn) {
+  choixMode = m;
+  document.querySelectorAll('#choix-mode .fpill').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  rChoixList();
+}
+
+function setChoixFilter(f, btn) {
+  choixFilter = f;
+  document.querySelectorAll('#choix-filters .fpill').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  rChoixList();
+}
+
+function rChoix() {
+  const all = allCx();
+  const done = all.filter(i => cxDone(i.id)).length;
+  const todo = all.length - done;
+  const pct = Math.round(done / all.length * 100);
+  // Count urgent remaining
+  const urgentLeft = CHOIX_GROUPS.slice(0, 3).flatMap(g => g.items).filter(i => !cxDone(i.id)).length;
+
+  document.getElementById('choix-metrics').innerHTML = `
+    <div class="metric"><div class="metric-label">Total choix</div><div class="metric-value">${all.length}</div><div class="metric-sub">éléments à décider</div></div>
+    <div class="metric"><div class="metric-label">Validés</div><div class="metric-value" style="color:var(--green)">${done}</div><div class="metric-sub">${pct}% fait</div></div>
+    <div class="metric"><div class="metric-label">Restants</div><div class="metric-value" style="color:var(--accent2)">${todo}</div><div class="metric-sub">à choisir</div></div>
+    <div class="metric"><div class="metric-label">Urgents</div><div class="metric-value" style="color:${urgentLeft>0?'#E24B4A':'var(--green)'}">${urgentLeft}</div><div class="metric-sub">${urgentLeft>0?'bloquants':'tout bon !'}</div></div>`;
+  rChoixList();
+}
+
+function rChoixList() {
+  const el = document.getElementById('choix-list');
+  if (choixMode === 'group') rChoixGrouped(el);
+  else rChoixChrono(el);
+}
+
+function rChoixGrouped(el) {
+  let h = '';
+  CHOIX_GROUPS.forEach(g => {
+    const vis = g.items.filter(i => {
+      if (choixFilter === 'done' && !cxDone(i.id)) return false;
+      if (choixFilter === 'todo' && cxDone(i.id)) return false;
+      return true;
+    });
+    if (!vis.length) return;
+    const gDone = g.items.filter(i => cxDone(i.id)).length;
+    const gPct = Math.round(gDone / g.items.length * 100);
+    h += `<div class="choix-group">
+      <div class="choix-group-hdr">
+        <div class="choix-group-letter" style="background:${g.bg};color:${g.c};">${g.letter}</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:500;">${g.nm}</div>
+          <div style="font-size:11px;color:var(--text2);">${gDone}/${g.items.length} validés</div>
+        </div>
+        <div style="width:50px;">
+          <div class="pbar" style="height:4px;"><div class="pfill" style="width:${gPct}%;background:${g.c};"></div></div>
+        </div>
+      </div>
+      ${vis.map(i => cxItemHTML(i, g)).join('')}
+    </div>`;
+  });
+  el.innerHTML = h || '<p style="color:var(--text2);font-size:13px;padding:1rem;">Aucun élément.</p>';
+}
+
+function rChoixChrono(el) {
+  let h = '';
+  CHRONO_PHASES.forEach(ph => {
+    const items = ph.ids.map(id => cxItem(id)).filter(Boolean);
+    const vis = items.filter(i => {
+      if (choixFilter === 'done' && !cxDone(i.id)) return false;
+      if (choixFilter === 'todo' && cxDone(i.id)) return false;
+      return true;
+    });
+    if (!vis.length) return;
+    const phDone = items.filter(i => cxDone(i.id)).length;
+    h += `<div class="chrono-phase">${ph.nm} <span style="font-weight:400;font-size:11px;color:var(--text3);">(${phDone}/${items.length})</span></div>`;
+    vis.forEach(i => {
+      const g = cxGroup(i.id);
+      h += cxItemHTML(i, g);
+    });
+  });
+  el.innerHTML = h || '<p style="color:var(--text2);font-size:13px;padding:1rem;">Aucun élément.</p>';
+}
+
+function cxItemHTML(item, group) {
+  const done = cxDone(item.id);
+  return `<div class="choix-item ${done?'is-done':''}">
+    <div class="choix-check ${done?'on':''}" onclick="toggleCx('${item.id}')">✓</div>
+    <span class="choix-name ${done?'done-name':''}">${item.n}</span>
+    <span class="choix-tag" style="background:${group.bg};color:${group.c};">${group.letter}</span>
+  </div>`;
 }
 
 // ═══ TRAVAUX ═════════════════════════════════════════════════════════════
