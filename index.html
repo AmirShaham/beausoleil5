@@ -227,6 +227,7 @@
       <p style="font-size:12px;color:var(--text2);">Montants TTC des devis signés · Suivez les acomptes et paiements</p>
     </div>
     <div id="lots-list"></div>
+    <div id="moe-section-lots" style="margin-top:18px;"></div>
   </div>
 
   <div class="view" id="v-sources">
@@ -453,7 +454,7 @@ const DEFAULT_ARTISANS = [
 const DEFAULT_STATE = {
   budget: 150000,
   tasks: {}, shop: {}, lots: {}, sources: {}, choix: {},
-  openCats: {}, openArtisans: {}, openRooms: {}, mb: {},
+  openCats: {}, openArtisans: {}, openRooms: {}, mb: {}, openLots: {},
   artisans: JSON.parse(JSON.stringify(DEFAULT_ARTISANS)),
   addArtForm: false,
   moe: { pct: 10, base: 0, payments: [] },
@@ -527,6 +528,15 @@ function mergeState(remote) {
   if (!S.artisans || S.artisans.length <= 1) S.artisans = JSON.parse(JSON.stringify(DEFAULT_ARTISANS));
   if (!S.moe) S.moe = { pct: 10, base: 0, payments: [] };
   if (!Array.isArray(S.moe.payments)) S.moe.payments = [];
+  if (!S.openLots) S.openLots = {};
+  Object.keys(S.lots || {}).forEach(id => {
+    const l = S.lots[id];
+    if (!Array.isArray(l.payments)) l.payments = [];
+    if (typeof l.paid === 'number' && l.paid > 0 && l.payments.length === 0) {
+      l.payments.push({ id: 'lp'+id+'migr', date: '', amount: l.paid, note: 'Montant migré (saisie précédente)' });
+    }
+    delete l.paid;
+  });
 }
 
 async function init() {
@@ -569,7 +579,7 @@ function allT() { return PH.flatMap(p => p.tasks); }
 function allI() { return SH.flatMap(c => c.it); }
 function shopEst() { return allI().reduce((a,i) => a + sp(i.id, i.p), 0); }
 function shopPd() { return allI().filter(i => spd(i.id)).reduce((a,i) => a + sp(i.id, i.p), 0); }
-function lotPaid(id) { return S.lots[id]?.paid ?? 0; }
+function lotPaid(id) { return (S.lots[id]?.payments || []).reduce((a,p) => a + (p.amount||0), 0); }
 function lotsTotal() { return LOTS.reduce((a,l) => a + l.ttc, 0); }
 function lotsPaidTotal() { return LOTS.reduce((a,l) => a + lotPaid(l.id), 0); }
 function srcAvail(id) { return S.sources[id]?.avail ?? 0; }
@@ -664,9 +674,11 @@ function rLots() {
     </div>
     ${LOTS.map(l => {
       const p = lotPaid(l.id);
-      const lp = Math.round(p/l.ttc*100);
+      const lp = l.ttc > 0 ? Math.round(p/l.ttc*100) : 0;
+      const open = S.openLots[l.id] === true;
+      const payments = lotPayments(l.id).slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
       return `<div class="card" style="margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer;" onclick="togLotPay('${l.id}')">
           <div style="width:10px;height:10px;border-radius:50%;background:${l.c};flex-shrink:0;"></div>
           <div style="flex:1;">
             <div style="font-size:13px;font-weight:600;">${l.entreprise}</div>
@@ -676,20 +688,51 @@ function rLots() {
             <div style="font-size:14px;font-weight:600;">${fmt(l.ttc)} €</div>
             <div style="font-size:10px;color:var(--text2);">TTC signé</div>
           </div>
+          <span style="font-size:11px;color:var(--text2);margin-left:4px;">${open?'▲':'▼'}</span>
         </div>
         <div class="pbar" style="height:5px;margin-bottom:8px;"><div class="pfill" style="width:${lp}%;background:${l.c};"></div></div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:11px;color:var(--text2);flex:1;">Montant payé (acomptes + factures) :</span>
-          <input type="number" class="price-inp" style="width:110px;" value="${p}" min="0" step="100" onchange="updLotPaid('${l.id}',this.value)">
-          <span style="font-size:12px;color:var(--text2);">€</span>
+          <span style="font-size:11px;color:var(--text2);flex:1;">Payé (acomptes + factures) :</span>
+          <span style="font-size:13px;font-weight:600;">${fmt(p)} €</span>
+          <span style="font-size:11px;color:var(--text2);">(${lp}%)</span>
         </div>
+        ${open ? `
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+          <p style="font-size:12px;font-weight:600;margin-bottom:8px;">Virements versés (${payments.length})</p>
+          ${payments.length ? payments.map(pm => `
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+              <span style="font-size:12px;color:var(--text2);width:88px;flex-shrink:0;">${pm.date||'—'}</span>
+              <span style="font-size:13px;font-weight:600;width:90px;flex-shrink:0;">${fmt(pm.amount)} €</span>
+              <span style="font-size:12px;color:var(--text2);flex:1;">${pm.note||''}</span>
+              <button class="btn-ghost" style="padding:3px 8px;font-size:11px;color:#E24B4A;border-color:#E24B4A;" onclick="event.stopPropagation();delLotPayment('${l.id}','${pm.id}')">Suppr.</button>
+            </div>`).join('') : '<p style="font-size:12px;color:var(--text2);">Aucun virement enregistré.</p>'}
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;" onclick="event.stopPropagation()">
+            <div class="src-field" style="flex:0 0 130px;"><label>Date</label><input type="date" id="lot-new-date-${l.id}" value="${new Date().toISOString().slice(0,10)}"></div>
+            <div class="src-field" style="flex:0 0 110px;"><label>Montant (€)</label><input type="number" id="lot-new-amount-${l.id}" min="0" step="50" placeholder="0"></div>
+            <div class="src-field" style="flex:1 1 140px;"><label>Note (optionnel)</label><input type="text" id="lot-new-note-${l.id}" placeholder="ex: acompte signature"></div>
+            <button class="btn-add" onclick="addLotPayment('${l.id}')">+ Ajouter</button>
+          </div>
+        </div>` : ''}
       </div>`;
     }).join('')}`;
+  rMoe();
 }
-function updLotPaid(id, v) {
-  if (!S.lots[id]) S.lots[id] = {};
-  S.lots[id].paid = parseFloat(v) || 0;
-  persist(); toast('Paiement mis à jour');
+function togLotPay(id) { S.openLots[id] = !S.openLots[id]; persist(); rLots(); }
+function lotPayments(id) { return (S.lots[id]?.payments) || []; }
+function addLotPayment(lotId) {
+  const date = document.getElementById(`lot-new-date-${lotId}`).value;
+  const amount = parseFloat(document.getElementById(`lot-new-amount-${lotId}`).value) || 0;
+  const note = document.getElementById(`lot-new-note-${lotId}`).value.trim();
+  if (amount <= 0) { toast('Indiquez un montant'); return; }
+  if (!S.lots[lotId]) S.lots[lotId] = {};
+  if (!Array.isArray(S.lots[lotId].payments)) S.lots[lotId].payments = [];
+  S.lots[lotId].payments.push({ id: 'lp'+Date.now(), date, amount, note });
+  persist(); rLots(); toast('Virement ajouté');
+}
+function delLotPayment(lotId, paymentId) {
+  if (!S.lots[lotId]?.payments) return;
+  S.lots[lotId].payments = S.lots[lotId].payments.filter(p => p.id !== paymentId);
+  persist(); rLots();
 }
 
 // ═══ SOURCES VIEW ════════════════════════════════════════════════════════
@@ -750,7 +793,7 @@ function rMoe() {
   const pct = due > 0 ? Math.min(Math.round(paid/due*100),100) : 0;
   const payments = (S.moe.payments||[]).slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
 
-  document.getElementById('moe-section').innerHTML = `
+  const html = `
     <div class="card">
       <div class="card-title">Maître d'œuvre — honoraires (Charlie Fraleux — Atelier Fraleux)</div>
       <div class="src-fields" style="margin-bottom:12px;">
@@ -787,6 +830,11 @@ function rMoe() {
         <button class="btn-add" onclick="addMoePayment()">+ Ajouter</button>
       </div>
     </div>`;
+
+  ['moe-section','moe-section-lots'].forEach(elId => {
+    const el = document.getElementById(elId);
+    if (el) el.innerHTML = html;
+  });
 }
 
 function updMoeSettings(field, v) {
