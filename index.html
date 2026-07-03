@@ -952,14 +952,14 @@ const CHOIX_GROUPS = [
 ];
 
 const CHRONO_PHASES = [
-  {nm:'🔴 Urgent — bloquent démarrage ITE (juillet)', prio:1, ids:['cx01','cx02','cx03']},
-  {nm:'🟠 Court terme — menuiseries ext. à commander', prio:2, ids:['cx04','cx05','cx06','cx07']},
-  {nm:'🟡 Avant saignées — électricité (M2T)', prio:3, ids:['cx08','cx09','cx10','cx11','cx12','cx13','cx14']},
-  {nm:'🔵 Avant commande — plomberie / sanitaires', prio:4, ids:['cx15','cx16','cx17','cx18','cx19','cx20','cx21','cx22','cx23','cx24','cx25']},
-  {nm:'🟢 Avant commande matière — carrelage', prio:5, ids:['cx26','cx27','cx28','cx29','cx30','cx31','cx32']},
-  {nm:'🟣 Pendant placo — menuiseries int.', prio:6, ids:['cx33','cx34','cx35','cx36','cx37']},
-  {nm:'💜 En parallèle — choix d\'ambiance', prio:7, ids:['cx38','cx39','cx40','cx41','cx42','cx43','cx44','cx45']},
-  {nm:'⚫ À planifier — achats hors devis', prio:8, ids:['cx46','cx47','cx48','cx49','cx50']},
+  {nm:'🔴 Urgent — menuiseries ext. à commander', prio:1, ids:['cx04','cx05','cx06','cx07']},
+  {nm:'🟠 Avant saignées — électricité (M2T)', prio:2, ids:['cx08','cx09','cx10','cx11','cx12','cx13','cx14']},
+  {nm:'🟡 Avant commande — plomberie / sanitaires', prio:3, ids:['cx15','cx16','cx17','cx18','cx19','cx20','cx21','cx22','cx23','cx24','cx25']},
+  {nm:'🟢 Avant commande matière — carrelage', prio:4, ids:['cx26','cx27','cx28','cx29','cx30','cx31','cx32']},
+  {nm:'🔵 Pendant placo — menuiseries int.', prio:5, ids:['cx33','cx34','cx35','cx36','cx37']},
+  {nm:'🟣 En parallèle — choix d\'ambiance', prio:6, ids:['cx38','cx39','cx40','cx41','cx42','cx43','cx44','cx45']},
+  {nm:'⚫ À planifier — achats hors devis', prio:7, ids:['cx46','cx47','cx48','cx49','cx50']},
+  {nm:'🟤 Plus tard — ITE / façade (reportée, hors gros œuvre)', prio:8, ids:['cx01','cx02','cx03']},
 ];
 
 let choixMode = 'group';
@@ -994,8 +994,8 @@ function rChoix() {
   const done = all.filter(i => cxDone(i.id)).length;
   const todo = all.length - done;
   const pct = Math.round(done / all.length * 100);
-  // Count urgent remaining
-  const urgentLeft = CHOIX_GROUPS.slice(0, 3).flatMap(g => g.items).filter(i => !cxDone(i.id)).length;
+  // Count urgent remaining (based on chronological urgency, not A-H grouping)
+  const urgentLeft = CHRONO_PHASES[0].ids.map(id => cxItem(id)).filter(Boolean).filter(i => !cxDone(i.id)).length;
 
   document.getElementById('choix-metrics').innerHTML = `
     <div class="metric"><div class="metric-label">Total choix</div><div class="metric-value">${all.length}</div><div class="metric-sub">éléments à décider</div></div>
