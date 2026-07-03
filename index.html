@@ -236,6 +236,7 @@
     </div>
     <div class="metrics" id="src-metrics"></div>
     <div id="sources-list"></div>
+    <div id="moe-section" style="margin-top:18px;"></div>
   </div>
 
   <div class="view" id="v-choix">
@@ -455,6 +456,7 @@ const DEFAULT_STATE = {
   openCats: {}, openArtisans: {}, openRooms: {}, mb: {},
   artisans: JSON.parse(JSON.stringify(DEFAULT_ARTISANS)),
   addArtForm: false,
+  moe: { pct: 10, base: 0, payments: [] },
 };
 
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -523,6 +525,8 @@ function mergeState(remote) {
   if (!S.sources) S.sources = {};
   if (!S.choix) S.choix = {};
   if (!S.artisans || S.artisans.length <= 1) S.artisans = JSON.parse(JSON.stringify(DEFAULT_ARTISANS));
+  if (!S.moe) S.moe = { pct: 10, base: 0, payments: [] };
+  if (!Array.isArray(S.moe.payments)) S.moe.payments = [];
 }
 
 async function init() {
@@ -624,13 +628,17 @@ function rDash() {
     </div>`;
 
   const fundsPct = totalFunds > 0 ? Math.round(spent / totalFunds * 100) : 0;
+  const restantACouvrir = Math.max(budget - spent, 0);
+  const covPct = restantACouvrir > 0 ? Math.round(totalFunds / restantACouvrir * 100) : 100;
   document.getElementById('dash-sources-card').innerHTML = `
     <div class="card">
       <div class="card-title">Financement — vue rapide</div>
       <div class="fin-row"><span class="fin-label">Épargne disponible maintenant</span><span class="fin-value" style="color:var(--green)">${fmt(srcTotalAvail())} €</span></div>
       <div class="fin-row"><span class="fin-label">Virements prévus</span><span class="fin-value" style="color:var(--blue)">${fmt(srcTotalPlanned())} €</span></div>
       <div class="fin-row bold"><span class="fin-label">Total mobilisable</span><span class="fin-value">${fmt(totalFunds)} €</span></div>
-      <div class="fin-row bold"><span class="fin-label">Couverture du budget</span><span class="fin-value" style="color:${totalFunds>=budget?'var(--green)':'var(--accent2)'}">${budget>0?Math.round(totalFunds/budget*100):0}%</span></div>
+      <div class="fin-row"><span class="fin-label">Déjà payé (acomptes + factures)</span><span class="fin-value" style="color:var(--accent)">− ${fmt(spent)} €</span></div>
+      <div class="fin-row"><span class="fin-label">Reste à couvrir</span><span class="fin-value">${fmt(restantACouvrir)} €</span></div>
+      <div class="fin-row bold"><span class="fin-label">Couverture du budget</span><span class="fin-value" style="color:${totalFunds>=restantACouvrir?'var(--green)':'var(--accent2)'}">${covPct}%</span></div>
     </div>`;
 
   document.getElementById('dash-art-card').innerHTML = `<div class="card"><div class="card-title">Artisans & Intervenants</div>${rArtisansHTML()}</div>`;
@@ -690,12 +698,15 @@ function rSources() {
   const planned = srcTotalPlanned();
   const total = avail + planned;
   const budget = S.budget || 150000;
+  const spent = lotsPaidTotal() + shopPd();
+  const restantACouvrir = Math.max(budget - spent, 0);
+  const covPct = restantACouvrir > 0 ? Math.round(total / restantACouvrir * 100) : 100;
 
   document.getElementById('src-metrics').innerHTML = `
     <div class="metric"><div class="metric-label">Disponible maintenant</div><div class="metric-value" style="color:var(--green)">${fmt(avail)} €</div><div class="metric-sub">Épargne actuelle</div></div>
     <div class="metric"><div class="metric-label">Virements prévus</div><div class="metric-value" style="color:var(--blue)">${fmt(planned)} €</div><div class="metric-sub">À venir</div></div>
     <div class="metric"><div class="metric-label">Total mobilisable</div><div class="metric-value">${fmt(total)} €</div><div class="metric-sub">Disponible + prévu</div></div>
-    <div class="metric"><div class="metric-label">Couverture budget</div><div class="metric-value" style="color:${total>=budget?'var(--green)':'var(--accent2)'}">${budget>0?Math.round(total/budget*100):0}%</div><div class="metric-sub">sur ${fmt(budget)} €</div></div>`;
+    <div class="metric"><div class="metric-label">Couverture budget</div><div class="metric-value" style="color:${total>=restantACouvrir?'var(--green)':'var(--accent2)'}">${covPct}%</div><div class="metric-sub">sur ${fmt(restantACouvrir)} € restant (déjà payé : ${fmt(spent)} €)</div></div>`;
 
   document.getElementById('sources-list').innerHTML = SOURCES.map(src => {
     const a = srcAvail(src.id), p = srcPlanned(src.id);
@@ -717,12 +728,84 @@ function rSources() {
       </div>
     </div>`;
   }).join('');
+
+  rMoe();
 }
 function updSrc(id, field, v) {
   if (!S.sources[id]) S.sources[id] = {};
   S.sources[id][field] = parseFloat(v) || 0;
   persist();
   rSources();
+}
+
+// ═══ MAÎTRE D'ŒUVRE — HONORAIRES ═══════════════════════════════════════════
+function moeTotalPaid() { return (S.moe.payments||[]).reduce((a,p) => a + (p.amount||0), 0); }
+function moeBase() { return S.moe.base > 0 ? S.moe.base : lotsTotal(); }
+function moeCommissionDue() { return moeBase() * (S.moe.pct||0) / 100; }
+
+function rMoe() {
+  const paid = moeTotalPaid();
+  const due = moeCommissionDue();
+  const remaining = due - paid;
+  const pct = due > 0 ? Math.min(Math.round(paid/due*100),100) : 0;
+  const payments = (S.moe.payments||[]).slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
+
+  document.getElementById('moe-section').innerHTML = `
+    <div class="card">
+      <div class="card-title">Maître d'œuvre — honoraires (Charlie Fraleux — Atelier Fraleux)</div>
+      <div class="src-fields" style="margin-bottom:12px;">
+        <div class="src-field">
+          <label>Commission (%)</label>
+          <input type="number" value="${S.moe.pct}" min="0" max="100" step="0.5" onchange="updMoeSettings('pct',this.value)">
+        </div>
+        <div class="src-field">
+          <label>Base de calcul (€) — 0 = total des lots signés</label>
+          <input type="number" value="${S.moe.base}" min="0" step="500" onchange="updMoeSettings('base',this.value)">
+        </div>
+      </div>
+      <div class="fin-row"><span class="fin-label">Base retenue</span><span class="fin-value">${fmt(moeBase())} €</span></div>
+      <div class="fin-row"><span class="fin-label">Commission due (${S.moe.pct}%)</span><span class="fin-value" style="color:var(--accent)">${fmt(due)} €</span></div>
+      <div class="fin-row"><span class="fin-label">Total déjà versé</span><span class="fin-value" style="color:var(--green)">${fmt(paid)} €</span></div>
+      <div class="fin-row bold"><span class="fin-label">Reste à verser</span><span class="fin-value" style="color:${remaining<=0?'var(--green)':'var(--accent2)'}">${fmt(Math.max(remaining,0))} €</span></div>
+      <div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>Versé</span><span>${pct}%</span></div><div class="pbar"><div class="pfill" style="width:${pct}%"></div></div></div>
+
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+        <p style="font-size:13px;font-weight:600;margin-bottom:10px;">Virements versés (${payments.length})</p>
+        ${payments.length ? payments.map(p => `
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:12px;color:var(--text2);width:88px;flex-shrink:0;">${p.date||'—'}</span>
+            <span style="font-size:13px;font-weight:600;width:90px;flex-shrink:0;">${fmt(p.amount)} €</span>
+            <span style="font-size:12px;color:var(--text2);flex:1;">${p.note||''}</span>
+            <button class="btn-ghost" style="padding:3px 8px;font-size:11px;color:#E24B4A;border-color:#E24B4A;" onclick="delMoePayment('${p.id}')">Suppr.</button>
+          </div>`).join('') : '<p style="font-size:12px;color:var(--text2);">Aucun virement enregistré.</p>'}
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;">
+        <div class="src-field" style="flex:0 0 130px;"><label>Date</label><input type="date" id="moe-new-date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="src-field" style="flex:0 0 110px;"><label>Montant (€)</label><input type="number" id="moe-new-amount" min="0" step="50" placeholder="0"></div>
+        <div class="src-field" style="flex:1 1 140px;"><label>Note (optionnel)</label><input type="text" id="moe-new-note" placeholder="ex: 3e virement"></div>
+        <button class="btn-add" onclick="addMoePayment()">+ Ajouter</button>
+      </div>
+    </div>`;
+}
+
+function updMoeSettings(field, v) {
+  S.moe[field] = parseFloat(v) || 0;
+  persist(); rMoe();
+}
+
+function addMoePayment() {
+  const date = document.getElementById('moe-new-date').value;
+  const amount = parseFloat(document.getElementById('moe-new-amount').value) || 0;
+  const note = document.getElementById('moe-new-note').value.trim();
+  if (amount <= 0) { toast('Indiquez un montant'); return; }
+  S.moe.payments.push({ id: 'moe'+Date.now(), date, amount, note });
+  persist(); rMoe(); toast('Virement ajouté');
+}
+
+function delMoePayment(id) {
+  S.moe.payments = S.moe.payments.filter(p => p.id !== id);
+  persist(); rMoe();
 }
 
 // ═══ ARTISANS ════════════════════════════════════════════════════════════
