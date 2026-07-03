@@ -9,62 +9,34 @@
 <meta name="apple-mobile-web-app-title" content="Beausoleil 5">
 <title>Maison Beausoleil 5</title>
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --accent: #D85A30;
-    --accent2: #BA7517;
-    --green: #1D9E75;
-    --blue: #378ADD;
-    --purple: #7F77DD;
-    --bg: #ffffff;
-    --bg2: #f5f4f0;
-    --bg3: #edecea;
-    --text: #1a1a18;
-    --text2: #6b6b68;
-    --text3: #9a9a97;
-    --border: rgba(0,0,0,0.10);
-    --border2: rgba(0,0,0,0.18);
-    --radius: 10px;
-    --radius-lg: 14px;
-    --shadow: 0 1px 4px rgba(0,0,0,0.08);
+    --accent: #D85A30; --accent2: #BA7517; --green: #1D9E75; --blue: #378ADD; --purple: #7F77DD;
+    --bg: #ffffff; --bg2: #f5f4f0; --bg3: #edecea;
+    --text: #1a1a18; --text2: #6b6b68; --text3: #9a9a97;
+    --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+    --radius: 10px; --radius-lg: 14px;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1a; --bg2: #262624; --bg3: #2e2e2c;
-      --text: #f0ede8; --text2: #a0a09d; --text3: #6a6a68;
-      --border: rgba(255,255,255,0.10); --border2: rgba(255,255,255,0.18);
-    }
+    :root { --bg:#1c1c1a; --bg2:#262624; --bg3:#2e2e2c; --text:#f0ede8; --text2:#a0a09d; --text3:#6a6a68; --border:rgba(255,255,255,0.10); --border2:rgba(255,255,255,0.18); }
   }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg2); color: var(--text); min-height: 100vh; }
-
-  /* APP SHELL */
-  #app { max-width: 960px; margin: 0 auto; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; }
-
-  /* HEADER */
+  #app { max-width: 960px; margin: 0 auto; background: var(--bg); min-height: 100vh; }
   .app-header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 0 16px; position: sticky; top: 0; z-index: 100; }
   .app-brand { display: flex; align-items: center; gap: 10px; padding: 12px 0 8px; }
   .app-brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
-  .app-brand h1 { font-size: 15px; font-weight: 600; color: var(--text); }
-  .app-brand .sync-status { margin-left: auto; font-size: 11px; color: var(--text3); display: flex; align-items: center; gap: 5px; }
+  .app-brand h1 { font-size: 15px; font-weight: 600; }
+  .sync-status { margin-left: auto; font-size: 11px; color: var(--text3); display: flex; align-items: center; gap: 5px; }
   .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); }
-  .sync-dot.ok { background: var(--green); }
-  .sync-dot.syncing { background: var(--accent2); animation: pulse 1s infinite; }
-  .sync-dot.error { background: #E24B4A; }
+  .sync-dot.ok { background: var(--green); } .sync-dot.syncing { background: var(--accent2); animation: pulse 1s infinite; } .sync-dot.error { background: #E24B4A; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-
-  /* NAV TABS */
-  .nav-tabs { display: flex; overflow-x: auto; scrollbar-width: none; gap: 0; }
+  .nav-tabs { display: flex; overflow-x: auto; scrollbar-width: none; }
   .nav-tabs::-webkit-scrollbar { display: none; }
-  .nav-tab { flex-shrink: 0; font-size: 13px; padding: 8px 14px 10px; border: none; background: transparent; color: var(--text2); cursor: pointer; border-bottom: 2.5px solid transparent; white-space: nowrap; transition: color .15s; }
+  .nav-tab { flex-shrink: 0; font-size: 13px; padding: 8px 13px 10px; border: none; background: transparent; color: var(--text2); cursor: pointer; border-bottom: 2.5px solid transparent; white-space: nowrap; }
   .nav-tab.on { color: var(--text); font-weight: 500; border-bottom-color: var(--accent); }
-
-  /* CONTENT */
   .view { display: none; padding: 16px; }
   .view.on { display: block; }
-
-  /* SETUP SCREEN */
   #setup-screen { position: fixed; inset: 0; background: var(--bg); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .setup-box { max-width: 420px; width: 100%; }
   .setup-box h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
@@ -75,80 +47,56 @@
   .setup-field label { font-size: 11px; font-weight: 500; color: var(--text2); display: block; margin-bottom: 4px; }
   .setup-field input { width: 100%; font-size: 13px; padding: 9px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); }
   .btn-primary { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); padding: 11px; font-size: 14px; font-weight: 500; cursor: pointer; }
-  .btn-primary:hover { opacity: .9; }
   .setup-error { font-size: 12px; color: #E24B4A; margin-top: 8px; display: none; }
-
-  /* METRIC CARDS */
   .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
   @media(min-width:500px){ .metrics { grid-template-columns: repeat(4, 1fr); } }
   .metric { background: var(--bg2); border-radius: var(--radius); padding: 12px; }
   .metric-label { font-size: 11px; color: var(--text2); margin-bottom: 3px; }
-  .metric-value { font-size: 20px; font-weight: 600; }
+  .metric-value { font-size: 19px; font-weight: 600; }
   .metric-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
-
-  /* CARDS */
   .card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px; }
   .card-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
-
-  /* PROGRESS BAR */
   .pbar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
   .pfill { height: 100%; border-radius: 3px; background: var(--accent); transition: width .3s; }
-
-  /* TASKS */
-  .task-row { display: flex; align-items: center; gap: 10px; padding: 8px 6px; border-radius: 8px; cursor: pointer; transition: background .1s; }
+  .task-row { display: flex; align-items: center; gap: 10px; padding: 8px 6px; border-radius: 8px; cursor: pointer; }
   .task-row:hover { background: var(--bg2); }
   .task-phase { font-size: 11px; font-weight: 600; color: var(--text2); padding: 10px 0 4px; text-transform: uppercase; letter-spacing: .05em; border-top: 1px solid var(--border); margin-top: 6px; }
   .task-phase:first-child { border-top: none; margin-top: 0; }
   .badge { font-size: 11px; padding: 2px 9px; border-radius: 20px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
-  .b-done { background: #EAF3DE; color: #3B6D11; }
-  .b-wip  { background: #FAEEDA; color: #854F0B; }
-  .b-todo { background: var(--bg3); color: var(--text2); }
-
-  /* FILTER PILLS */
+  .b-done { background: #EAF3DE; color: #3B6D11; } .b-wip { background: #FAEEDA; color: #854F0B; } .b-todo { background: var(--bg3); color: var(--text2); }
   .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
   .fpill { font-size: 12px; padding: 5px 12px; border: 1px solid var(--border2); border-radius: 20px; background: transparent; color: var(--text2); cursor: pointer; }
   .fpill.on { background: var(--text); color: var(--bg); border-color: var(--text); }
-
-  /* ARTISANS */
   .art-card { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 8px; overflow: hidden; }
   .art-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; }
   .art-row:hover { background: var(--bg2); }
-  .ava { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .ava { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
   .art-body { padding: 14px; border-top: 1px solid var(--border); background: var(--bg2); }
   .art-field { margin-bottom: 10px; }
   .art-field label { font-size: 11px; font-weight: 500; color: var(--text2); display: block; margin-bottom: 4px; }
   .art-inp { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); }
   .art-inp:focus { outline: none; border-color: var(--accent); }
   .art-ta { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); resize: vertical; min-height: 56px; }
-  .art-ta:focus { outline: none; border-color: var(--accent); }
   .art-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .art-link { font-size: 12px; padding: 6px 13px; border: 1px solid var(--border2); border-radius: 20px; color: var(--text2); text-decoration: none; background: var(--bg); }
-
-  /* ADD ARTISAN FORM */
   .add-art-form { border: 1px dashed var(--border2); border-radius: var(--radius-lg); padding: 14px; margin-top: 4px; }
-  .add-art-form h4 { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 10px; }
+  .add-art-form h4 { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
   .form-inp { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); }
-  .form-inp:focus { outline: none; border-color: var(--accent); }
   .form-sel { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); }
   .btn-add { font-size: 13px; padding: 7px 16px; background: var(--accent); color: #fff; border: none; border-radius: 20px; cursor: pointer; }
   .btn-ghost { font-size: 12px; padding: 6px 13px; border: 1px solid var(--border2); border-radius: 20px; background: transparent; color: var(--text2); cursor: pointer; }
-
-  /* SHOP */
   .shop-cat { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 8px; overflow: hidden; }
   .shop-cat-hdr { display: flex; align-items: center; gap: 8px; padding: 11px 14px; cursor: pointer; }
   .shop-cat-hdr:hover { background: var(--bg2); }
   .cat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
   .cat-pbar { height: 3px; background: var(--bg3); }
-  .cat-pfill { height: 100%; }
   .shop-item { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-top: 1px solid var(--border); }
   .shop-item.paid { background: var(--bg2); }
-  .checkbox { width: 18px; height: 18px; border: 1.5px solid var(--border2); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; font-weight: 700; transition: all .15s; }
+  .checkbox { width: 18px; height: 18px; border: 1.5px solid var(--border2); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; font-weight: 700; color: transparent; }
   .checkbox.on { background: var(--green); border-color: var(--green); color: #fff; }
-  .price-inp { width: 80px; font-size: 13px; font-weight: 500; padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; text-align: right; background: var(--bg); color: var(--text); }
+  .price-inp { width: 84px; font-size: 13px; font-weight: 500; padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; text-align: right; background: var(--bg); color: var(--text); }
   .price-inp:focus { outline: none; border-color: var(--accent); }
-
-  /* MOOD BOARD */
   .mb-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
   @media(min-width:600px) { .mb-grid { grid-template-columns: 1fr 1fr; } }
   .mb-card { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
@@ -156,12 +104,9 @@
   .mb-hdr:hover { background: var(--bg2); }
   .mb-body { padding: 14px; border-top: 1px solid var(--border); background: var(--bg2); }
   .mb-row { margin-bottom: 12px; }
-  .mb-row:last-child { margin-bottom: 0; }
   .mb-label { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
   .mb-inp { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); }
-  .mb-inp:focus { outline: none; border-color: var(--accent); }
-  .mb-ta { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); resize: vertical; min-height: 56px; }
-  .mb-ta:focus { outline: none; border-color: var(--accent); }
+  .mb-ta { width: 100%; font-size: 13px; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); resize: vertical; min-height: 52px; }
   .swatches-row { display: flex; align-items: center; gap: 10px; }
   .swatch-group { display: flex; flex-direction: column; align-items: center; gap: 3px; }
   .swatch-group label { font-size: 10px; color: var(--text3); }
@@ -169,97 +114,82 @@
   .swatch-preview { display: flex; gap: 4px; flex: 1; }
   .swatch-bar { flex: 1; height: 36px; border-radius: 6px; border: 1px solid var(--border); }
   .style-pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .style-pill { font-size: 11px; padding: 4px 10px; border: 1px solid var(--border2); border-radius: 20px; cursor: pointer; background: var(--bg); color: var(--text2); transition: all .15s; }
+  .style-pill { font-size: 11px; padding: 4px 10px; border: 1px solid var(--border2); border-radius: 20px; cursor: pointer; background: var(--bg); color: var(--text2); }
   .style-pill.on { background: var(--text); color: var(--bg); border-color: var(--text); }
   .mb-swatches-preview { display: flex; gap: 3px; }
   .mb-swatch-sm { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border); }
-
-  /* SETTINGS */
   .settings-section { margin-bottom: 20px; }
-  .settings-section h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .settings-section h3 { font-size: 13px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
   .settings-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
   .settings-row:last-child { border-bottom: none; }
-  .settings-row label { font-size: 13px; color: var(--text); flex: 1; }
-  .settings-row span { font-size: 12px; color: var(--text2); }
+  .settings-row label { font-size: 13px; flex: 1; }
   .settings-inp { font-size: 13px; padding: 6px 10px; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); flex: 1; }
-  .settings-inp:focus { outline: none; border-color: var(--accent); }
   .btn-danger { font-size: 12px; padding: 6px 14px; border: 1px solid #E24B4A; border-radius: 20px; background: transparent; color: #E24B4A; cursor: pointer; }
-  .btn-save { font-size: 12px; padding: 6px 14px; border: none; border-radius: 20px; background: var(--green); color: #fff; cursor: pointer; }
-
-  /* TIMELINE */
   .timeline-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text2); margin-bottom: 6px; }
   .tl-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
   .tl-name { font-size: 10px; color: var(--text2); width: 68px; text-align: right; flex-shrink: 0; }
   .tl-track { flex: 1; height: 14px; background: var(--bg3); border-radius: 3px; overflow: hidden; position: relative; }
   .tl-fill { position: absolute; height: 100%; border-radius: 3px; opacity: .85; }
-  .tl-now { border-top: 1px dashed var(--border2); padding-top: 4px; display: flex; gap: 6px; }
-  .tl-now-line { flex: 1; position: relative; }
-
-  /* BUDGET CHART */
-  .budget-chart-wrap { position: relative; height: 180px; }
-
-  /* FINANCE TABLE */
   .fin-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
   .fin-row:last-child { border-bottom: none; }
   .fin-row.bold .fin-label { font-weight: 500; }
   .fin-row.bold .fin-value { font-size: 15px; font-weight: 600; }
   .fin-label { font-size: 12px; color: var(--text2); }
   .fin-value { font-size: 13px; font-weight: 500; }
-
-  /* TOAST */
+  /* LOTS */
+  .lot-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .lot-row:last-child { border-bottom: none; }
+  .lot-name { flex: 1; }
+  .lot-name .n1 { font-size: 13px; font-weight: 500; }
+  .lot-name .n2 { font-size: 11px; color: var(--text2); }
+  .lot-amount { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  /* SOURCES */
+  .src-card { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 8px; padding: 12px 14px; }
+  .src-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .src-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .src-name { flex: 1; font-size: 13px; font-weight: 500; }
+  .src-status { font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  .src-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .src-field label { font-size: 10px; color: var(--text3); display: block; margin-bottom: 3px; }
+  .src-field input { width: 100%; font-size: 13px; font-weight: 500; padding: 6px 9px; border: 1px solid var(--border2); border-radius: 7px; background: var(--bg); color: var(--text); text-align: right; }
+  .src-field input:focus { outline: none; border-color: var(--accent); }
   .toast { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: var(--bg); font-size: 12px; padding: 9px 16px; border-radius: 20px; z-index: 9999; opacity: 0; transition: opacity .3s; pointer-events: none; }
   .toast.show { opacity: 1; }
-
-  /* SCROLLBAR */
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-  /* SEARCH */
   .search-inp { width: 100%; font-size: 13px; padding: 8px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); margin-bottom: 12px; }
-  .search-inp:focus { outline: none; border-color: var(--accent); }
-
-  .arrow { font-size: 12px; color: var(--text3); flex-shrink: 0; transition: transform .2s; }
-  .arrow.open { transform: rotate(180deg); }
+  .arrow { font-size: 12px; color: var(--text3); flex-shrink: 0; }
 </style>
 </head>
 <body>
 
-<!-- SETUP SCREEN -->
 <div id="setup-screen">
   <div class="setup-box">
     <h2>🏡 Maison Beausoleil 5</h2>
-    <p>Pour synchroniser vos données entre PC et téléphone, vous avez besoin d'un compte JSONBin gratuit. La configuration prend 2 minutes.</p>
+    <p>Pour synchroniser vos données entre PC et téléphone, connectez votre compte JSONBin.</p>
     <div class="setup-steps">
-      <b>Étape 1</b> — Créez un compte gratuit sur <a href="https://jsonbin.io" target="_blank">jsonbin.io</a><br>
-      <b>Étape 2</b> — Dans votre tableau de bord, copiez votre <b>Master Key</b><br>
-      <b>Étape 3</b> — Collez-la ci-dessous et cliquez sur "Démarrer"
+      <b>Étape 1</b> — Compte gratuit sur <a href="https://jsonbin.io" target="_blank">jsonbin.io</a><br>
+      <b>Étape 2</b> — Copiez votre <b>Master Key</b> (menu API Keys)<br>
+      <b>Étape 3</b> — Collez-la ci-dessous
     </div>
-    <div class="setup-field">
-      <label>Master Key JSONBin</label>
-      <input type="password" id="setup-key" placeholder="$2b$10$..." autocomplete="off">
-    </div>
-    <div class="setup-field">
-      <label>Bin ID <span style="font-weight:400;color:var(--text3)">(laissez vide pour en créer un automatiquement)</span></label>
-      <input type="text" id="setup-bin" placeholder="64abc123..." autocomplete="off">
-    </div>
+    <div class="setup-field"><label>Master Key JSONBin</label><input type="password" id="setup-key" placeholder="$2b$10$..." autocomplete="off"></div>
+    <div class="setup-field"><label>Bin ID <span style="font-weight:400;color:var(--text3)">(vide = créé automatiquement)</span></label><input type="text" id="setup-bin" autocomplete="off"></div>
     <button class="btn-primary" onclick="doSetup()">Démarrer →</button>
     <div class="setup-error" id="setup-error"></div>
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="app">
   <div class="app-header">
     <div class="app-brand">
       <div class="app-brand-dot"></div>
       <h1>Maison Beausoleil 5</h1>
-      <div class="sync-status">
-        <div class="sync-dot" id="syncDot"></div>
-        <span id="syncLabel">—</span>
-      </div>
+      <div class="sync-status"><div class="sync-dot" id="syncDot"></div><span id="syncLabel">—</span></div>
     </div>
     <div class="nav-tabs">
       <button class="nav-tab on" onclick="sv('dash',this)">Vue générale</button>
+      <button class="nav-tab" onclick="sv('lots',this)">Devis & Lots</button>
+      <button class="nav-tab" onclick="sv('sources',this)">Financement</button>
       <button class="nav-tab" onclick="sv('travaux',this)">Travaux</button>
       <button class="nav-tab" onclick="sv('achats',this)">Achats</button>
       <button class="nav-tab" onclick="sv('ambiances',this)">Ambiances</button>
@@ -267,25 +197,38 @@
     </div>
   </div>
 
-  <!-- VUE GÉNÉRALE -->
   <div class="view on" id="v-dash">
     <div class="metrics" id="dash-metrics"></div>
-    <div id="dash-budget-card"></div>
     <div id="dash-finance-card"></div>
+    <div id="dash-lots-card"></div>
+    <div id="dash-sources-card"></div>
     <div id="dash-art-card"></div>
     <div id="dash-timeline-card"></div>
     <div id="dash-phases-card"></div>
-    <div id="dash-achats-card"></div>
-    <div id="dash-mb-card"></div>
   </div>
 
-  <!-- TRAVAUX -->
+  <div class="view" id="v-lots">
+    <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
+      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Devis signés & Lots</p>
+      <p style="font-size:12px;color:var(--text2);">Montants TTC des devis signés · Suivez les acomptes et paiements</p>
+    </div>
+    <div id="lots-list"></div>
+  </div>
+
+  <div class="view" id="v-sources">
+    <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
+      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Sources de financement</p>
+      <p style="font-size:12px;color:var(--text2);">Épargne disponible et virements prévus · Renseignez les montants</p>
+    </div>
+    <div class="metrics" id="src-metrics"></div>
+    <div id="sources-list"></div>
+  </div>
+
   <div class="view" id="v-travaux">
     <div id="travaux-header"></div>
     <div id="travaux-list"></div>
   </div>
 
-  <!-- ACHATS -->
   <div class="view" id="v-achats">
     <div id="achats-header"></div>
     <input class="search-inp" type="text" placeholder="Rechercher un article..." id="achats-search" oninput="rShopList()">
@@ -297,98 +240,106 @@
     <div id="achats-list"></div>
   </div>
 
-  <!-- AMBIANCES -->
   <div class="view" id="v-ambiances">
     <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
-      <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">Tableaux d'ambiance</p>
-      <p style="font-size:12px;color:var(--text2);">6 paramètres clés par pièce · Référence pour l'équipe de chantier</p>
+      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Tableaux d'ambiance</p>
+      <p style="font-size:12px;color:var(--text2);">6 paramètres clés par pièce</p>
     </div>
     <div class="mb-grid" id="mb-grid"></div>
   </div>
 
-  <!-- RÉGLAGES -->
   <div class="view" id="v-settings">
     <div class="settings-section">
       <h3>Projet</h3>
-      <div class="settings-row"><label>Nom du projet</label><input class="settings-inp" id="set-name" value="Maison Beausoleil 5" onchange="updateSetting('projectName',this.value)"></div>
-      <div class="settings-row"><label>Maître d'œuvre</label><input class="settings-inp" id="set-mo" value="Charlie Farleux" onchange="updateSetting('mo',this.value)"></div>
-      <div class="settings-row"><label>Date de début</label><input class="settings-inp" type="date" id="set-start" value="2026-02-01" onchange="updateSetting('dateStart',this.value)"></div>
-      <div class="settings-row"><label>Date de fin prévue</label><input class="settings-inp" type="date" id="set-end" value="2026-11-30" onchange="updateSetting('dateEnd',this.value)"></div>
-      <div class="settings-row"><label>Budget total (€)</label><input class="settings-inp" type="number" id="set-budget" value="150000" onchange="updateSetting('budget',parseFloat(this.value))"></div>
-      <div class="settings-row"><label>Travaux facturés à ce jour (€)</label><input class="settings-inp" type="number" id="set-spent" value="8000" onchange="updateSetting('travauxSpent',parseFloat(this.value));rDash()"></div>
+      <div class="settings-row"><label>Budget total (€)</label><input class="settings-inp" type="number" id="set-budget" onchange="updateSetting('budget',parseFloat(this.value));rDash()"></div>
     </div>
     <div class="settings-section">
       <h3>Synchronisation JSONBin</h3>
-      <div class="settings-row"><label>Master Key</label><span id="set-key-display" style="font-size:12px;color:var(--text2);">••••••••</span></div>
+      <div class="settings-row"><label>Master Key</label><span id="set-key-display" style="font-size:12px;color:var(--text2);">—</span></div>
       <div class="settings-row"><label>Bin ID</label><span id="set-bin-display" style="font-size:12px;color:var(--text2);">—</span></div>
-      <div class="settings-row">
-        <button class="btn-ghost" onclick="syncNow()">Synchroniser maintenant</button>
-        <button class="btn-danger" onclick="resetSetup()">Changer de compte</button>
-      </div>
+      <div class="settings-row"><button class="btn-ghost" onclick="syncNow()">Synchroniser maintenant</button><button class="btn-danger" onclick="resetSetup()">Changer de compte</button></div>
     </div>
     <div class="settings-section">
       <h3>Données</h3>
-      <div class="settings-row">
-        <label>Exporter les données (JSON)</label>
-        <button class="btn-ghost" onclick="exportData()">Télécharger</button>
-      </div>
-      <div class="settings-row">
-        <label style="color:#E24B4A">Réinitialiser toutes les données</label>
-        <button class="btn-danger" onclick="confirmReset()">Réinitialiser</button>
-      </div>
+      <div class="settings-row"><label>Exporter (JSON)</label><button class="btn-ghost" onclick="exportData()">Télécharger</button></div>
+      <div class="settings-row"><label style="color:#E24B4A">Réinitialiser tout</label><button class="btn-danger" onclick="confirmReset()">Réinitialiser</button></div>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// ─── DATA ───────────────────────────────────────────────────────────────
+// ═══ DEVIS SIGNÉS (LOTS) ═══════════════════════════════════════════════
+const LOTS = [
+  {id:'lot_maconnerie', entreprise:'La Petite Maçonnerie Rennaise', lot:'Démolition · Maçonnerie · Ravalement ITE', ttc:34170.75, c:'#D85A30'},
+  {id:'lot_vidal', entreprise:'J. VIDAL', lot:'Placo · Isolation intérieure · Plafonds', ttc:25916.33, c:'#BA7517'},
+  {id:'lot_aerochauffe', entreprise:'AEROCHAUFFE', lot:'Plomberie · Chauffage · Sanitaires', ttc:23474.94, c:'#378ADD'},
+  {id:'lot_bizeul', entreprise:'BIZEUL Carrelage', lot:'Carrelage · Chapes · Faïence', ttc:19081.36, c:'#1D9E75'},
+  {id:'lot_m2t', entreprise:'M2T Électricité', lot:'Électricité complète · Tableau', ttc:11985.06, c:'#EF9F27'},
+  {id:'lot_lemoine', entreprise:'LEMOINE Benjamin', lot:'Velux · Volets solaires toiture', ttc:4691.41, c:'#7F77DD'},
+  {id:'lot_sab_volets', entreprise:'SAB Menuiseries', lot:'Motorisation volets roulants', ttc:3324.96, c:'#0F6E56'},
+  {id:'lot_sab_porte', entreprise:'SAB Menuiseries', lot:'Porte d\'entrée · Fenêtre WC', ttc:1167.90, c:'#185FA5'},
+];
+
+// ═══ SOURCES DE FINANCEMENT ═════════════════════════════════════════════
+const SOURCES = [
+  {id:'src_livretA_amir', nm:'Livret A Amir', icon:'🏦', type:'Épargne', c:'#E6F1FB', tc:'#185FA5'},
+  {id:'src_ldds_amir', nm:'LDDS Amir', icon:'🏦', type:'Épargne', c:'#E6F1FB', tc:'#185FA5'},
+  {id:'src_livretA_celine', nm:'Livret A Céline', icon:'🏦', type:'Épargne', c:'#F4E6F1', tc:'#993556'},
+  {id:'src_ldds_celine', nm:'LDDS Céline', icon:'🏦', type:'Épargne', c:'#F4E6F1', tc:'#993556'},
+  {id:'src_postal', nm:'Compte Banque Postale', icon:'💳', type:'Compte courant', c:'#FAEEDA', tc:'#854F0B'},
+  {id:'src_vir_israel', nm:'Virement appart Israël', icon:'✈️', type:'Virement prévu', c:'#EAF3DE', tc:'#3B6D11'},
+  {id:'src_vir_france', nm:'Virement appart France', icon:'🏠', type:'Virement prévu', c:'#EAF3DE', tc:'#3B6D11'},
+  {id:'src_dividendes', nm:'Dividendes Amir', icon:'📈', type:'Virement prévu', c:'#EDEAFB', tc:'#3C3489'},
+];
+
+// ═══ PHASES TRAVAUX ═════════════════════════════════════════════════════
 const PH = [
   {id:'p1',nm:'Phase 1 — Démolition & déblaiement',tasks:[
     {id:'t1',n:'Démolition cuisine',s:'done'},{id:'t2',n:'Démolition salon / séjour',s:'done'},
     {id:'t3',n:'Démolition SdB bas',s:'done'},{id:'t4',n:'Démolition SdB haut',s:'done'},
     {id:'t5',n:'Démolition chambres',s:'done'},{id:'t6',n:'Démolition toilettes bas',s:'wip'},
-    {id:'t7',n:'Démolition placards intégrés',s:'wip'},{id:'t8',n:'Évacuation des gravats',s:'todo'}]},
-  {id:'p2',nm:'Phase 2 — Gros œuvre & structure',tasks:[
-    {id:'t9',n:'Esquisse & plans définitifs',s:'wip'},{id:'t10',n:'Vérification structure porteuse',s:'todo'},
-    {id:'t11',n:'Renforcement poutres / planchers',s:'todo'},{id:'t12',n:'Cloisons porteuses',s:'todo'},
-    {id:'t13',n:'Étanchéité sous-sol',s:'todo'}]},
-  {id:'p3',nm:'Phase 3 — Réseaux bruts',tasks:[
-    {id:'t14',n:'Réseau plomberie général',s:'todo'},{id:'t15',n:'Évacuations eaux usées',s:'todo'},
-    {id:'t16',n:'Réseau électrique + tableau',s:'todo'},{id:'t17',n:'VMC / ventilation',s:'todo'},
-    {id:'t18',n:'Chauffage / plancher chauffant',s:'todo'}]},
-  {id:'p4',nm:'Phase 4 — Isolation',tasks:[
-    {id:'t19',n:'Isolation murs intérieurs',s:'todo'},{id:'t20',n:'Isolation plancher bas',s:'todo'},
-    {id:'t21',n:'Isolation combles / toiture',s:'todo'},{id:'t22',n:'Isolation sous-sol',s:'todo'}]},
-  {id:'p5',nm:'Phase 5 — Cloisons & chapes',tasks:[
-    {id:'t23',n:'Pose cloisons placo',s:'todo'},{id:'t24',n:'Chape sol RdC',s:'todo'},
-    {id:'t25',n:'Chape sol étage',s:'todo'},{id:'t26',n:'Sol béton ciré sous-sol',s:'todo'}]},
-  {id:'p6',nm:'Phase 6 — Revêtements sols',tasks:[
-    {id:'t27',n:'Carrelage SdB bas',s:'todo'},{id:'t28',n:'Carrelage SdB haut',s:'todo'},
-    {id:'t29',n:'Carrelage buanderie',s:'todo'},{id:'t30',n:'Carrelage WC bas',s:'todo'},
-    {id:'t31',n:'Carrelage WC haut',s:'todo'},{id:'t32',n:'Sol salon / cuisine',s:'todo'},
-    {id:'t33',n:'Parquet chambre parents',s:'todo'},{id:'t34',n:'Parquet chambre 1',s:'todo'},
-    {id:'t35',n:'Parquet chambre 2',s:'todo'},{id:'t36',n:'Parquet chambres haut',s:'todo'},
-    {id:'t37',n:'Sol chambre sous-sol',s:'todo'}]},
-  {id:'p7',nm:'Phase 7 — Menuiseries intérieures',tasks:[
-    {id:'t38',n:'Pose portes intérieures',s:'todo'},{id:'t39',n:'Pose fenêtres / baies',s:'todo'},
-    {id:'t40',n:'Placards sur mesure',s:'todo'}]},
-  {id:'p8',nm:'Phase 8 — Équipements pièces humides',tasks:[
-    {id:'t41',n:'Installation cuisine équipée',s:'todo'},{id:'t42',n:'Installation SdB bas',s:'todo'},
-    {id:'t43',n:'Installation SdB haut',s:'todo'},{id:'t44',n:'Installation WC bas',s:'todo'},
-    {id:'t45',n:'Installation WC haut',s:'todo'},{id:'t46',n:'Installation buanderie',s:'todo'}]},
-  {id:'p9',nm:'Phase 9 — Peinture & finitions',tasks:[
-    {id:'t47',n:'Enduits & préparation murs',s:'todo'},{id:'t48',n:'Peinture salon / cuisine',s:'todo'},
-    {id:'t49',n:'Peinture chambres',s:'todo'},{id:'t50',n:'Peinture couloirs & escalier',s:'todo'},
-    {id:'t51',n:'Peinture sous-sol',s:'todo'}]},
+    {id:'t7',n:'Démolition placards intégrés',s:'wip'},{id:'t8',n:'Dépose cloisons ch1/ch2 + grenier (Maçonnerie)',s:'todo'},
+    {id:'t9',n:'Évacuation des gravats',s:'todo'}]},
+  {id:'p2',nm:'Phase 2 — Gros œuvre & maçonnerie',tasks:[
+    {id:'t10',n:'Esquisse & plans définitifs',s:'wip'},{id:'t11',n:'Dallage complément sous-sol',s:'todo'},
+    {id:'t12',n:'Carottages en dalle',s:'todo'},{id:'t13',n:'Étanchéité sous-sol',s:'todo'}]},
+  {id:'p3',nm:'Phase 3 — Façade & ITE (Maçonnerie Rennaise)',tasks:[
+    {id:'t14',n:'Préparation façade (dépose, traitement)',s:'todo'},{id:'t15',n:'Échafaudage',s:'todo'},
+    {id:'t16',n:'Isolation thermique extérieure 140mm',s:'todo'},{id:'t17',n:'Enduit de finition Thermolook',s:'todo'},
+    {id:'t18',n:'Peinture soubassement & appuis',s:'todo'}]},
+  {id:'p4',nm:'Phase 4 — Toiture & menuiseries ext. ',tasks:[
+    {id:'t19',n:'Pose 2 Velux GGL MK06 (Lemoine)',s:'todo'},{id:'t20',n:'Volets solaires Velux SSL (Lemoine)',s:'todo'},
+    {id:'t21',n:'Porte d\'entrée + fenêtre WC (SAB)',s:'todo'},{id:'t22',n:'Motorisation volets roulants (SAB)',s:'todo'}]},
+  {id:'p5',nm:'Phase 5 — Réseaux (M2T + Aerochauffe)',tasks:[
+    {id:'t23',n:'Réseau électrique complet + tableau (M2T)',s:'todo'},{id:'t24',n:'Saignées et rebouchage (M2T)',s:'todo'},
+    {id:'t25',n:'Dépose réseau chauffage existant (Aerochauffe)',s:'todo'},{id:'t26',n:'Nouveau réseau chauffage 14 radiateurs',s:'todo'},
+    {id:'t27',n:'Réseau eau chaude/froide sanitaire',s:'todo'},{id:'t28',n:'Évacuations eaux usées',s:'todo'},
+    {id:'t29',n:'Neutralisation arrivée gaz cuisine',s:'todo'}]},
+  {id:'p6',nm:'Phase 6 — Placo & isolation intérieure (Vidal)',tasks:[
+    {id:'t30',n:'Sous-sol : plafond rampant + isolation murs',s:'todo'},{id:'t31',n:'RDC : plafonds + doublages + cloisons',s:'todo'},
+    {id:'t32',n:'R+1 : isolation toiture rampants + cloisons',s:'todo'},{id:'t33',n:'Réservations verrières',s:'todo'},
+    {id:'t34',n:'Habillage WC suspendus + coffres',s:'todo'},{id:'t35',n:'Joints placo',s:'todo'}]},
+  {id:'p7',nm:'Phase 7 — Chapes & carrelage (Bizeul)',tasks:[
+    {id:'t36',n:'Ragréage RDC complet',s:'todo'},{id:'t37',n:'Chape liquide salle de jeux R+1',s:'todo'},
+    {id:'t38',n:'Ragréage R+1',s:'todo'},{id:'t39',n:'Carrelage sol RDC 80x80',s:'todo'},
+    {id:'t40',n:'Carrelage sols R+1 (WC + SdB) 60x60',s:'todo'},{id:'t41',n:'Faïence murale SdE R+1',s:'todo'},
+    {id:'t42',n:'Crédences vasques (x5)',s:'todo'},{id:'t43',n:'Plinthes',s:'todo'}]},
+  {id:'p8',nm:'Phase 8 — Sanitaires & équipements (Aerochauffe)',tasks:[
+    {id:'t44',n:'3 WC suspendus Grohé/Alterna',s:'todo'},{id:'t45',n:'Lave-mains WC RDC + R+1',s:'todo'},
+    {id:'t46',n:'Meuble vasque SdB RDC 90cm',s:'todo'},{id:'t47',n:'Douche R+1 : receveur 140x100 + paroi',s:'todo'},
+    {id:'t48',n:'Meuble double vasque R+1 120cm',s:'todo'},{id:'t49',n:'Miroir LED + radiateur sèche-serviettes',s:'todo'},
+    {id:'t50',n:'Installation cuisine équipée',s:'todo'}]},
+  {id:'p9',nm:'Phase 9 — Sols & peinture',tasks:[
+    {id:'t51',n:'Parquet chambres (hors devis - à commander)',s:'todo'},{id:'t52',n:'Peinture intérieure complète (hors devis)',s:'todo'},
+    {id:'t53',n:'Menuiserie intérieure : portes (Vidal)',s:'todo'}]},
   {id:'p10',nm:'Phase 10 — Finitions & réception',tasks:[
-    {id:'t52',n:'Pose plinthes & habillages',s:'todo'},{id:'t53',n:'Réglages électricité finaux',s:'todo'},
-    {id:'t54',n:'Réglages plomberie finale',s:'todo'},{id:'t55',n:'Nettoyage chantier',s:'todo'},
-    {id:'t56',n:'Réception des travaux',s:'todo'}]},
+    {id:'t54',n:'Réglages électricité finaux',s:'todo'},{id:'t55',n:'Réglages plomberie finale',s:'todo'},
+    {id:'t56',n:'Nettoyage chantier',s:'todo'},{id:'t57',n:'Réception des travaux',s:'todo'}]},
 ];
 
+// ═══ ACHATS ══════════════════════════════════════════════════════════════
 const SH = [
   {id:'cu',nm:'Cuisine complète',c:'#D85A30',it:[
     {id:'c1',n:'Ensemble meubles cuisine',p:6000},{id:'c2',n:'Plan de travail',p:1200},
@@ -419,37 +370,22 @@ const SH = [
     {id:'h1',n:'Lits (x2) + matelas',p:1400},{id:'h2',n:'Armoires / placards',p:1800},
     {id:'h3',n:'Luminaires',p:350},{id:'h4',n:'Rideaux',p:300}]},
   {id:'sb',nm:'Salle de bain bas',c:'#0F6E56',it:[
-    {id:'sb1',n:'Douche (receveur + paroi)',p:1300},{id:'sb2',n:'Robinetterie douche',p:400},
-    {id:'sb3',n:'Meuble vasque + vasque',p:750},{id:'sb4',n:'Robinetterie vasque',p:250},
-    {id:'sb5',n:'Miroir',p:200},{id:'sb6',n:'Sèche-serviettes',p:350},
-    {id:'sb7',n:'Luminaires',p:200},{id:'sb8',n:'Accessoires',p:150},
-    {id:'sb9',n:'Carrelage sol',p:400},{id:'sb10',n:'Faïence murale',p:600}]},
+    {id:'sb5',n:'Miroir',p:200},{id:'sb7',n:'Luminaires',p:200},{id:'sb8',n:'Accessoires',p:150}]},
   {id:'sh',nm:'Salle de bain haut',c:'#185FA5',it:[
-    {id:'sh1',n:'Baignoire ou douche italienne',p:1600},{id:'sh2',n:'Robinetterie bain/douche',p:550},
-    {id:'sh3',n:'Meuble double vasque',p:1100},{id:'sh4',n:'Robinetterie vasques',p:350},
-    {id:'sh5',n:'Miroir',p:280},{id:'sh6',n:'Sèche-serviettes',p:350},
-    {id:'sh7',n:'Luminaires',p:200},{id:'sh8',n:'Accessoires',p:150},
-    {id:'sh9',n:'Carrelage sol',p:500},{id:'sh10',n:'Faïence murale',p:750}]},
-  {id:'wb',nm:'Toilettes bas',c:'#533AB7',it:[
-    {id:'wb1',n:'Cuvette WC suspendue',p:350},{id:'wb2',n:'Bâti-support + plaque',p:300},
-    {id:'wb3',n:'Lave-mains + robinetterie',p:220},{id:'wb4',n:'Luminaire',p:80},{id:'wb5',n:'Carrelage',p:200}]},
-  {id:'wh',nm:'Toilettes haut',c:'#533AB7',it:[
-    {id:'wh1',n:'Cuvette WC suspendue',p:350},{id:'wh2',n:'Bâti-support + plaque',p:300},
-    {id:'wh3',n:'Lave-mains + robinetterie',p:220},{id:'wh4',n:'Luminaire',p:80},{id:'wh5',n:'Carrelage',p:200}]},
+    {id:'sh7',n:'Luminaires',p:200},{id:'sh8',n:'Accessoires',p:150}]},
   {id:'bu',nm:'Buanderie haut',c:'#3B6D11',it:[
     {id:'bu1',n:'Lave-linge',p:750},{id:'bu2',n:'Sèche-linge',p:650},
-    {id:'bu3',n:'Évier + robinetterie',p:280},{id:'bu4',n:'Rangements / étagères',p:350},{id:'bu5',n:'Carrelage',p:250}]},
+    {id:'bu4',n:'Rangements / étagères',p:350}]},
   {id:'ss',nm:'Sous-sol / Cave',c:'#5F5E5A',it:[
-    {id:'ss1',n:'Sol béton ciré',p:1200},{id:'ss2',n:'Lit + matelas',p:600},
-    {id:'ss3',n:'Rangements',p:400},{id:'ss4',n:'Luminaires',p:200}]},
-  {id:'pe',nm:'Peinture',c:'#D4537E',it:[
+    {id:'ss2',n:'Lit + matelas',p:600},{id:'ss3',n:'Rangements',p:400},{id:'ss4',n:'Luminaires',p:200}]},
+  {id:'pe',nm:'Peinture (hors devis)',c:'#D4537E',it:[
     {id:'pt1',n:'Peinture salon / cuisine',p:400},{id:'pt2',n:'Peinture chambre parents',p:200},
     {id:'pt3',n:'Peinture chambres enfants',p:360},{id:'pt4',n:'Peinture chambres haut',p:350},
     {id:'pt5',n:'Peinture couloirs & escalier',p:300},{id:'pt6',n:'Peinture sous-sol',p:250},{id:'pt7',n:'Apprêt & outillage',p:350}]},
-  {id:'so',nm:'Sols & Parquets',c:'#888780',it:[
+  {id:'so',nm:'Parquets (hors devis)',c:'#888780',it:[
     {id:'cr1',n:'Parquet chambre parents',p:1200},{id:'cr2',n:'Parquet chambre enfant 1',p:800},
     {id:'cr3',n:'Parquet chambre enfant 2',p:800},{id:'cr4',n:'Parquet chambres haut',p:1500},
-    {id:'cr5',n:'Sol salon / cuisine',p:2800},{id:'cr6',n:'Colle, joints, sous-couche',p:500},{id:'cr7',n:'Plinthes & finitions',p:400}]},
+    {id:'cr6',n:'Colle, sous-couche',p:500},{id:'cr7',n:'Plinthes & finitions',p:400}]},
 ];
 
 const ROOMS = [
@@ -468,393 +404,376 @@ const ROOMS = [
 
 const STYLES = ['Moderne','Scandinave','Industriel','Classique','Bohème','Minimaliste','Naturel','Art Déco','Côtier','Rustique'];
 
-// ─── STATE ──────────────────────────────────────────────────────────────
+// ═══ ARTISANS RÉELS (extraits des devis) ══════════════════════════════════
+const DEFAULT_ARTISANS = [
+  {i:'CF',n:'Charlie Fraleux',r:'Maître d\'œuvre — Atelier Fraleux',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'06 68 07 63 68',email:'charlie@atelierfraleux.fr',note:''},
+  {i:'MR',n:'La Petite Maçonnerie Rennaise',r:'Démolition · Maçonnerie · Ravalement',s:'Planifié',bg:'#FAC775',tc:'#854F0B',phone:'02 99 30 41 58',email:'contact@lamaconnerie.fr',note:'Devis 18237 signé — 34 170,75 € TTC'},
+  {i:'JV',n:'J. VIDAL',r:'Placo · Isolation · Plafonds',s:'Planifié',bg:'#9FE1CB',tc:'#0F6E56',phone:'06 07 58 89 44',email:'sarlj.vidal@me.com',note:'Devis DEV00002450 signé — 25 916,33 € TTC · Acompte 30% : 7 774,90 €'},
+  {i:'AE',n:'AEROCHAUFFE',r:'Plomberie · Chauffage · Sanitaires',s:'Planifié',bg:'#B5D4F4',tc:'#185FA5',phone:'02 99 60 84 13',email:'aerochauff@orange.fr',note:'Devis DE558 signé — 23 474,94 € TTC · Portable : 06 76 51 23 19'},
+  {i:'BZ',n:'BIZEUL Carrelage',r:'Carrelage · Chapes · Faïence',s:'Planifié',bg:'#CECBF6',tc:'#3C3489',phone:'02 99 68 66 79',email:'contact@bizeul-carrelage.fr',note:'Devis D202605408 signé — 19 081,36 € TTC · Acompte 30% : 5 724,41 €'},
+  {i:'M2',n:'M2T Électricité',r:'Électricité complète',s:'Planifié',bg:'#C0DD97',tc:'#3B6D11',phone:'06 13 34 02 50',email:'contact@m2t-electricite.fr',note:'Devis D-000719 v2 signé — 11 985,06 € TTC'},
+  {i:'LB',n:'LEMOINE Benjamin',r:'Velux · Volets toiture',s:'Planifié',bg:'#F4C0D1',tc:'#993556',phone:'',email:'',note:'Devis DEV00000148 signé — 4 691,41 € TTC · Acompte : 1 407,42 €'},
+  {i:'SB',n:'SAB Menuiseries',r:'Porte entrée · Fenêtres · Volets',s:'Planifié',bg:'#F5C4B3',tc:'#993C1D',phone:'02 99 85 73 63',email:'contact@sab-menuiseries.fr',note:'2 devis signés — 4 492,86 € TTC · Contacts : Julien HUET 06 12 81 65 86 / Vincent BLOT 06 45 14 27 54'},
+];
+
+// ═══ STATE ═══════════════════════════════════════════════════════════════
 const DEFAULT_STATE = {
-  projectName: 'Maison Beausoleil 5',
-  mo: 'Charlie Farleux',
-  dateStart: '2026-02-01',
-  dateEnd: '2026-11-30',
   budget: 150000,
-  travauxSpent: 8000,
-  tasks: {},
-  shop: {},
-  openCats: {},
-  openArtisans: {},
-  openRooms: {},
-  mb: {},
-  artisans: [{i:'CF',n:'Charlie Farleux',r:'Maître d\'œuvre',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'',email:'',note:''}],
+  tasks: {}, shop: {}, lots: {}, sources: {},
+  openCats: {}, openArtisans: {}, openRooms: {}, mb: {},
+  artisans: JSON.parse(JSON.stringify(DEFAULT_ARTISANS)),
   addArtForm: false,
 };
 
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
-let syncKey = '', syncBin = '';
-let syncTimer = null;
-let chInst = null;
+let syncKey = '', syncBin = '', syncTimer = null;
 let tFilter = 'all', sFilter = 'all';
 
-// ─── JSONBIN ────────────────────────────────────────────────────────────
-const JB_BASE = 'https://api.jsonbin.io/v3/b';
-
+// ═══ JSONBIN ═════════════════════════════════════════════════════════════
+const JB = 'https://api.jsonbin.io/v3/b';
 async function jbCreate(key, data) {
-  const r = await fetch(JB_BASE, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'Beausoleil5' },
-    body: JSON.stringify(data)
-  });
-  if (!r.ok) throw new Error('Erreur création bin');
-  const j = await r.json();
-  return j.metadata.id;
+  const r = await fetch(JB, { method:'POST', headers:{'Content-Type':'application/json','X-Master-Key':key,'X-Bin-Name':'Beausoleil5'}, body:JSON.stringify(data) });
+  if (!r.ok) throw new Error();
+  return (await r.json()).metadata.id;
 }
-
 async function jbRead(key, bin) {
-  const r = await fetch(`${JB_BASE}/${bin}/latest`, { headers: { 'X-Master-Key': key } });
-  if (!r.ok) throw new Error('Lecture impossible');
-  const j = await r.json();
-  return j.record;
+  const r = await fetch(`${JB}/${bin}/latest`, { headers:{'X-Master-Key':key} });
+  if (!r.ok) throw new Error();
+  return (await r.json()).record;
 }
-
 async function jbWrite(key, bin, data) {
-  const r = await fetch(`${JB_BASE}/${bin}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'X-Master-Key': key },
-    body: JSON.stringify(data)
-  });
-  if (!r.ok) throw new Error('Écriture impossible');
+  const r = await fetch(`${JB}/${bin}`, { method:'PUT', headers:{'Content-Type':'application/json','X-Master-Key':key}, body:JSON.stringify(data) });
+  if (!r.ok) throw new Error();
 }
-
-function setSyncStatus(status) {
-  const dot = document.getElementById('syncDot');
-  const lbl = document.getElementById('syncLabel');
-  if (!dot) return;
-  dot.className = 'sync-dot ' + status;
-  const labels = { ok: 'Synchronisé', syncing: 'Sync...', error: 'Hors ligne', '': '—' };
-  lbl.textContent = labels[status] || '—';
+function setSyncStatus(st) {
+  const d = document.getElementById('syncDot'), l = document.getElementById('syncLabel');
+  if (!d) return;
+  d.className = 'sync-dot ' + st;
+  l.textContent = {ok:'Synchronisé',syncing:'Sync...',error:'Hors ligne'}[st] || '—';
 }
-
 async function syncNow() {
   if (!syncKey || !syncBin) return;
   setSyncStatus('syncing');
-  try {
-    await jbWrite(syncKey, syncBin, S);
-    setSyncStatus('ok');
-    toast('Données synchronisées');
-  } catch(e) {
-    setSyncStatus('error');
-    toast('Erreur de synchronisation');
-  }
+  try { await jbWrite(syncKey, syncBin, S); setSyncStatus('ok'); }
+  catch(e) { setSyncStatus('error'); }
 }
-
-function scheduleSave() {
+function persist() {
+  localStorage.setItem('b5_local', JSON.stringify(S));
   if (syncTimer) clearTimeout(syncTimer);
   syncTimer = setTimeout(syncNow, 1500);
 }
 
-async function persist() {
-  localStorage.setItem('b5_local', JSON.stringify(S));
-  scheduleSave();
-}
-
-// ─── SETUP ──────────────────────────────────────────────────────────────
+// ═══ SETUP ═══════════════════════════════════════════════════════════════
 async function doSetup() {
   const key = document.getElementById('setup-key').value.trim();
   const bin = document.getElementById('setup-bin').value.trim();
   const err = document.getElementById('setup-error');
   err.style.display = 'none';
   if (!key) { err.textContent = 'La Master Key est requise.'; err.style.display = 'block'; return; }
-
   try {
     let binId = bin;
-    if (!binId) {
-      binId = await jbCreate(key, S);
-    } else {
-      const remote = await jbRead(key, binId);
-      if (remote && typeof remote === 'object') Object.assign(S, remote);
-    }
-    syncKey = key;
-    syncBin = binId;
-    localStorage.setItem('b5_sync', JSON.stringify({ key, bin: binId }));
+    if (!binId) binId = await jbCreate(key, S);
+    else { const rm = await jbRead(key, binId); if (rm) mergeState(rm); }
+    syncKey = key; syncBin = binId;
+    localStorage.setItem('b5_sync', JSON.stringify({key, bin:binId}));
     document.getElementById('setup-screen').style.display = 'none';
     initApp();
-  } catch(e) {
-    err.textContent = 'Impossible de se connecter. Vérifiez votre Master Key.';
-    err.style.display = 'block';
-  }
+  } catch(e) { err.textContent = 'Connexion impossible. Vérifiez la Master Key.'; err.style.display = 'block'; }
 }
-
 function resetSetup() {
-  if (!confirm('Changer de compte JSONBin ? Les données locales sont conservées.')) return;
-  localStorage.removeItem('b5_sync');
-  location.reload();
+  if (!confirm('Changer de compte JSONBin ?')) return;
+  localStorage.removeItem('b5_sync'); location.reload();
+}
+function mergeState(remote) {
+  Object.assign(S, remote);
+  // Ensure new fields exist for older saves
+  if (!S.lots) S.lots = {};
+  if (!S.sources) S.sources = {};
+  if (!S.artisans || S.artisans.length <= 1) S.artisans = JSON.parse(JSON.stringify(DEFAULT_ARTISANS));
 }
 
-// ─── INIT ────────────────────────────────────────────────────────────────
 async function init() {
   const stored = localStorage.getItem('b5_local');
-  if (stored) try { Object.assign(S, JSON.parse(stored)); } catch(e) {}
-
+  if (stored) try { mergeState(JSON.parse(stored)); } catch(e) {}
   const sync = localStorage.getItem('b5_sync');
   if (sync) {
     try {
-      const { key, bin } = JSON.parse(sync);
+      const {key, bin} = JSON.parse(sync);
       syncKey = key; syncBin = bin;
       document.getElementById('setup-screen').style.display = 'none';
       setSyncStatus('syncing');
-      try {
-        const remote = await jbRead(key, bin);
-        if (remote && typeof remote === 'object') {
-          Object.assign(S, remote);
-          localStorage.setItem('b5_local', JSON.stringify(S));
-        }
-        setSyncStatus('ok');
-      } catch(e) { setSyncStatus('error'); }
+      try { const rm = await jbRead(key, bin); if (rm) { mergeState(rm); localStorage.setItem('b5_local', JSON.stringify(S)); } setSyncStatus('ok'); }
+      catch(e) { setSyncStatus('error'); }
       initApp();
     } catch(e) {}
-  } else {
-    document.getElementById('setup-screen').style.display = 'flex';
-  }
+  } else document.getElementById('setup-screen').style.display = 'flex';
 }
-
 function initApp() {
-  document.getElementById('set-key-display').textContent = syncKey ? '••••••••' + syncKey.slice(-4) : '—';
+  document.getElementById('set-key-display').textContent = syncKey ? '••••' + syncKey.slice(-4) : '—';
   document.getElementById('set-bin-display').textContent = syncBin || '—';
-  document.getElementById('set-name').value = S.projectName || 'Maison Beausoleil 5';
-  document.getElementById('set-mo').value = S.mo || 'Charlie Farleux';
   document.getElementById('set-budget').value = S.budget || 150000;
-  document.getElementById('set-spent').value = S.travauxSpent || 8000;
-  if (S.dateStart) document.getElementById('set-start').value = S.dateStart;
-  if (S.dateEnd) document.getElementById('set-end').value = S.dateEnd;
   sv('dash', document.querySelector('.nav-tab'));
 }
 
-// ─── NAVIGATION ──────────────────────────────────────────────────────────
+// ═══ NAV ═════════════════════════════════════════════════════════════════
 function sv(v, btn) {
   document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('on'));
   document.querySelectorAll('.view').forEach(el => el.classList.remove('on'));
   if (btn) btn.classList.add('on');
-  const vEl = document.getElementById('v-' + v);
-  if (vEl) vEl.classList.add('on');
-  if (v === 'dash') rDash();
-  else if (v === 'travaux') rTravaux();
-  else if (v === 'achats') rAchats();
-  else if (v === 'ambiances') rAmbiances();
+  document.getElementById('v-' + v)?.classList.add('on');
+  ({dash:rDash, lots:rLots, sources:rSources, travaux:rTravaux, achats:rAchats, ambiances:rAmbiances}[v] || (()=>{}))();
 }
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────
+// ═══ HELPERS ═════════════════════════════════════════════════════════════
 function ts(id, def) { return S.tasks[id] || def; }
 function sp(id, def) { return S.shop[id]?.price ?? def; }
 function spd(id) { return S.shop[id]?.paid ?? false; }
 function allT() { return PH.flatMap(p => p.tasks); }
 function allI() { return SH.flatMap(c => c.it); }
-function shopEst() { return allI().reduce((a, i) => a + sp(i.id, i.p), 0); }
-function shopPd() { return allI().filter(i => spd(i.id)).reduce((a, i) => a + sp(i.id, i.p), 0); }
-function getMB(rid) { return S.mb[rid] || { c1:'#F5F0E8', c2:'#C8B89A', c3:'#6B5B4E', style:'', sol:'', murs:'', eclairage:'', note:'' }; }
+function shopEst() { return allI().reduce((a,i) => a + sp(i.id, i.p), 0); }
+function shopPd() { return allI().filter(i => spd(i.id)).reduce((a,i) => a + sp(i.id, i.p), 0); }
+function lotPaid(id) { return S.lots[id]?.paid ?? 0; }
+function lotsTotal() { return LOTS.reduce((a,l) => a + l.ttc, 0); }
+function lotsPaidTotal() { return LOTS.reduce((a,l) => a + lotPaid(l.id), 0); }
+function srcAvail(id) { return S.sources[id]?.avail ?? 0; }
+function srcPlanned(id) { return S.sources[id]?.planned ?? 0; }
+function srcTotalAvail() { return SOURCES.reduce((a,s) => a + srcAvail(s.id), 0); }
+function srcTotalPlanned() { return SOURCES.reduce((a,s) => a + srcPlanned(s.id), 0); }
+function getMB(rid) { return S.mb[rid] || {c1:'#F5F0E8',c2:'#C8B89A',c3:'#6B5B4E',style:'',sol:'',murs:'',eclairage:'',note:''}; }
 function fmt(n) { return Math.round(n).toLocaleString('fr-FR'); }
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+function updateSetting(k, v) { S[k] = v; persist(); }
 
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-function updateSetting(key, val) {
-  S[key] = val;
-  persist();
-}
-
-// ─── DASHBOARD ───────────────────────────────────────────────────────────
+// ═══ DASHBOARD ═══════════════════════════════════════════════════════════
 function rDash() {
   const tasks = allT();
-  const done = tasks.filter(t => ts(t.id, t.s) === 'done').length;
-  const wip = tasks.filter(t => ts(t.id, t.s) === 'wip').length;
-  const items = allI();
-  const paidCnt = items.filter(i => spd(i.id)).length;
-  const paid = shopPd(), est = shopEst();
-  const spent = (S.travauxSpent || 0) + paid;
+  const done = tasks.filter(t => ts(t.id,t.s)==='done').length;
+  const wip = tasks.filter(t => ts(t.id,t.s)==='wip').length;
+  const shopPaid = shopPd();
+  const lotsP = lotsPaidTotal();
+  const spent = lotsP + shopPaid;
   const budget = S.budget || 150000;
-  const rem = budget - spent;
-  const pct = Math.round(done / tasks.length * 100);
-  const bpct = Math.round(spent / budget * 100);
-  const mbFilled = ROOMS.filter(r => S.mb[r.id] && (S.mb[r.id].style || S.mb[r.id].sol || S.mb[r.id].note)).length;
+  const engaged = lotsTotal();
+  const pct = Math.round(done/tasks.length*100);
+  const bpct = Math.round(spent/budget*100);
+  const totalFunds = srcTotalAvail() + srcTotalPlanned();
 
   document.getElementById('dash-metrics').innerHTML = `
-    <div class="metric"><div class="metric-label">Budget total</div><div class="metric-value" style="color:var(--accent)">${fmt(budget)} €</div><div class="metric-sub">Enveloppe définie</div></div>
-    <div class="metric"><div class="metric-label">Total dépensé</div><div class="metric-value" style="color:var(--accent2)">${fmt(spent)} €</div><div class="metric-sub">${bpct}% du budget</div></div>
-    <div class="metric"><div class="metric-label">Travaux terminés</div><div class="metric-value" style="color:var(--green)">${done}/${tasks.length}</div><div class="metric-sub">${wip} en cours</div></div>
-    <div class="metric"><div class="metric-label">Achats payés</div><div class="metric-value" style="color:var(--blue)">${paidCnt}/${items.length}</div><div class="metric-sub">${fmt(paid)} €</div></div>`;
+    <div class="metric"><div class="metric-label">Budget total</div><div class="metric-value" style="color:var(--accent)">${fmt(budget)} €</div><div class="metric-sub">Engagé (devis) : ${fmt(engaged)} €</div></div>
+    <div class="metric"><div class="metric-label">Total payé</div><div class="metric-value" style="color:var(--accent2)">${fmt(spent)} €</div><div class="metric-sub">${bpct}% du budget</div></div>
+    <div class="metric"><div class="metric-label">Fonds disponibles</div><div class="metric-value" style="color:var(--green)">${fmt(totalFunds)} €</div><div class="metric-sub">Épargne + virements prévus</div></div>
+    <div class="metric"><div class="metric-label">Travaux</div><div class="metric-value" style="color:var(--blue)">${done}/${tasks.length}</div><div class="metric-sub">${wip} en cours · ${pct}%</div></div>`;
 
+  const remaining = budget - engaged - shopEst();
   document.getElementById('dash-finance-card').innerHTML = `
     <div class="card">
       <div class="card-title">Synthèse financière</div>
-      <div class="fin-row"><span class="fin-label">Travaux facturés</span><span class="fin-value" style="color:var(--accent)">${fmt(S.travauxSpent || 0)} €</span></div>
-      <div class="fin-row"><span class="fin-label">Achats payés</span><span class="fin-value" style="color:var(--accent2)">${fmt(paid)} €</span></div>
-      <div class="fin-row bold"><span class="fin-label">Total dépensé</span><span class="fin-value" style="color:var(--accent)">${fmt(spent)} €</span></div>
-      <div class="fin-row bold"><span class="fin-label">Reste disponible</span><span class="fin-value" style="color:var(--green)">${fmt(rem)} €</span></div>
-      <div style="margin-top:12px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>Budget consommé</span><span>${bpct}%</span></div><div class="pbar"><div class="pfill" style="width:${bpct}%;background:${bpct>80?'#E24B4A':'var(--accent)'}"></div></div></div>
-      <div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>Avancement travaux</span><span>${pct}%</span></div><div class="pbar"><div class="pfill" style="width:${pct}%"></div></div></div>
+      <div class="fin-row"><span class="fin-label">Devis signés (8 lots)</span><span class="fin-value">${fmt(engaged)} €</span></div>
+      <div class="fin-row"><span class="fin-label">Payé sur lots (acomptes + factures)</span><span class="fin-value" style="color:var(--accent)">${fmt(lotsP)} €</span></div>
+      <div class="fin-row"><span class="fin-label">Achats mobilier/équipement estimés</span><span class="fin-value">${fmt(shopEst())} €</span></div>
+      <div class="fin-row"><span class="fin-label">Achats payés</span><span class="fin-value" style="color:var(--accent2)">${fmt(shopPaid)} €</span></div>
+      <div class="fin-row bold"><span class="fin-label">Total payé à ce jour</span><span class="fin-value" style="color:var(--accent)">${fmt(spent)} €</span></div>
+      <div class="fin-row bold"><span class="fin-label">Marge restante (budget − engagé − achats)</span><span class="fin-value" style="color:${remaining>=0?'var(--green)':'#E24B4A'}">${fmt(remaining)} €</span></div>
+      <div style="margin-top:12px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>Budget consommé</span><span>${bpct}%</span></div><div class="pbar"><div class="pfill" style="width:${Math.min(bpct,100)}%;background:${bpct>80?'#E24B4A':'var(--accent)'}"></div></div></div>
     </div>`;
 
-  document.getElementById('dash-art-card').innerHTML = `
+  document.getElementById('dash-lots-card').innerHTML = `
     <div class="card">
-      <div class="card-title">Artisans & Intervenants</div>
-      ${rArtisansHTML()}
-    </div>`;
-
-  document.getElementById('dash-timeline-card').innerHTML = `
-    <div class="card">
-      <div class="card-title">Planning global</div>
-      ${rTimelineHTML()}
-    </div>`;
-
-  document.getElementById('dash-phases-card').innerHTML = `
-    <div class="card">
-      <div class="card-title">Avancement par phase</div>
-      ${PH.map(ph => {
-        const d = ph.tasks.filter(t => ts(t.id, t.s) === 'done').length;
-        const p = Math.round(d / ph.tasks.length * 100);
-        return `<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:3px;"><span>${ph.nm.replace(/Phase \d+ — /, '')}</span><span>${d}/${ph.tasks.length}</span></div><div class="pbar" style="height:4px;"><div class="pfill" style="width:${p}%"></div></div></div>`;
-      }).join('')}
-    </div>`;
-
-  document.getElementById('dash-mb-card').innerHTML = `
-    <div class="card">
-      <div class="card-title">Ambiances — aperçu</div>
-      ${ROOMS.map(r => {
-        const m = getMB(r.id);
-        const ok = !!(m.style || m.sol || m.note);
-        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);">
-          <div style="width:7px;height:7px;border-radius:50%;background:${r.c};flex-shrink:0;"></div>
-          <span style="flex:1;font-size:12px;color:var(--text);">${r.nm}</span>
-          <div style="display:flex;gap:3px;">${[m.c1,m.c2,m.c3].map(c=>`<div style="width:12px;height:12px;border-radius:2px;background:${c};border:1px solid var(--border);"></div>`).join('')}</div>
-          <span style="font-size:11px;padding:1px 7px;border-radius:20px;background:${ok?'#EAF3DE':'var(--bg3)'};color:${ok?'#3B6D11':'var(--text2)'};">${ok?'Définie':'À définir'}</span>
+      <div class="card-title">Lots — paiements</div>
+      ${LOTS.map(l => {
+        const p = lotPaid(l.id);
+        const lp = Math.round(p / l.ttc * 100);
+        return `<div style="margin-bottom:9px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:3px;"><span>${l.entreprise}</span><span>${fmt(p)} / ${fmt(l.ttc)} €</span></div>
+          <div class="pbar" style="height:4px;"><div class="pfill" style="width:${lp}%;background:${l.c};"></div></div>
         </div>`;
       }).join('')}
     </div>`;
 
-  // Budget chart
-  document.getElementById('dash-budget-card').innerHTML = `
+  const fundsPct = totalFunds > 0 ? Math.round(spent / totalFunds * 100) : 0;
+  document.getElementById('dash-sources-card').innerHTML = `
     <div class="card">
-      <div class="card-title">Budget — répartition</div>
-      <div class="budget-chart-wrap"><canvas id="bChart"></canvas></div>
-      <div id="bLeg" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:11px;color:var(--text2);"></div>
+      <div class="card-title">Financement — vue rapide</div>
+      <div class="fin-row"><span class="fin-label">Épargne disponible maintenant</span><span class="fin-value" style="color:var(--green)">${fmt(srcTotalAvail())} €</span></div>
+      <div class="fin-row"><span class="fin-label">Virements prévus</span><span class="fin-value" style="color:var(--blue)">${fmt(srcTotalPlanned())} €</span></div>
+      <div class="fin-row bold"><span class="fin-label">Total mobilisable</span><span class="fin-value">${fmt(totalFunds)} €</span></div>
+      <div class="fin-row bold"><span class="fin-label">Couverture du budget</span><span class="fin-value" style="color:${totalFunds>=budget?'var(--green)':'var(--accent2)'}">${budget>0?Math.round(totalFunds/budget*100):0}%</span></div>
     </div>`;
 
-  if (chInst) { chInst.destroy(); chInst = null; }
-  const bs = [
-    {l:'Travaux & MO',v:90000,c:'#D85A30'},{l:'Cuisine',v:12000,c:'#EF9F27'},
-    {l:'Salon',v:9000,c:'#378ADD'},{l:'Chambres',v:19000,c:'#7F77DD'},
-    {l:'Pièces humides',v:15000,c:'#1D9E75'},{l:'Finitions',v:5000,c:'#888780'}
-  ];
-  chInst = new Chart(document.getElementById('bChart'), {
-    type:'doughnut',
-    data:{labels:bs.map(b=>b.l),datasets:[{data:bs.map(b=>b.v),backgroundColor:bs.map(b=>b.c),borderWidth:3,borderColor:'transparent'}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label} : ${fmt(ctx.raw)} €`}}}}
-  });
-  document.getElementById('bLeg').innerHTML = bs.map(b=>`<span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:2px;background:${b.c};flex-shrink:0;"></span>${b.l}</span>`).join('');
+  document.getElementById('dash-art-card').innerHTML = `<div class="card"><div class="card-title">Artisans & Intervenants</div>${rArtisansHTML()}</div>`;
+  document.getElementById('dash-timeline-card').innerHTML = `<div class="card"><div class="card-title">Planning global</div>${rTimelineHTML()}</div>`;
+  document.getElementById('dash-phases-card').innerHTML = `
+    <div class="card"><div class="card-title">Avancement par phase</div>
+    ${PH.map(ph => {
+      const d = ph.tasks.filter(t => ts(t.id,t.s)==='done').length;
+      const p = Math.round(d/ph.tasks.length*100);
+      return `<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:3px;"><span>${ph.nm.replace(/Phase \d+ — /,'')}</span><span>${d}/${ph.tasks.length}</span></div><div class="pbar" style="height:4px;"><div class="pfill" style="width:${p}%"></div></div></div>`;
+    }).join('')}</div>`;
 }
 
-// ─── ARTISANS ────────────────────────────────────────────────────────────
+// ═══ LOTS VIEW ═══════════════════════════════════════════════════════════
+function rLots() {
+  const total = lotsTotal();
+  const paid = lotsPaidTotal();
+  document.getElementById('lots-list').innerHTML = `
+    <div class="metrics" style="grid-template-columns:repeat(3,1fr);">
+      <div class="metric"><div class="metric-label">Total engagé TTC</div><div class="metric-value" style="color:var(--accent)">${fmt(total)} €</div><div class="metric-sub">8 devis signés</div></div>
+      <div class="metric"><div class="metric-label">Déjà payé</div><div class="metric-value" style="color:var(--green)">${fmt(paid)} €</div><div class="metric-sub">${total>0?Math.round(paid/total*100):0}%</div></div>
+      <div class="metric"><div class="metric-label">Reste à payer</div><div class="metric-value" style="color:var(--accent2)">${fmt(total-paid)} €</div><div class="metric-sub">sur les lots</div></div>
+    </div>
+    ${LOTS.map(l => {
+      const p = lotPaid(l.id);
+      const lp = Math.round(p/l.ttc*100);
+      return `<div class="card" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:${l.c};flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;">${l.entreprise}</div>
+            <div style="font-size:11px;color:var(--text2);">${l.lot}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:14px;font-weight:600;">${fmt(l.ttc)} €</div>
+            <div style="font-size:10px;color:var(--text2);">TTC signé</div>
+          </div>
+        </div>
+        <div class="pbar" style="height:5px;margin-bottom:8px;"><div class="pfill" style="width:${lp}%;background:${l.c};"></div></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text2);flex:1;">Montant payé (acomptes + factures) :</span>
+          <input type="number" class="price-inp" style="width:110px;" value="${p}" min="0" step="100" onchange="updLotPaid('${l.id}',this.value)">
+          <span style="font-size:12px;color:var(--text2);">€</span>
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+function updLotPaid(id, v) {
+  if (!S.lots[id]) S.lots[id] = {};
+  S.lots[id].paid = parseFloat(v) || 0;
+  persist(); toast('Paiement mis à jour');
+}
+
+// ═══ SOURCES VIEW ════════════════════════════════════════════════════════
+function rSources() {
+  const avail = srcTotalAvail();
+  const planned = srcTotalPlanned();
+  const total = avail + planned;
+  const budget = S.budget || 150000;
+
+  document.getElementById('src-metrics').innerHTML = `
+    <div class="metric"><div class="metric-label">Disponible maintenant</div><div class="metric-value" style="color:var(--green)">${fmt(avail)} €</div><div class="metric-sub">Épargne actuelle</div></div>
+    <div class="metric"><div class="metric-label">Virements prévus</div><div class="metric-value" style="color:var(--blue)">${fmt(planned)} €</div><div class="metric-sub">À venir</div></div>
+    <div class="metric"><div class="metric-label">Total mobilisable</div><div class="metric-value">${fmt(total)} €</div><div class="metric-sub">Disponible + prévu</div></div>
+    <div class="metric"><div class="metric-label">Couverture budget</div><div class="metric-value" style="color:${total>=budget?'var(--green)':'var(--accent2)'}">${budget>0?Math.round(total/budget*100):0}%</div><div class="metric-sub">sur ${fmt(budget)} €</div></div>`;
+
+  document.getElementById('sources-list').innerHTML = SOURCES.map(src => {
+    const a = srcAvail(src.id), p = srcPlanned(src.id);
+    return `<div class="src-card">
+      <div class="src-hdr">
+        <div class="src-icon" style="background:${src.c};">${src.icon}</div>
+        <div class="src-name">${src.nm}</div>
+        <span class="src-status" style="background:${src.c};color:${src.tc};">${src.type}</span>
+      </div>
+      <div class="src-fields">
+        <div class="src-field">
+          <label>Disponible maintenant (€)</label>
+          <input type="number" value="${a}" min="0" step="100" onchange="updSrc('${src.id}','avail',this.value)">
+        </div>
+        <div class="src-field">
+          <label>Virement prévu (€)</label>
+          <input type="number" value="${p}" min="0" step="100" onchange="updSrc('${src.id}','planned',this.value)">
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function updSrc(id, field, v) {
+  if (!S.sources[id]) S.sources[id] = {};
+  S.sources[id][field] = parseFloat(v) || 0;
+  persist();
+  rSources();
+}
+
+// ═══ ARTISANS ════════════════════════════════════════════════════════════
 const SC = {'Terminé':'#EAF3DE','En cours':'#FAEEDA','Planifié':'#E6F1FB'};
 const STC = {'Terminé':'#3B6D11','En cours':'#854F0B','Planifié':'#185FA5'};
-
 function rArtisansHTML() {
-  const arts = (S.artisans || []).map((a, idx) => {
+  const arts = (S.artisans||[]).map((a, idx) => {
     const isOpen = S.openArtisans[idx] === true;
-    const ph = a.phone || '', em = a.email || '', nt = a.note || '';
-    const contact = isOpen ? `
-      <div class="art-body">
-        <div class="art-field"><label>Téléphone</label><input class="art-inp" type="tel" placeholder="06 00 00 00 00" value="${ph}" onchange="updArt(${idx},'phone',this.value)"></div>
-        <div class="art-field"><label>Email</label><input class="art-inp" type="email" placeholder="contact@exemple.fr" value="${em}" onchange="updArt(${idx},'email',this.value)"></div>
-        <div class="art-field"><label>Note</label><textarea class="art-ta" placeholder="Devis, disponibilités..." onchange="updArt(${idx},'note',this.value)">${nt}</textarea></div>
-        <div class="art-actions">
-          ${ph ? `<a class="art-link" href="tel:${ph}">Appeler</a>` : ''}
-          ${em ? `<a class="art-link" href="mailto:${em}">Email</a>` : ''}
-          <button class="btn-ghost" style="color:#E24B4A;border-color:#E24B4A;" onclick="delArt(${idx})">Supprimer</button>
-        </div>
-      </div>` : '';
+    const ph = a.phone||'', em = a.email||'', nt = a.note||'';
+    const body = isOpen ? `<div class="art-body">
+      <div class="art-field"><label>Téléphone</label><input class="art-inp" type="tel" value="${ph}" onchange="updArt(${idx},'phone',this.value)"></div>
+      <div class="art-field"><label>Email</label><input class="art-inp" type="email" value="${em}" onchange="updArt(${idx},'email',this.value)"></div>
+      <div class="art-field"><label>Note</label><textarea class="art-ta" onchange="updArt(${idx},'note',this.value)">${nt}</textarea></div>
+      <div class="art-actions">
+        ${ph?`<a class="art-link" href="tel:${ph.replace(/\s/g,'')}">Appeler</a>`:''}
+        ${em?`<a class="art-link" href="mailto:${em}">Email</a>`:''}
+        <button class="btn-ghost" style="color:#E24B4A;border-color:#E24B4A;" onclick="delArt(${idx})">Supprimer</button>
+      </div>
+    </div>` : '';
     return `<div class="art-card">
       <div class="art-row" onclick="togArt(${idx})">
         <div class="ava" style="background:${a.bg};color:${a.tc};">${a.i}</div>
-        <div style="flex:1;"><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:1px;">${a.n}</div><div style="font-size:11px;color:var(--text2);">${a.r}${ph?' · '+ph:''}${em?' · '+em:''}</div></div>
-        <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:${SC[a.s]||'#F1EFE8'};color:${STC[a.s]||'var(--text2)'};margin-right:6px;">${a.s}</span>
-        <span class="arrow ${isOpen?'open':''}">▾</span>
-      </div>
-      ${contact}
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:500;margin-bottom:1px;">${a.n}</div>
+          <div style="font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.r}${ph?' · '+ph:''}</div>
+        </div>
+        <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:${SC[a.s]||'#F1EFE8'};color:${STC[a.s]||'var(--text2)'};margin-right:4px;flex-shrink:0;">${a.s}</span>
+        <span class="arrow">${isOpen?'▾':'▸'}</span>
+      </div>${body}
     </div>`;
   }).join('');
-
-  const addForm = S.addArtForm ? `
-    <div class="add-art-form">
-      <h4>Nouvel artisan</h4>
-      <div class="form-row">
-        <input class="form-inp" id="nart-name" placeholder="Prénom Nom" type="text">
-        <input class="form-inp" id="nart-role" placeholder="Métier / Rôle" type="text">
-      </div>
-      <div class="form-row">
-        <input class="form-inp" id="nart-phone" placeholder="Téléphone" type="tel">
-        <input class="form-inp" id="nart-email" placeholder="Email" type="email">
-      </div>
-      <select class="form-sel" id="nart-status" style="margin-bottom:10px;"><option>Planifié</option><option>En cours</option><option>Terminé</option></select>
-      <div style="display:flex;gap:8px;"><button class="btn-add" onclick="addArt()">Ajouter</button><button class="btn-ghost" onclick="toggleAddArt(false)">Annuler</button></div>
-    </div>` : `<button class="btn-ghost" style="margin-top:8px;" onclick="toggleAddArt(true)">+ Ajouter un artisan</button>`;
-
+  const addForm = S.addArtForm ? `<div class="add-art-form">
+    <h4>Nouvel artisan</h4>
+    <div class="form-row"><input class="form-inp" id="nart-name" placeholder="Nom / Entreprise"><input class="form-inp" id="nart-role" placeholder="Métier / Rôle"></div>
+    <div class="form-row"><input class="form-inp" id="nart-phone" placeholder="Téléphone"><input class="form-inp" id="nart-email" placeholder="Email"></div>
+    <select class="form-sel" id="nart-status" style="margin-bottom:10px;"><option>Planifié</option><option>En cours</option><option>Terminé</option></select>
+    <div style="display:flex;gap:8px;"><button class="btn-add" onclick="addArt()">Ajouter</button><button class="btn-ghost" onclick="toggleAddArt(false)">Annuler</button></div>
+  </div>` : `<button class="btn-ghost" style="margin-top:8px;" onclick="toggleAddArt(true)">+ Ajouter un artisan</button>`;
   return arts + addForm;
 }
-
-function togArt(idx) {
-  S.openArtisans[idx] = !S.openArtisans[idx];
-  persist();
-  const el = document.querySelector('#dash-art-card .card div:last-child');
-  if (el) el.outerHTML = rArtisansHTML(); // refresh
-  rDash(); // simpler: re-render card
-}
-function updArt(idx, field, val) { if (!S.artisans[idx]) return; S.artisans[idx][field] = val; persist(); }
-function delArt(idx) { if (!confirm('Supprimer cet artisan ?')) return; S.artisans.splice(idx, 1); persist(); rDash(); }
+function togArt(idx) { S.openArtisans[idx] = !S.openArtisans[idx]; persist(); rDash(); }
+function updArt(idx, f, v) { if (S.artisans[idx]) { S.artisans[idx][f] = v; persist(); } }
+function delArt(idx) { if (!confirm('Supprimer cet artisan ?')) return; S.artisans.splice(idx,1); persist(); rDash(); }
 function toggleAddArt(v) { S.addArtForm = v; persist(); rDash(); }
-
 const ART_COLORS = [['#F5C4B3','#993C1D'],['#FAC775','#854F0B'],['#9FE1CB','#0F6E56'],['#B5D4F4','#185FA5'],['#CECBF6','#3C3489'],['#C0DD97','#3B6D11'],['#F4C0D1','#993556']];
 function addArt() {
   const n = document.getElementById('nart-name').value.trim();
-  const r = document.getElementById('nart-role').value.trim();
   if (!n) return;
   const i = n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  const ci = (S.artisans || []).length % ART_COLORS.length;
-  const [bg, tc] = ART_COLORS[ci];
-  S.artisans = S.artisans || [];
-  S.artisans.push({ i, n, r, s: document.getElementById('nart-status').value, bg, tc, phone: document.getElementById('nart-phone').value, email: document.getElementById('nart-email').value, note: '' });
+  const [bg, tc] = ART_COLORS[(S.artisans||[]).length % ART_COLORS.length];
+  S.artisans.push({i, n, r:document.getElementById('nart-role').value, s:document.getElementById('nart-status').value, bg, tc, phone:document.getElementById('nart-phone').value, email:document.getElementById('nart-email').value, note:''});
   S.addArtForm = false;
   persist(); rDash();
 }
 
-// ─── TIMELINE ────────────────────────────────────────────────────────────
+// ═══ TIMELINE ════════════════════════════════════════════════════════════
 function rTimelineHTML() {
   const ps = [
-    {n:'Démolition',s:0,e:8,c:'#D85A30'},{n:'Gros œuvre',s:6,e:16,c:'#BA7517'},
-    {n:'Réseaux',s:14,e:22,c:'#378ADD'},{n:'Isolation',s:20,e:26,c:'#1D9E75'},
-    {n:'Cloisons',s:24,e:30,c:'#7F77DD'},{n:'Sols',s:28,e:36,c:'#EF9F27'},
-    {n:'Menuiseries',s:34,e:38,c:'#D4537E'},{n:'Équipements',s:36,e:40,c:'#0F6E56'},
-    {n:'Peinture',s:38,e:42,c:'#533AB7'},{n:'Réception',s:41,e:44,c:'#444441'}
+    {n:'Démolition',s:0,e:8,c:'#D85A30'},{n:'Maçonnerie',s:6,e:14,c:'#BA7517'},
+    {n:'Façade ITE',s:10,e:20,c:'#EF9F27'},{n:'Toiture/Velux',s:12,e:18,c:'#D4537E'},
+    {n:'Réseaux',s:16,e:24,c:'#378ADD'},{n:'Placo/Isol.',s:22,e:30,c:'#7F77DD'},
+    {n:'Chapes/Carr.',s:28,e:36,c:'#1D9E75'},{n:'Sanitaires',s:34,e:40,c:'#0F6E56'},
+    {n:'Sols/Peint.',s:38,e:42,c:'#533AB7'},{n:'Réception',s:41,e:44,c:'#444441'}
   ];
-  const tot = 44, now = 3;
+  const tot = 44, now = 5;
   let h = `<div class="timeline-labels"><span>Fév</span><span>Avr</span><span>Juin</span><span>Août</span><span>Oct</span><span>Nov</span></div>`;
   ps.forEach(p => {
-    const l = Math.round(p.s / tot * 100), w = Math.round((p.e - p.s) / tot * 100);
+    const l = Math.round(p.s/tot*100), w = Math.round((p.e-p.s)/tot*100);
     h += `<div class="tl-row"><div class="tl-name">${p.n}</div><div class="tl-track"><div class="tl-fill" style="left:${l}%;width:${w}%;background:${p.c};"></div></div></div>`;
   });
-  const np = Math.round(now / tot * 100);
-  h += `<div class="tl-now"><div style="width:68px;flex-shrink:0;"></div><div class="tl-now-line" style="flex:1;position:relative;height:16px;"><div style="position:absolute;left:${np}%;top:-6px;width:1px;height:22px;background:var(--text);opacity:.3;"></div><div style="position:absolute;left:${np}%;transform:translateX(-50%);top:14px;font-size:10px;color:var(--text2);">Auj.</div></div></div>`;
+  const np = Math.round(now/tot*100);
+  h += `<div style="display:flex;gap:6px;margin-top:4px;"><div style="width:68px;flex-shrink:0;"></div><div style="flex:1;position:relative;height:16px;"><div style="position:absolute;left:${np}%;top:-6px;width:1px;height:22px;background:var(--text);opacity:.3;"></div><div style="position:absolute;left:${np}%;transform:translateX(-50%);top:14px;font-size:10px;color:var(--text2);">Auj.</div></div></div>`;
   return h;
 }
 
-// ─── TRAVAUX ─────────────────────────────────────────────────────────────
+// ═══ TRAVAUX ═════════════════════════════════════════════════════════════
 function rTravaux() {
   const tasks = allT();
-  const done = tasks.filter(t => ts(t.id, t.s) === 'done').length;
-  const wip = tasks.filter(t => ts(t.id, t.s) === 'wip').length;
-
+  const done = tasks.filter(t => ts(t.id,t.s)==='done').length;
+  const wip = tasks.filter(t => ts(t.id,t.s)==='wip').length;
   document.getElementById('travaux-header').innerHTML = `
     <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:12px;">
-      <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">Suivi des travaux</p>
-      <p style="font-size:12px;color:var(--text2);">${done} terminés · ${wip} en cours · ${tasks.length - done - wip} à faire</p>
+      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Suivi des travaux</p>
+      <p style="font-size:12px;color:var(--text2);">${done} terminés · ${wip} en cours · ${tasks.length-done-wip} à faire</p>
     </div>
     <div class="filters">
       <button class="fpill ${tFilter==='all'?'on':''}" onclick="setTFilter('all',this)">Tous</button>
@@ -862,96 +781,73 @@ function rTravaux() {
       <button class="fpill ${tFilter==='wip'?'on':''}" onclick="setTFilter('wip',this)">En cours</button>
       <button class="fpill ${tFilter==='todo'?'on':''}" onclick="setTFilter('todo',this)">À faire</button>
     </div>
-    <p style="font-size:11px;color:var(--text3);margin-bottom:10px;">Appuyez sur une tâche pour changer son statut : À faire → En cours → Terminé</p>`;
+    <p style="font-size:11px;color:var(--text3);margin-bottom:10px;">Appuyez sur une tâche pour changer son statut</p>`;
   rTaskList();
 }
-
-function setTFilter(f, btn) {
-  tFilter = f;
-  document.querySelectorAll('#travaux-header .fpill').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  rTaskList();
-}
-
+function setTFilter(f, btn) { tFilter = f; document.querySelectorAll('#travaux-header .fpill').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); rTaskList(); }
 function rTaskList() {
   let h = '';
   PH.forEach(ph => {
-    const vis = ph.tasks.filter(t => tFilter === 'all' || ts(t.id, t.s) === tFilter);
+    const vis = ph.tasks.filter(t => tFilter==='all' || ts(t.id,t.s)===tFilter);
     if (!vis.length) return;
     h += `<div class="task-phase">${ph.nm}</div>`;
     vis.forEach(t => {
-      const st = ts(t.id, t.s);
+      const st = ts(t.id,t.s);
       const bc = st==='done'?'b-done':st==='wip'?'b-wip':'b-todo';
       const lb = st==='done'?'Terminé':st==='wip'?'En cours':'À faire';
-      h += `<div class="task-row" onclick="cycleTask('${t.id}','${t.s}')"><span class="badge ${bc}">${lb}</span><span style="font-size:13px;color:var(--text);">${t.n}</span></div>`;
+      h += `<div class="task-row" onclick="cycleTask('${t.id}','${t.s}')"><span class="badge ${bc}">${lb}</span><span style="font-size:13px;">${t.n}</span></div>`;
     });
   });
   document.getElementById('travaux-list').innerHTML = h || '<p style="color:var(--text2);font-size:13px;padding:1rem 0;">Aucune tâche.</p>';
 }
+function cycleTask(id, def) { const c = ts(id,def); S.tasks[id] = c==='todo'?'wip':c==='wip'?'done':'todo'; persist(); rTaskList(); }
 
-function cycleTask(id, def) {
-  const cur = ts(id, def);
-  S.tasks[id] = cur==='todo'?'wip':cur==='wip'?'done':'todo';
-  persist(); rTaskList();
-}
-
-// ─── ACHATS ──────────────────────────────────────────────────────────────
+// ═══ ACHATS ══════════════════════════════════════════════════════════════
 function rAchats() {
   const items = allI();
-  const paidCnt = items.filter(i => spd(i.id)).length;
+  const paidCnt = items.filter(i=>spd(i.id)).length;
   const paid = shopPd(), est = shopEst();
-  const pct = est > 0 ? Math.round(paid / est * 100) : 0;
-
   document.getElementById('achats-header').innerHTML = `
     <div style="padding:4px 0 12px;border-bottom:1px solid var(--border);margin-bottom:12px;">
-      <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">Liste des achats</p>
+      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Liste des achats</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
-        <span style="font-size:12px;color:var(--text2);">Estimé <b style="color:var(--text)">${fmt(est)} €</b></span>
+        <span style="font-size:12px;color:var(--text2);">Estimé <b>${fmt(est)} €</b></span>
         <span style="font-size:12px;color:var(--text2);">Payé <b style="color:var(--green)">${fmt(paid)} €</b></span>
         <span style="font-size:12px;color:var(--text2);">Reste <b style="color:var(--accent2)">${fmt(est-paid)} €</b></span>
-        <span style="font-size:12px;color:var(--text2);"><b>${pct}%</b> payé</span>
       </div>
     </div>`;
   rShopList();
 }
-
-function setShopFilter(f, btn) {
-  sFilter = f;
-  document.querySelectorAll('#achats-filters .fpill').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  rShopList();
-}
-
+function setShopFilter(f, btn) { sFilter = f; document.querySelectorAll('#achats-filters .fpill').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); rShopList(); }
 function rShopList() {
-  const srch = (document.getElementById('achats-search')?.value || '').toLowerCase();
+  const srch = (document.getElementById('achats-search')?.value||'').toLowerCase();
   let h = '';
   SH.forEach(cat => {
     const vis = cat.it.filter(i => {
-      if (sFilter === 'paid' && !spd(i.id)) return false;
-      if (sFilter === 'todo' && spd(i.id)) return false;
+      if (sFilter==='paid' && !spd(i.id)) return false;
+      if (sFilter==='todo' && spd(i.id)) return false;
       if (srch && !i.n.toLowerCase().includes(srch)) return false;
       return true;
     });
     if (!vis.length) return;
-    const cEst = cat.it.reduce((a,i) => a + sp(i.id, i.p), 0);
-    const cPaid = cat.it.filter(i => spd(i.id)).reduce((a,i) => a + sp(i.id, i.p), 0);
-    const cPct = cEst > 0 ? Math.round(cPaid / cEst * 100) : 0;
+    const cEst = cat.it.reduce((a,i)=>a+sp(i.id,i.p),0);
+    const cPaid = cat.it.filter(i=>spd(i.id)).reduce((a,i)=>a+sp(i.id,i.p),0);
+    const cPct = cEst>0?Math.round(cPaid/cEst*100):0;
     const isOpen = S.openCats[cat.id] !== false;
     h += `<div class="shop-cat">
       <div class="shop-cat-hdr" onclick="togCat('${cat.id}')">
         <div class="cat-dot" style="background:${cat.c};"></div>
-        <span style="font-size:13px;font-weight:500;color:var(--text);flex:1;">${cat.nm}</span>
+        <span style="font-size:13px;font-weight:500;flex:1;">${cat.nm}</span>
         <span style="font-size:12px;color:var(--text2);">${cPct>0?fmt(cPaid)+' / ':''}${fmt(cEst)} €</span>
-        <span class="arrow ${isOpen?'open':''}" style="margin-left:6px;">▾</span>
+        <span class="arrow" style="margin-left:6px;">${isOpen?'▾':'▸'}</span>
       </div>
-      <div class="cat-pbar"><div class="cat-pfill" style="width:${cPct}%;background:${cat.c};opacity:.7;"></div></div>
+      <div class="cat-pbar"><div style="width:${cPct}%;height:100%;background:${cat.c};opacity:.7;"></div></div>
       <div style="display:${isOpen?'block':'none'};">
         ${vis.map(item => {
-          const pd = spd(item.id);
-          const pr = sp(item.id, item.p);
+          const pd = spd(item.id), pr = sp(item.id,item.p);
           return `<div class="shop-item ${pd?'paid':''}">
-            <div class="checkbox ${pd?'on':''}" onclick="togPaid('${item.id}')">${pd?'✓':''}</div>
-            <span style="flex:1;font-size:13px;color:${pd?'var(--text3)':'var(--text)'};${pd?'text-decoration:line-through;':''}">${item.n}</span>
+            <div class="checkbox ${pd?'on':''}" onclick="togPaid('${item.id}')">✓</div>
+            <span style="flex:1;font-size:13px;${pd?'color:var(--text3);text-decoration:line-through;':''}">${item.n}</span>
             <input class="price-inp" type="number" value="${pr}" min="0" step="50" onchange="updPrice('${item.id}',${item.p},this.value)" onclick="event.stopPropagation()">
             <span style="font-size:12px;color:var(--text2);">€</span>
           </div>`;
@@ -961,126 +857,64 @@ function rShopList() {
   });
   document.getElementById('achats-list').innerHTML = h || '<p style="color:var(--text2);font-size:13px;">Aucun article.</p>';
 }
+function togCat(id) { S.openCats[id] = !(S.openCats[id]!==false); persist(); rShopList(); }
+function togPaid(id) { if (!S.shop[id]) S.shop[id]={paid:false}; S.shop[id].paid=!S.shop[id].paid; persist(); rShopList(); rAchats(); }
+function updPrice(id, def, v) { if (!S.shop[id]) S.shop[id]={paid:spd(id)}; S.shop[id].price=parseFloat(v)||0; persist(); }
 
-function togCat(id) {
-  const was = S.openCats[id] !== false;
-  S.openCats[id] = !was;
-  persist(); rShopList();
-}
-
-function togPaid(id) {
-  if (!S.shop[id]) S.shop[id] = { paid: false };
-  S.shop[id].paid = !S.shop[id].paid;
-  persist(); rShopList(); rAchats();
-}
-
-function updPrice(id, def, v) {
-  if (!S.shop[id]) S.shop[id] = { paid: spd(id) };
-  S.shop[id].price = parseFloat(v) || 0;
-  persist();
-}
-
-// ─── AMBIANCES ───────────────────────────────────────────────────────────
+// ═══ AMBIANCES ═══════════════════════════════════════════════════════════
 function rAmbiances() {
   document.getElementById('mb-grid').innerHTML = ROOMS.map(room => {
     const m = getMB(room.id);
     const isOpen = S.openRooms[room.id] === true;
-    const curStyle = m.style || '';
-    const body = isOpen ? `
-      <div class="mb-body">
-        <div class="mb-row">
-          <div class="mb-label">1 — Palette de couleurs</div>
-          <div class="swatches-row">
-            <div class="swatch-group"><input type="color" class="swatch-inp" value="${m.c1}" onchange="updMB('${room.id}','c1',this.value)"><label>Principale</label></div>
-            <div class="swatch-group"><input type="color" class="swatch-inp" value="${m.c2}" onchange="updMB('${room.id}','c2',this.value)"><label>Secondaire</label></div>
-            <div class="swatch-group"><input type="color" class="swatch-inp" value="${m.c3}" onchange="updMB('${room.id}','c3',this.value)"><label>Accent</label></div>
-            <div class="swatch-preview">
-              <div class="swatch-bar" style="background:${m.c1};"></div>
-              <div class="swatch-bar" style="background:${m.c2};"></div>
-              <div class="swatch-bar" style="flex:0.4;background:${m.c3};"></div>
-            </div>
-          </div>
-        </div>
-        <div class="mb-row">
-          <div class="mb-label">2 — Style / Ambiance</div>
-          <div class="style-pills">
-            ${STYLES.map(s => `<span class="style-pill ${curStyle===s?'on':''}" onclick="setStyle('${room.id}','${s}',this)">${s}</span>`).join('')}
-          </div>
-        </div>
-        <div class="mb-row">
-          <div class="mb-label">3 — Revêtement sol</div>
-          <input class="mb-inp" type="text" placeholder="ex : parquet chêne 14×90, carrelage 60×60..." value="${m.sol||''}" onchange="updMB('${room.id}','sol',this.value)">
-        </div>
-        <div class="mb-row">
-          <div class="mb-label">4 — Murs & plafond</div>
-          <input class="mb-inp" type="text" placeholder="ex : peinture blanc cassé NCS S0502, papier peint..." value="${m.murs||''}" onchange="updMB('${room.id}','murs',this.value)">
-        </div>
-        <div class="mb-row">
-          <div class="mb-label">5 — Éclairage</div>
-          <input class="mb-inp" type="text" placeholder="ex : spots encastrés 2700K, suspension centrale..." value="${m.eclairage||''}" onchange="updMB('${room.id}','eclairage',this.value)">
-        </div>
-        <div class="mb-row">
-          <div class="mb-label">6 — Notes pour le chantier</div>
-          <textarea class="mb-ta" placeholder="Instructions spécifiques, contraintes, points d'attention..." onchange="updMB('${room.id}','note',this.value)">${m.note||''}</textarea>
-        </div>
-      </div>` : '';
-
+    const body = isOpen ? `<div class="mb-body">
+      <div class="mb-row"><div class="mb-label">1 — Palette de couleurs</div>
+        <div class="swatches-row">
+          <div class="swatch-group"><input type="color" class="swatch-inp" value="${m.c1}" onchange="updMB('${room.id}','c1',this.value)"><label>Principale</label></div>
+          <div class="swatch-group"><input type="color" class="swatch-inp" value="${m.c2}" onchange="updMB('${room.id}','c2',this.value)"><label>Secondaire</label></div>
+          <div class="swatch-group"><input type="color" class="swatch-inp" value="${m.c3}" onchange="updMB('${room.id}','c3',this.value)"><label>Accent</label></div>
+          <div class="swatch-preview"><div class="swatch-bar" style="background:${m.c1};"></div><div class="swatch-bar" style="background:${m.c2};"></div><div class="swatch-bar" style="flex:.4;background:${m.c3};"></div></div>
+        </div></div>
+      <div class="mb-row"><div class="mb-label">2 — Style / Ambiance</div>
+        <div class="style-pills">${STYLES.map(s=>`<span class="style-pill ${m.style===s?'on':''}" onclick="setStyle('${room.id}','${s}',this)">${s}</span>`).join('')}</div></div>
+      <div class="mb-row"><div class="mb-label">3 — Revêtement sol</div><input class="mb-inp" value="${m.sol||''}" placeholder="ex : parquet chêne, carrelage 80x80..." onchange="updMB('${room.id}','sol',this.value)"></div>
+      <div class="mb-row"><div class="mb-label">4 — Murs & plafond</div><input class="mb-inp" value="${m.murs||''}" placeholder="ex : peinture NCS S0502..." onchange="updMB('${room.id}','murs',this.value)"></div>
+      <div class="mb-row"><div class="mb-label">5 — Éclairage</div><input class="mb-inp" value="${m.eclairage||''}" placeholder="ex : spots 2700K..." onchange="updMB('${room.id}','eclairage',this.value)"></div>
+      <div class="mb-row"><div class="mb-label">6 — Notes pour le chantier</div><textarea class="mb-ta" onchange="updMB('${room.id}','note',this.value)">${m.note||''}</textarea></div>
+    </div>` : '';
     return `<div class="mb-card">
       <div class="mb-hdr" onclick="togRoom('${room.id}')">
         <div style="width:9px;height:9px;border-radius:50%;background:${room.c};flex-shrink:0;"></div>
-        <span style="font-size:13px;font-weight:500;color:var(--text);flex:1;">${room.icon} ${room.nm}</span>
-        <div class="mb-swatches-preview">
-          <div class="mb-swatch-sm" style="background:${m.c1};"></div>
-          <div class="mb-swatch-sm" style="background:${m.c2};"></div>
-          <div class="mb-swatch-sm" style="background:${m.c3};"></div>
-        </div>
-        <span class="arrow ${isOpen?'open':''}" style="margin-left:8px;">▾</span>
-      </div>
-      ${body}
+        <span style="font-size:13px;font-weight:500;flex:1;">${room.icon} ${room.nm}</span>
+        <div class="mb-swatches-preview"><div class="mb-swatch-sm" style="background:${m.c1};"></div><div class="mb-swatch-sm" style="background:${m.c2};"></div><div class="mb-swatch-sm" style="background:${m.c3};"></div></div>
+        <span class="arrow" style="margin-left:8px;">${isOpen?'▾':'▸'}</span>
+      </div>${body}
     </div>`;
   }).join('');
 }
-
-function togRoom(rid) {
-  S.openRooms[rid] = !S.openRooms[rid];
-  persist(); rAmbiances();
-}
-
-function updMB(rid, field, val) {
-  if (!S.mb[rid]) S.mb[rid] = getMB(rid);
-  S.mb[rid][field] = val;
-  persist();
-}
-
+function togRoom(rid) { S.openRooms[rid] = !S.openRooms[rid]; persist(); rAmbiances(); }
+function updMB(rid, f, v) { if (!S.mb[rid]) S.mb[rid] = getMB(rid); S.mb[rid][f] = v; persist(); }
 function setStyle(rid, style, el) {
   if (!S.mb[rid]) S.mb[rid] = getMB(rid);
-  S.mb[rid].style = style;
-  persist();
-  el.closest('.style-pills').querySelectorAll('.style-pill').forEach(p => p.classList.remove('on'));
+  S.mb[rid].style = style; persist();
+  el.closest('.style-pills').querySelectorAll('.style-pill').forEach(p=>p.classList.remove('on'));
   el.classList.add('on');
 }
 
-// ─── SETTINGS HELPERS ────────────────────────────────────────────────────
+// ═══ SETTINGS ════════════════════════════════════════════════════════════
 function exportData() {
-  const blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'beausoleil5-data.json';
   a.click();
 }
-
 function confirmReset() {
-  if (!confirm('Réinitialiser TOUTES les données ? Cette action est irréversible.')) return;
+  if (!confirm('Réinitialiser TOUTES les données ?')) return;
   S = JSON.parse(JSON.stringify(DEFAULT_STATE));
   persist(); initApp(); toast('Données réinitialisées');
 }
 
-// ─── SERVICE WORKER REGISTRATION ─────────────────────────────────────────
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
-}
-
-// ─── START ───────────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
 init();
 </script>
 </body>

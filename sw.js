@@ -1,5 +1,5 @@
-const CACHE = 'beausoleil5-v1';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+const CACHE = 'beausoleil5-v2';
+const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
@@ -14,12 +14,10 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Network first for API calls
-  if (e.request.url.includes('jsonbin.io') || e.request.url.includes('cdnjs')) {
+  if (e.request.url.includes('jsonbin.io')) {
     e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
     return;
   }
-  // Cache first for app shell
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
       const clone = res.clone();
