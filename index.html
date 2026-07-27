@@ -489,8 +489,15 @@ function setSyncStatus(st) {
 async function syncNow() {
   if (!syncKey || !syncBin) return;
   setSyncStatus('syncing');
-  try { await jbWrite(syncKey, syncBin, S); setSyncStatus('ok'); }
-  catch(e) { setSyncStatus('error'); }
+  try {
+    // Pull latest remote first and merge it in additively, so this device
+    // can never blindly overwrite virements/payments added elsewhere.
+    const remote = await jbRead(syncKey, syncBin);
+    if (remote) mergeState(remote);
+    await jbWrite(syncKey, syncBin, S);
+    localStorage.setItem('b5_local', JSON.stringify(S));
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('error'); }
 }
 function persist() {
   localStorage.setItem('b5_local', JSON.stringify(S));
@@ -519,8 +526,29 @@ function resetSetup() {
   if (!confirm('Changer de compte JSONBin ?')) return;
   localStorage.removeItem('b5_sync'); location.reload();
 }
+function mergePayments(localArr, remoteArr) {
+  const map = new Map();
+  (localArr || []).forEach(p => p && p.id && map.set(p.id, p));
+  (remoteArr || []).forEach(p => p && p.id && map.set(p.id, p));
+  return Array.from(map.values());
+}
 function mergeState(remote) {
+  if (!remote) return;
+  // Union-merge virements/payments by id so a stale device can never erase
+  // entries that another device already saved — additive, never destructive.
+  const lotIds = new Set([...Object.keys(S.lots || {}), ...Object.keys(remote.lots || {})]);
+  const mergedLots = {};
+  lotIds.forEach(id => {
+    const loc = (S.lots || {})[id] || {};
+    const rem = (remote.lots || {})[id] || {};
+    mergedLots[id] = Object.assign({}, loc, rem, { payments: mergePayments(loc.payments, rem.payments) });
+  });
+  const mergedMoePayments = mergePayments((S.moe || {}).payments, (remote.moe || {}).payments);
+
   Object.assign(S, remote);
+  S.lots = mergedLots;
+  S.moe = Object.assign({ pct: 10, base: 0 }, S.moe, remote.moe, { payments: mergedMoePayments });
+
   // Ensure new fields exist for older saves
   if (!S.lots) S.lots = {};
   if (!S.sources) S.sources = {};

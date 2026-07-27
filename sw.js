@@ -1,4 +1,4 @@
-const CACHE = 'beausoleil5-v2';
+const CACHE = 'beausoleil5-v3';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
@@ -18,11 +18,14 @@ self.addEventListener('fetch', e => {
     e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
     return;
   }
+  // Network-first: always try to fetch the latest version. Only fall back
+  // to the cached copy when offline, so updates are never stuck on an old
+  // cached version again.
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
+    fetch(e.request).then(res => {
       const clone = res.clone();
       caches.open(CACHE).then(c => c.put(e.request, clone));
       return res;
-    }))
+    }).catch(() => caches.match(e.request))
   );
 });
