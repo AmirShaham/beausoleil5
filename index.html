@@ -524,7 +524,14 @@ async function doSetup() {
   if (!key) { err.textContent = 'La Master Key est requise.'; err.style.display = 'block'; return; }
   try {
     let binId = bin;
-    if (!binId) binId = await jbCreate(key, S);
+    if (!binId) {
+      if (!confirm('Aucun Bin ID indiqué : un NOUVEAU bin vide va être créé.\n\nSi vous avez déjà utilisé cette app, ne continuez PAS — retrouvez plutôt votre Bin ID existant (visible dans Réglages sur un appareil déjà connecté, ou sur jsonbin.io) et collez-le ici, sinon vos données existantes ne seront pas reliées à ce nouvel appareil.\n\nCréer un nouveau bin quand même ?')) {
+        err.textContent = 'Entrez votre Bin ID existant pour continuer.';
+        err.style.display = 'block';
+        return;
+      }
+      binId = await jbCreate(key, S);
+    }
     else { const rm = await jbRead(key, binId); if (rm) mergeState(rm); }
     syncKey = key; syncBin = binId;
     localStorage.setItem('b5_sync', JSON.stringify({key, bin:binId}));
