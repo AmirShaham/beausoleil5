@@ -314,6 +314,7 @@ const LOTS = [
   {id:'lot_lemoine', entreprise:'LEMOINE Benjamin', lot:'Velux · Volets solaires toiture', ttc:4691.41, c:'#7F77DD'},
   {id:'lot_sab_volets', entreprise:'SAB Menuiseries', lot:'Motorisation volets roulants', ttc:3324.96, c:'#0F6E56'},
   {id:'lot_sab_porte', entreprise:'SAB Menuiseries', lot:'Porte d\'entrée · Fenêtre WC', ttc:1167.90, c:'#185FA5'},
+  {id:'lot_chatel', entreprise:'Gabrielle Chatel', lot:'Peinture intérieure — murs et plafonds · Pose parquet à l\'étage', ttc:0, c:'#D4537E'},
 ];
 
 // ═══ SOURCES DE FINANCEMENT ═════════════════════════════════════════════
@@ -448,6 +449,7 @@ const DEFAULT_ARTISANS = [
   {i:'M2',n:'M2T Électricité',r:'Électricité complète',s:'Planifié',bg:'#C0DD97',tc:'#3B6D11',phone:'06 13 34 02 50',email:'contact@m2t-electricite.fr',note:'Devis D-000719 v2 signé — 11 985,06 € TTC'},
   {i:'LB',n:'LEMOINE Benjamin',r:'Velux · Volets toiture',s:'Planifié',bg:'#F4C0D1',tc:'#993556',phone:'',email:'',note:'Devis DEV00000148 signé — 4 691,41 € TTC · Acompte : 1 407,42 €'},
   {i:'SB',n:'SAB Menuiseries',r:'Porte entrée · Fenêtres · Volets',s:'Planifié',bg:'#F5C4B3',tc:'#993C1D',phone:'02 99 85 73 63',email:'contact@sab-menuiseries.fr',note:'2 devis signés — 4 492,86 € TTC · Contacts : Julien HUET 06 12 81 65 86 / Vincent BLOT 06 45 14 27 54'},
+  {i:'GC',n:'Gabrielle Chatel',r:'Peinture · Pose parquet',s:'À contacter',bg:'#F9D7E3',tc:'#99295A',phone:'06 24 94 39 54',email:'',note:'Devis à venir — 0 € TTC'},
 ];
 
 // ═══ STATE ═══════════════════════════════════════════════════════════════
@@ -643,7 +645,7 @@ function rDash() {
   document.getElementById('dash-finance-card').innerHTML = `
     <div class="card">
       <div class="card-title">Synthèse financière</div>
-      <div class="fin-row"><span class="fin-label">Devis signés (8 lots)</span><span class="fin-value">${fmt(engaged)} €</span></div>
+      <div class="fin-row"><span class="fin-label">Devis signés (9 lots)</span><span class="fin-value">${fmt(engaged)} €</span></div>
       <div class="fin-row"><span class="fin-label">Payé sur lots (acomptes + factures)</span><span class="fin-value" style="color:var(--accent)">${fmt(lotsP)} €</span></div>
       <div class="fin-row"><span class="fin-label">Achats mobilier/équipement estimés</span><span class="fin-value">${fmt(shopEst())} €</span></div>
       <div class="fin-row"><span class="fin-label">Achats payés</span><span class="fin-value" style="color:var(--accent2)">${fmt(shopPaid)} €</span></div>
@@ -657,7 +659,7 @@ function rDash() {
       <div class="card-title">Lots — paiements</div>
       ${LOTS.map(l => {
         const p = lotPaid(l.id);
-        const lp = Math.round(p / l.ttc * 100);
+        const lp = l.ttc > 0 ? Math.round(p / l.ttc * 100) : 0;
         return `<div style="margin-bottom:9px;">
           <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:3px;"><span>${l.entreprise}</span><span>${fmt(p)} / ${fmt(l.ttc)} €</span></div>
           <div class="pbar" style="height:4px;"><div class="pfill" style="width:${lp}%;background:${l.c};"></div></div>
@@ -696,7 +698,7 @@ function rLots() {
   const paid = lotsPaidTotal();
   document.getElementById('lots-list').innerHTML = `
     <div class="metrics" style="grid-template-columns:repeat(3,1fr);">
-      <div class="metric"><div class="metric-label">Total engagé TTC</div><div class="metric-value" style="color:var(--accent)">${fmt(total)} €</div><div class="metric-sub">8 devis signés</div></div>
+      <div class="metric"><div class="metric-label">Total engagé TTC</div><div class="metric-value" style="color:var(--accent)">${fmt(total)} €</div><div class="metric-sub">9 devis signés</div></div>
       <div class="metric"><div class="metric-label">Déjà payé</div><div class="metric-value" style="color:var(--green)">${fmt(paid)} €</div><div class="metric-sub">${total>0?Math.round(paid/total*100):0}%</div></div>
       <div class="metric"><div class="metric-label">Reste à payer</div><div class="metric-value" style="color:var(--accent2)">${fmt(total-paid)} €</div><div class="metric-sub">sur les lots</div></div>
     </div>
