@@ -627,6 +627,8 @@ function mergeState(remote) {
   if (!Array.isArray(S.mergedBins)) S.mergedBins = [];
   // Choix désormais tranchés suite au devis CEDEO / Aerochauffe révisé (21/09/2026)
   ['cx15','cx16','cx17','cx18','cx19','cx20','cx21','cx22','cx23','cx25'].forEach(id => { S.choix[id] = true; });
+  // Choix carrelage/faïence tranchés suite au devis Bizeul mis à jour (14/09/2026, fiche Mosaic)
+  ['cx26','cx27','cx28','cx29','cx30','cx31','cx32'].forEach(id => { S.choix[id] = true; });
   Object.keys(S.lots || {}).forEach(id => {
     const l = S.lots[id];
     if (!Array.isArray(l.payments)) l.payments = [];
@@ -1077,13 +1079,13 @@ const CHOIX_GROUPS = [
     {id:'cx25',n:'Paroi de douche R+1 → Choisi : Alterna Domino Fixe + pivot 100 cm, au lieu de la version pivotante L70×H195',prio:4},
   ]},
   {id:'E',letter:'E',nm:'Carrelage & Faïence (Bizeul)',c:'#1D9E75',bg:'#E5F4EE',prio:5,items:[
-    {id:'cx26',n:'Carrelage sol RDC 80×80 — modèle + couleur (budget 75 €/m²)',prio:5},
-    {id:'cx27',n:'Carrelage sols R+1 (WC + SdB) 60×60 — modèle + couleur',prio:5},
-    {id:'cx28',n:'Faïence murale SdE R+1 : format 20×50, 30×60 ou 30×90',prio:5},
-    {id:'cx29',n:'Faïence crédences 5 vasques — format + couleur',prio:5},
-    {id:'cx30',n:'Couleur joints (sol et mural) — gris moyen / blanc / autre',prio:5},
-    {id:'cx31',n:'Profilé de finition JOLLY-P : confirmer PVC blanc brillant',prio:5},
-    {id:'cx32',n:'Barre de seuil / profilé transition Schluter RENO-MU',prio:5},
+    {id:'cx26',n:'Carrelage sol RDC → Choisi : 20×120 Golden Oak Matt RT — ⚠️ pas du 80×80, et fourniture+pose ≈95,42 €/m² vs budget 75 €/m²',prio:5},
+    {id:'cx27',n:'Carrelage sols R+1 (WC + SdB) → Choisi : 60×60 Beige Nat RT',prio:5},
+    {id:'cx28',n:'Faïence murale SdE R+1 → Choisi : 35×100 Beige Nat RT + liseré mosaïque 1.5×10 Arrow Off White Brillo (pas 20×50/30×60/30×90)',prio:5},
+    {id:'cx29',n:'Faïence crédences vasques → Choisi : R+1 en 35×100 Beige Nat RT + 1.5×10 Arrow Off White Brillo · RDC en 10.6×12 Fan White Brillo',prio:5},
+    {id:'cx30',n:'Couleur joints → Confirmé : gris moyen au sol, blanc au mural',prio:5},
+    {id:'cx31',n:'Profilé de finition JOLLY-P → Confirmé : PVC blanc brillant',prio:5},
+    {id:'cx32',n:'Barre de seuil / profilé transition → Confirmé : Schluter RENO-MU (sous-sol) + RENO-AEVT (seuils vers parquet)',prio:5},
   ]},
   {id:'F',letter:'F',nm:'Placo & menuiseries int. (Vidal)',c:'#7F77DD',bg:'#EDEAFB',prio:6,items:[
     {id:'cx33',n:'Emplacement et dimensions verrières (2 réservations)',prio:6},
