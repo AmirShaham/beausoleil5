@@ -592,6 +592,9 @@ function mergeState(remote) {
   const mergedSources = shallowMergePreferLocal(remote.sources, S.sources);
   const mergedChoix = shallowMergePreferLocal(remote.choix, S.choix);
   const mergedMb = shallowMergePreferLocal(remote.mb, S.mb);
+  // mergedBins is a list of bin IDs already folded in — union it too, or
+  // every subsequent sync's remote-pull silently drops earlier entries.
+  const mergedBinsList = Array.from(new Set([...(S.mergedBins || []), ...(remote.mergedBins || [])]));
 
   Object.assign(S, remote);
   S.lots = mergedLots;
@@ -601,6 +604,7 @@ function mergeState(remote) {
   S.sources = mergedSources;
   S.choix = mergedChoix;
   S.mb = mergedMb;
+  S.mergedBins = mergedBinsList;
 
   // Ensure new fields exist for older saves
   if (!S.lots) S.lots = {};
