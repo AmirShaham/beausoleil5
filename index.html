@@ -298,6 +298,7 @@
       <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;">Si des données ont fini dans plusieurs bins JSONBin (par ex. après une reconnexion), collez ici l'ID d'un autre bin pour fusionner son contenu dans l'état actuel. Rien n'est écrasé — paiements, tâches, achats, tout est additionné avec ce qui existe déjà.</p>
       <div class="settings-row"><label>Bin ID à fusionner</label><input class="settings-inp" type="text" id="merge-bin-id" placeholder="64abc123..." autocomplete="off"></div>
       <div class="settings-row"><button class="btn-ghost" onclick="mergeFromBin()">Fusionner ce bin</button></div>
+      <div id="merged-bins-list" style="margin-top:10px;"></div>
     </div>
     <div class="settings-section">
       <h3>Données</h3>
@@ -466,6 +467,7 @@ const DEFAULT_STATE = {
   artisans: JSON.parse(JSON.stringify(DEFAULT_ARTISANS)),
   addArtForm: false,
   moe: { pct: 10, base: 0, payments: [] },
+  mergedBins: [],
 };
 
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -544,7 +546,10 @@ async function mergeFromBin() {
     const rm = await jbRead(syncKey, id);
     if (!rm) { toast('Ce bin est vide ou introuvable'); return; }
     mergeState(rm);
+    if (!Array.isArray(S.mergedBins)) S.mergedBins = [];
+    if (!S.mergedBins.includes(id)) S.mergedBins.push(id);
     await syncNow();
+    renderMergedBins();
     toast('Fusionné avec succès — rechargement...');
     setTimeout(() => location.reload(), 900);
   } catch(e) {
@@ -608,6 +613,7 @@ function mergeState(remote) {
   if (!S.moe) S.moe = { pct: 10, base: 0, payments: [] };
   if (!Array.isArray(S.moe.payments)) S.moe.payments = [];
   if (!S.openLots) S.openLots = {};
+  if (!Array.isArray(S.mergedBins)) S.mergedBins = [];
   Object.keys(S.lots || {}).forEach(id => {
     const l = S.lots[id];
     if (!Array.isArray(l.payments)) l.payments = [];
@@ -638,7 +644,21 @@ function initApp() {
   document.getElementById('set-key-display').textContent = syncKey ? '••••' + syncKey.slice(-4) : '—';
   document.getElementById('set-bin-display').textContent = syncBin || '—';
   document.getElementById('set-budget').value = S.budget || 150000;
+  renderMergedBins();
   sv('dash', document.querySelector('.nav-tab'));
+}
+function renderMergedBins() {
+  const el = document.getElementById('merged-bins-list');
+  if (!el) return;
+  const list = Array.isArray(S.mergedBins) ? S.mergedBins : [];
+  if (list.length === 0) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text2);">Aucun bin fusionné pour l\'instant.</div>';
+    return;
+  }
+  el.innerHTML = '<div style="font-size:12px;color:var(--text2);margin-bottom:6px;">Bins déjà fusionnés dans ce bin (' + list.length + ') :</div>' +
+    '<ul style="margin:0;padding-left:18px;">' +
+    list.map(id => '<li style="font-size:12px;color:var(--text2);font-family:monospace;margin-bottom:3px;">' + id + '</li>').join('') +
+    '</ul>';
 }
 
 // ═══ NAV ═════════════════════════════════════════════════════════════════
