@@ -294,6 +294,12 @@
       <div class="settings-row"><button class="btn-ghost" onclick="syncNow()">Synchroniser maintenant</button><button class="btn-danger" onclick="resetSetup()">Changer de compte</button></div>
     </div>
     <div class="settings-section">
+      <h3>Fusionner un autre bin</h3>
+      <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;">Si des données ont fini dans plusieurs bins JSONBin (par ex. après une reconnexion), collez ici l'ID d'un autre bin pour fusionner son contenu dans l'état actuel. Rien n'est écrasé — paiements, tâches, achats, tout est additionné avec ce qui existe déjà.</p>
+      <div class="settings-row"><label>Bin ID à fusionner</label><input class="settings-inp" type="text" id="merge-bin-id" placeholder="64abc123..." autocomplete="off"></div>
+      <div class="settings-row"><button class="btn-ghost" onclick="mergeFromBin()">Fusionner ce bin</button></div>
+    </div>
+    <div class="settings-section">
       <h3>Données</h3>
       <div class="settings-row"><label>Exporter (JSON)</label><button class="btn-ghost" onclick="exportData()">Télécharger</button></div>
       <div class="settings-row"><label style="color:#E24B4A">Réinitialiser tout</label><button class="btn-danger" onclick="confirmReset()">Réinitialiser</button></div>
@@ -528,11 +534,36 @@ function resetSetup() {
   if (!confirm('Changer de compte JSONBin ?')) return;
   localStorage.removeItem('b5_sync'); location.reload();
 }
+async function mergeFromBin() {
+  const id = document.getElementById('merge-bin-id').value.trim();
+  if (!id) { toast('Indiquez un Bin ID'); return; }
+  if (!syncKey || !syncBin) { toast('Pas encore connecté à un bin'); return; }
+  if (id === syncBin) { toast('C\'est déjà le bin actuel'); return; }
+  toast('Fusion en cours...');
+  try {
+    const rm = await jbRead(syncKey, id);
+    if (!rm) { toast('Ce bin est vide ou introuvable'); return; }
+    mergeState(rm);
+    await syncNow();
+    toast('Fusionné avec succès — rechargement...');
+    setTimeout(() => location.reload(), 900);
+  } catch(e) {
+    toast('Erreur — vérifiez l\'ID de ce bin');
+  }
+}
 function mergePayments(localArr, remoteArr) {
   const map = new Map();
   (localArr || []).forEach(p => p && p.id && map.set(p.id, p));
   (remoteArr || []).forEach(p => p && p.id && map.set(p.id, p));
   return Array.from(map.values());
+}
+function shallowMergePreferLocal(remote, local) {
+  // Union of keys; where both sides have the same key, the LOCAL value wins.
+  // This is what makes it safe to pull-before-push: a sync that fires just
+  // after a local edit (before that edit has reached the remote bin) can no
+  // longer clobber it, while updates made on another device (keys only the
+  // remote side has) still come through.
+  return Object.assign({}, remote || {}, local || {});
 }
 function mergeState(remote) {
   if (!remote) return;
@@ -546,16 +577,34 @@ function mergeState(remote) {
     mergedLots[id] = Object.assign({}, loc, rem, { payments: mergePayments(loc.payments, rem.payments) });
   });
   const mergedMoePayments = mergePayments((S.moe || {}).payments, (remote.moe || {}).payments);
+  // Same additive protection for tasks/achats/sources/choix/ambiances: these
+  // used to be a blind Object.assign(S, remote), which meant the routine
+  // pull-before-push auto-sync could silently overwrite an edit you'd just
+  // made (if it fired before that edit reached the bin) with the bin's
+  // older value — the "checking one task changes others" bug.
+  const mergedTasks = shallowMergePreferLocal(remote.tasks, S.tasks);
+  const mergedShop = shallowMergePreferLocal(remote.shop, S.shop);
+  const mergedSources = shallowMergePreferLocal(remote.sources, S.sources);
+  const mergedChoix = shallowMergePreferLocal(remote.choix, S.choix);
+  const mergedMb = shallowMergePreferLocal(remote.mb, S.mb);
 
   Object.assign(S, remote);
   S.lots = mergedLots;
   S.moe = Object.assign({ pct: 10, base: 0 }, S.moe, remote.moe, { payments: mergedMoePayments });
+  S.tasks = mergedTasks;
+  S.shop = mergedShop;
+  S.sources = mergedSources;
+  S.choix = mergedChoix;
+  S.mb = mergedMb;
 
   // Ensure new fields exist for older saves
   if (!S.lots) S.lots = {};
   if (!S.sources) S.sources = {};
   if (!S.choix) S.choix = {};
   if (!S.artisans || S.artisans.length <= 1) S.artisans = JSON.parse(JSON.stringify(DEFAULT_ARTISANS));
+  if (!S.artisans.some(a => a.n === 'Gabrielle Chatel')) {
+    S.artisans.push({i:'GC',n:'Gabrielle Chatel',r:'Peinture · Pose parquet',s:'À contacter',bg:'#F9D7E3',tc:'#99295A',phone:'06 24 94 39 54',email:'',note:'Devis à venir — 0 € TTC'});
+  }
   if (!S.moe) S.moe = { pct: 10, base: 0, payments: [] };
   if (!Array.isArray(S.moe.payments)) S.moe.payments = [];
   if (!S.openLots) S.openLots = {};
