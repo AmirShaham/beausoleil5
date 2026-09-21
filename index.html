@@ -625,6 +625,8 @@ function mergeState(remote) {
   if (!Array.isArray(S.moe.payments)) S.moe.payments = [];
   if (!S.openLots) S.openLots = {};
   if (!Array.isArray(S.mergedBins)) S.mergedBins = [];
+  // Choix désormais tranchés suite au devis CEDEO / Aerochauffe révisé (21/09/2026)
+  ['cx15','cx16','cx17','cx18','cx19','cx20','cx21','cx22','cx23','cx25'].forEach(id => { S.choix[id] = true; });
   Object.keys(S.lots || {}).forEach(id => {
     const l = S.lots[id];
     if (!Array.isArray(l.payments)) l.payments = [];
@@ -1062,17 +1064,17 @@ const CHOIX_GROUPS = [
     {id:'cx14',n:'Emplacements prises USB (cuisine, salle de jeux…)',prio:3},
   ]},
   {id:'D',letter:'D',nm:'Plomberie / Sanitaires (Aerochauffe)',c:'#378ADD',bg:'#E6F1FB',prio:4,items:[
-    {id:'cx15',n:'Confirmer meuble vasque SdB RDC : Séducta 90 cm Olive Mat',prio:4},
-    {id:'cx16',n:'Confirmer meuble double vasque R+1 : Séducta 120 cm Olive Mat',prio:4},
-    {id:'cx17',n:'Cuvettes WC × 3 : Alterna Concerto — confirmer modèle',prio:4},
-    {id:'cx18',n:'Mitigeurs lavabo : Alterna Daily chromé ou upgrade Hansgrohe ?',prio:4},
-    {id:'cx19',n:'Robinetterie douche R+1 : Grohé Tempesta 110 — confirmer',prio:4},
-    {id:'cx20',n:'Modèle radiateur sèche-serviettes SdB haut (Acova Atol)',prio:4},
-    {id:'cx21',n:'Confirmer 14 radiateurs Finimétal Reggane — dimensions',prio:4},
-    {id:'cx22',n:'Miroir SdB R+1 : Alterna Milan LED 50 cm — confirmer',prio:4},
-    {id:'cx23',n:'Lave-main WC RDC : Alterna Concerto chêne Tek',prio:4},
-    {id:'cx24',n:'Lave-main WC R+1 : Alterna Concerto céramique',prio:4},
-    {id:'cx25',n:'Paroi de douche R+1 : Alterna pivotante L70×H195',prio:4},
+    {id:'cx15',n:'Meuble vasque SdB RDC → Choisi : BIBA 1000 2 tiroirs Chêne Sienna (Salgar), au lieu de Séducta',prio:4},
+    {id:'cx16',n:'Meuble double vasque R+1 → Choisi : 2× meuble sous vasque Alterna Concerto bois clair L60 cm + plan double vasque L120, au lieu de Séducta',prio:4},
+    {id:'cx17',n:'Cuvettes WC × 3 → Choisi : bâti-support Grohé + cuvette suspendue Alterna Daily\'o sans bride',prio:4},
+    {id:'cx18',n:'Mitigeurs lavabo → Choisi : Alterna Concerto chromé (pas d\'upgrade Hansgrohe)',prio:4},
+    {id:'cx19',n:'Robinetterie douche R+1 → Choisi : colonne de douche thermostatique Alterna Concerto 4 chromé, au lieu de Grohé Tempesta 110',prio:4},
+    {id:'cx20',n:'Radiateur sèche-serviettes SdB haut → Choisi : Alterna Priméo eau chaude 976W blanc, au lieu d\'Acova Atol',prio:4},
+    {id:'cx21',n:'Radiateurs → Confirmé : 1 neuf Finimétal Reggane 3010 Standard 11S 600×600, les autres conservés/réemployés',prio:4},
+    {id:'cx22',n:'Miroir SdB R+1 → Choisi : Alterna Vienne L120×H80 réversible, au lieu de Milan LED 50 cm',prio:4},
+    {id:'cx23',n:'Lave-mains WC RDC → Choisi : Alterna Priméo blanc + Alterna Priméo chêne, mitigeurs Concerto chromé',prio:4},
+    {id:'cx24',n:'Lave-main WC R+1 → Choisi : module de raccordement Fixoconnect + robinet d\'équerre type Boku (pas de lave-main dédié) — à re-vérifier avec Aerochauffe',prio:4},
+    {id:'cx25',n:'Paroi de douche R+1 → Choisi : Alterna Domino Fixe + pivot 100 cm, au lieu de la version pivotante L70×H195',prio:4},
   ]},
   {id:'E',letter:'E',nm:'Carrelage & Faïence (Bizeul)',c:'#1D9E75',bg:'#E5F4EE',prio:5,items:[
     {id:'cx26',n:'Carrelage sol RDC 80×80 — modèle + couleur (budget 75 €/m²)',prio:5},
