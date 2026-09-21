@@ -341,42 +341,62 @@ const PH = [
   {id:'p1',nm:'Phase 1 — Démolition & déblaiement',tasks:[
     {id:'t1',n:'Démolition cuisine',s:'done'},{id:'t2',n:'Démolition salon / séjour',s:'done'},
     {id:'t3',n:'Démolition SdB bas',s:'done'},{id:'t4',n:'Démolition SdB haut',s:'done'},
-    {id:'t5',n:'Démolition chambres',s:'done'},{id:'t6',n:'Démolition toilettes bas',s:'wip'},
-    {id:'t7',n:'Démolition placards intégrés',s:'wip'},{id:'t8',n:'Dépose cloisons ch1/ch2 + grenier (Maçonnerie)',s:'todo'},
-    {id:'t9',n:'Évacuation des gravats',s:'todo'}]},
+    {id:'t5',n:'Démolition chambres',s:'done'},{id:'t6',n:'Démolition toilettes bas',s:'done'},
+    {id:'t7',n:'Démolition placards intégrés',s:'done'},{id:'t8',n:'Dépose cloisons ch.parents/bureau/couloir + grenier (Maçonnerie)',s:'done'},
+    {id:'t9',n:'Évacuation des gravats',s:'done'}]},
   {id:'p2',nm:'Phase 2 — Gros œuvre & maçonnerie',tasks:[
-    {id:'t10',n:'Esquisse & plans définitifs',s:'wip'},{id:'t11',n:'Dallage complément sous-sol',s:'todo'},
-    {id:'t12',n:'Carottages en dalle',s:'todo'},{id:'t13',n:'Étanchéité sous-sol',s:'todo'}]},
-  {id:'p3',nm:'Phase 3 — Façade & ITE (Maçonnerie Rennaise)',tasks:[
+    {id:'t10',n:'Esquisse & plans définitifs (plans du 29/07/2026 retenus)',s:'done'},{id:'t11',n:'Dallage complément sous-sol',s:'done'},
+    {id:'t12',n:'Carottages en dalle',s:'done'},{id:'t13',n:'Étanchéité sous-sol',s:'done'},
+    {id:'t58',n:'Rebouchage plancher séjour/cuisine (Maçonnerie) — date d\'intervention à communiquer',s:'wip'}]},
+  {id:'p3',nm:'Phase 3 — Toiture & Velux (Lemoine)',tasks:[
+    {id:'t19',n:'Pose 2 Velux GGL MK06 (Lemoine)',s:'done'},{id:'t20',n:'Volets solaires Velux SSL (Lemoine)',s:'done'},
+    {id:'t59',n:'Ventilation VMC en toiture (Lemoine, en lien avec l\'électricien)',s:'wip'}]},
+  {id:'p4',nm:'Phase 4 — Réseaux électricité & plomberie (M2T + Aerochauffe)',tasks:[
+    {id:'t23',n:'Réseau électrique complet + tableau (M2T)',s:'done'},{id:'t24',n:'Saignées et rebouchage (M2T)',s:'done'},
+    {id:'t25',n:'Dépose réseau chauffage existant (Aerochauffe)',s:'done'},{id:'t26',n:'Nouveau réseau chauffage 14 radiateurs',s:'wip'},
+    {id:'t27',n:'Réseau eau chaude/froide sanitaire',s:'done'},{id:'t28',n:'Évacuations eaux usées',s:'done'},
+    {id:'t29',n:'Neutralisation arrivée gaz cuisine',s:'done'},
+    {id:'t60',n:'Alimentations VR électriques + PC/appliques extérieurs (M2T)',s:'wip'},
+    {id:'t61',n:'Renforts ventilo de plafonds Bureau + CH. Parentale (éclairage intégré)',s:'wip'},
+    {id:'t62',n:'VMC : passage des gaines en combles — faisabilité en attente',s:'todo'},
+    {id:'t63',n:'Modifs élec ponctuelles (liseuses CH. parentale à 1m, PC salle de musique, spots WC R+1)',s:'wip'}]},
+  {id:'p5',nm:'Phase 5 — Placo & isolation intérieure (Vidal)',tasks:[
+    {id:'t30',n:'Sous-sol : plafond rampant + isolation murs',s:'done'},{id:'t31',n:'RDC : plafonds + doublages + cloisons',s:'wip'},
+    {id:'t32',n:'R+1 : isolation toiture rampants + cloisons',s:'wip'},{id:'t33',n:'Réservations verrières',s:'todo'},
+    {id:'t34',n:'Habillage WC suspendus + coffres',s:'wip'},{id:'t35',n:'Joints placo',s:'todo'},
+    {id:'t64',n:'Réservation douche R+1 (soubassement 45cm placo + réservation porte 99,5cm fini, plan variante du 21/09)',s:'wip'},
+    {id:'t65',n:'Devis complémentaire : niche armoire de toilette SDE RDC + coffre en biais buanderie',s:'wip'},
+    {id:'t66',n:'Porte buanderie : dépose + pose bloc porte phonique (montant à confirmer)',s:'todo'},
+    {id:'t67',n:'Évacuation gravats / nettoyage extérieur',s:'wip'}]},
+  {id:'p6',nm:'Phase 6 — Chapes & carrelage (Bizeul)',tasks:[
+    {id:'t36',n:'Ragréage RDC complet',s:'todo'},{id:'t37',n:'Chape liquide salle de jeux R+1',s:'todo'},
+    {id:'t38',n:'Ragréage R+1',s:'todo'},{id:'t39',n:'Carrelage sol RDC — 20×120 Golden Oak Matt RT (budget dépassé vs 80×80 initial, cf. devis 16 344,65 €)',s:'todo'},
+    {id:'t40',n:'Carrelage sols R+1 (WC + SdB) — 60×60 Beige Nat RT',s:'todo'},{id:'t41',n:'Faïence murale SdE R+1 — 35×100 Beige Nat RT + liseré mosaïque',s:'todo'},
+    {id:'t42',n:'Crédences vasques (x5) — mosaïque/35×100 en R+1, Fan White Brillo en RDC',s:'todo'},{id:'t43',n:'Plinthes',s:'todo'},
+    {id:'t68',n:'Réservation paillasson encastré (80×50cm, décalé porte ~15cm)',s:'todo'},
+    {id:'t69',n:'Choix carrelage/faïence validés — devis signé le 21/09, en attente de commande fournitures',s:'done'}]},
+  {id:'p7',nm:'Phase 7 — Sanitaires & équipements (Aerochauffe)',tasks:[
+    {id:'t44',n:'3 WC suspendus Grohé/Alterna — pose en cours',s:'wip'},{id:'t45',n:'Lave-mains WC RDC (meuble blanc) + R+1 (meuble bois) — matériaux confirmés',s:'wip'},
+    {id:'t46',n:'Meuble vasque SdB RDC 90cm',s:'todo'},{id:'t47',n:'Douche R+1 : receveur + paroi (réservations placo finalisées)',s:'todo'},
+    {id:'t48',n:'Meuble double vasque R+1 120cm',s:'todo'},{id:'t49',n:'Miroir LED + radiateur sèche-serviettes',s:'todo'},
+    {id:'t70',n:'Commander l\'armoire de toilette (pour valider la faisabilité de la niche placo)',s:'todo'}]},
+  {id:'p8',nm:'Phase 8 — Menuiseries extérieures (SAB)',tasks:[
+    {id:'t21',n:'Porte d\'entrée + fenêtre WC (SAB) — intervention avant mi-octobre',s:'todo'},{id:'t22',n:'Motorisation volets roulants + porte de garage (SAB) — intervention prévue le 12/10',s:'todo'},
+    {id:'t72',n:'Entrées d\'air : compatibilité avec la VMC à valider sur place',s:'todo'},
+    {id:'t73',n:'Remplacement montant baie salon (reprise montant intérieur)',s:'todo'},
+    {id:'t74',n:'Pose baie des WC (date d\'intervention à transmettre)',s:'todo'}]},
+  {id:'p9',nm:'Phase 9 — Façade & ITE (Maçonnerie Rennaise) — reportée en second temps',tasks:[
     {id:'t14',n:'Préparation façade (dépose, traitement)',s:'todo'},{id:'t15',n:'Échafaudage',s:'todo'},
     {id:'t16',n:'Isolation thermique extérieure 140mm',s:'todo'},{id:'t17',n:'Enduit de finition Thermolook',s:'todo'},
     {id:'t18',n:'Peinture soubassement & appuis',s:'todo'}]},
-  {id:'p4',nm:'Phase 4 — Toiture & menuiseries ext. ',tasks:[
-    {id:'t19',n:'Pose 2 Velux GGL MK06 (Lemoine)',s:'todo'},{id:'t20',n:'Volets solaires Velux SSL (Lemoine)',s:'todo'},
-    {id:'t21',n:'Porte d\'entrée + fenêtre WC (SAB)',s:'todo'},{id:'t22',n:'Motorisation volets roulants (SAB)',s:'todo'}]},
-  {id:'p5',nm:'Phase 5 — Réseaux (M2T + Aerochauffe)',tasks:[
-    {id:'t23',n:'Réseau électrique complet + tableau (M2T)',s:'todo'},{id:'t24',n:'Saignées et rebouchage (M2T)',s:'todo'},
-    {id:'t25',n:'Dépose réseau chauffage existant (Aerochauffe)',s:'todo'},{id:'t26',n:'Nouveau réseau chauffage 14 radiateurs',s:'todo'},
-    {id:'t27',n:'Réseau eau chaude/froide sanitaire',s:'todo'},{id:'t28',n:'Évacuations eaux usées',s:'todo'},
-    {id:'t29',n:'Neutralisation arrivée gaz cuisine',s:'todo'}]},
-  {id:'p6',nm:'Phase 6 — Placo & isolation intérieure (Vidal)',tasks:[
-    {id:'t30',n:'Sous-sol : plafond rampant + isolation murs',s:'todo'},{id:'t31',n:'RDC : plafonds + doublages + cloisons',s:'todo'},
-    {id:'t32',n:'R+1 : isolation toiture rampants + cloisons',s:'todo'},{id:'t33',n:'Réservations verrières',s:'todo'},
-    {id:'t34',n:'Habillage WC suspendus + coffres',s:'todo'},{id:'t35',n:'Joints placo',s:'todo'}]},
-  {id:'p7',nm:'Phase 7 — Chapes & carrelage (Bizeul)',tasks:[
-    {id:'t36',n:'Ragréage RDC complet',s:'todo'},{id:'t37',n:'Chape liquide salle de jeux R+1',s:'todo'},
-    {id:'t38',n:'Ragréage R+1',s:'todo'},{id:'t39',n:'Carrelage sol RDC 80x80',s:'todo'},
-    {id:'t40',n:'Carrelage sols R+1 (WC + SdB) 60x60',s:'todo'},{id:'t41',n:'Faïence murale SdE R+1',s:'todo'},
-    {id:'t42',n:'Crédences vasques (x5)',s:'todo'},{id:'t43',n:'Plinthes',s:'todo'}]},
-  {id:'p8',nm:'Phase 8 — Sanitaires & équipements (Aerochauffe)',tasks:[
-    {id:'t44',n:'3 WC suspendus Grohé/Alterna',s:'todo'},{id:'t45',n:'Lave-mains WC RDC + R+1',s:'todo'},
-    {id:'t46',n:'Meuble vasque SdB RDC 90cm',s:'todo'},{id:'t47',n:'Douche R+1 : receveur 140x100 + paroi',s:'todo'},
-    {id:'t48',n:'Meuble double vasque R+1 120cm',s:'todo'},{id:'t49',n:'Miroir LED + radiateur sèche-serviettes',s:'todo'},
-    {id:'t50',n:'Installation cuisine équipée',s:'todo'}]},
-  {id:'p9',nm:'Phase 9 — Sols & peinture',tasks:[
+  {id:'p10',nm:'Phase 10 — Cuisine (MCA)',tasks:[
+    {id:'t50',n:'Installation cuisine équipée',s:'todo'},
+    {id:'t75',n:'Pose cuisine MCA — prévue semaine 46 (mi-novembre)',s:'todo'}]},
+  {id:'p11',nm:'Phase 11 — Sols & peinture (par vos soins)',tasks:[
     {id:'t51',n:'Parquet chambres (hors devis - à commander)',s:'todo'},{id:'t52',n:'Peinture intérieure complète (hors devis)',s:'todo'},
-    {id:'t53',n:'Menuiserie intérieure : portes (Vidal)',s:'todo'}]},
-  {id:'p10',nm:'Phase 10 — Finitions & réception',tasks:[
+    {id:'t53',n:'Menuiserie intérieure : portes (Vidal)',s:'todo'},
+    {id:'t76',n:'Peinture et remise en état de l\'escalier (par vos soins)',s:'todo'}]},
+  {id:'p12',nm:'Phase 12 — Finitions & réception',tasks:[
     {id:'t54',n:'Réglages électricité finaux',s:'todo'},{id:'t55',n:'Réglages plomberie finale',s:'todo'},
     {id:'t56',n:'Nettoyage chantier',s:'todo'},{id:'t57',n:'Réception des travaux',s:'todo'}]},
 ];
