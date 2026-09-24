@@ -616,14 +616,19 @@ function mergeState(remote) {
   // older value — the "checking one task changes others" bug.
   const mergedTasks = shallowMergePreferLocal(remote.tasks, S.tasks);
   const mergedShop = shallowMergePreferLocal(remote.shop, S.shop);
-  // Sources also carry a withdrawals[] history now (like lots' payments) —
-  // union those by id too, on top of the local-wins merge for avail/planned.
+  // Sources: withdrawals[] union the same way lot payments do. total/planned
+  // use last-write-wins by timestamp instead of "local always wins" — a
+  // blind local-wins meant that once a device had ever set a source's
+  // total/planned, it would keep that value forever and silently ignore a
+  // newer edit pushed from another device (e.g. phone edits invisible on
+  // PC). updSrc() stamps _ts on every edit so the two devices can compare.
   const srcIds = new Set([...Object.keys(S.sources || {}), ...Object.keys(remote.sources || {})]);
   const mergedSources = {};
   srcIds.forEach(id => {
     const loc = (S.sources || {})[id] || {};
     const rem = (remote.sources || {})[id] || {};
-    mergedSources[id] = Object.assign({}, rem, loc, { withdrawals: mergePayments(loc.withdrawals, rem.withdrawals) });
+    const winner = (rem._ts || 0) > (loc._ts || 0) ? rem : loc;
+    mergedSources[id] = Object.assign({}, winner, { withdrawals: mergePayments(loc.withdrawals, rem.withdrawals) });
   });
   const mergedChoix = shallowMergePreferLocal(remote.choix, S.choix);
   const mergedMb = shallowMergePreferLocal(remote.mb, S.mb);
@@ -921,21 +926,21 @@ function rSources() {
         <span class="src-status" style="background:${src.c};color:${src.tc};">${src.type}</span>
         <span style="font-size:11px;color:var(--text2);margin-left:6px;">${open?'▲':'▼'}</span>
       </div>
-      <div class="src-fields" onclick="event.stopPropagation()">
+      <div class="src-fields" style="grid-template-columns:1fr 1.2fr 1fr;" onclick="event.stopPropagation()">
         <div class="src-field">
           <label>Somme totale (€)</label>
           <input type="number" value="${t}" min="0" step="100" onchange="updSrc('${src.id}','total',this.value)">
+        </div>
+        <div class="src-field">
+          <label>Disponible maintenant (€)</label>
+          <input type="text" value="${fmt(a)} €" disabled title="Calculé : Somme totale − retraits" style="font-size:16px;font-weight:700;color:${a>=0?'var(--green)':'#E24B4A'};background:var(--bg2);border-color:${a>=0?'var(--green)':'#E24B4A'};cursor:default;">
         </div>
         <div class="src-field">
           <label>Virement prévu (€)</label>
           <input type="number" value="${p}" min="0" step="100" onchange="updSrc('${src.id}','planned',this.value)">
         </div>
       </div>
-      <div class="fin-row" style="margin-top:6px;" onclick="event.stopPropagation()">
-        <span class="fin-label">Disponible maintenant (après retraits)</span>
-        <span class="fin-value" style="color:${a>=0?'var(--green)':'#E24B4A'};font-weight:600;">${fmt(a)} €</span>
-      </div>
-      <div class="fin-row" style="cursor:pointer;" onclick="togSrcOpen('${src.id}')">
+      <div class="fin-row" style="cursor:pointer;margin-top:6px;" onclick="togSrcOpen('${src.id}')">
         <span class="fin-label">Virements effectués (cumul)</span>
         <span class="fin-value" style="font-weight:600;">${fmt(w)} €</span>
       </div>
@@ -965,6 +970,7 @@ function togSrcOpen(id) { S.openSources[id] = !S.openSources[id]; persist(); rSo
 function updSrc(id, field, v) {
   if (!S.sources[id]) S.sources[id] = {};
   S.sources[id][field] = parseFloat(v) || 0;
+  S.sources[id]._ts = Date.now();
   persist();
   rSources();
 }
