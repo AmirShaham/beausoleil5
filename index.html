@@ -667,7 +667,13 @@ function mergeState(remote) {
     delete l.paid;
   });
   Object.keys(S.sources || {}).forEach(id => {
-    if (!Array.isArray(S.sources[id].withdrawals)) S.sources[id].withdrawals = [];
+    const src = S.sources[id];
+    if (!Array.isArray(src.withdrawals)) src.withdrawals = [];
+    // "total" (Somme totale) is new — seed it from the old manually-entered
+    // "avail" (disponible maintenant) so existing balances aren't lost; from
+    // now on "avail" is derived (total − withdrawals) instead of stored.
+    if (typeof src.total !== 'number') src.total = src.avail ?? 0;
+    delete src.avail;
   });
 }
 
@@ -728,8 +734,10 @@ function shopPd() { return allI().filter(i => spd(i.id)).reduce((a,i) => a + sp(
 function lotPaid(id) { return (S.lots[id]?.payments || []).reduce((a,p) => a + (p.amount||0), 0); }
 function lotsTotal() { return LOTS.reduce((a,l) => a + l.ttc, 0); }
 function lotsPaidTotal() { return LOTS.reduce((a,l) => a + lotPaid(l.id), 0); }
-function srcAvail(id) { return S.sources[id]?.avail ?? 0; }
+function srcTotal(id) { return S.sources[id]?.total ?? 0; }
+function srcAvail(id) { return srcTotal(id) - srcWithdrawn(id); }
 function srcPlanned(id) { return S.sources[id]?.planned ?? 0; }
+function srcTotalSumAll() { return SOURCES.reduce((a,s) => a + srcTotal(s.id), 0); }
 function srcTotalAvail() { return SOURCES.reduce((a,s) => a + srcAvail(s.id), 0); }
 function srcTotalPlanned() { return SOURCES.reduce((a,s) => a + srcPlanned(s.id), 0); }
 function srcWithdrawals(id) { return (S.sources[id]?.withdrawals) || []; }
@@ -896,13 +904,13 @@ function rSources() {
 
   const withdrawn = srcTotalWithdrawn();
   document.getElementById('src-metrics').innerHTML = `
-    <div class="metric"><div class="metric-label">Disponible maintenant</div><div class="metric-value" style="color:var(--green)">${fmt(avail)} €</div><div class="metric-sub">Épargne actuelle</div></div>
+    <div class="metric"><div class="metric-label">Somme totale</div><div class="metric-value">${fmt(srcTotalSumAll())} €</div><div class="metric-sub">Avant retraits</div></div>
+    <div class="metric"><div class="metric-label">Disponible maintenant</div><div class="metric-value" style="color:var(--green)">${fmt(avail)} €</div><div class="metric-sub">Somme totale − retraits (${fmt(withdrawn)} €)</div></div>
     <div class="metric"><div class="metric-label">Virements prévus</div><div class="metric-value" style="color:var(--blue)">${fmt(planned)} €</div><div class="metric-sub">À venir</div></div>
-    <div class="metric"><div class="metric-label">Total mobilisable</div><div class="metric-value">${fmt(total)} €</div><div class="metric-sub">Disponible + prévu</div></div>
     <div class="metric"><div class="metric-label">Couverture budget</div><div class="metric-value" style="color:${total>=restantACouvrir?'var(--green)':'var(--accent2)'}">${covPct}%</div><div class="metric-sub">sur ${fmt(restantACouvrir)} € restant (déjà payé : ${fmt(spent)} €)</div></div>`;
 
   document.getElementById('sources-list').innerHTML = SOURCES.map(src => {
-    const a = srcAvail(src.id), p = srcPlanned(src.id);
+    const t = srcTotal(src.id), a = srcAvail(src.id), p = srcPlanned(src.id);
     const w = srcWithdrawn(src.id);
     const open = S.openSources[src.id] === true;
     const withdrawals = srcWithdrawals(src.id).slice().sort((x,y) => (y.date||'').localeCompare(x.date||''));
@@ -915,17 +923,21 @@ function rSources() {
       </div>
       <div class="src-fields" onclick="event.stopPropagation()">
         <div class="src-field">
-          <label>Disponible maintenant (€)</label>
-          <input type="number" value="${a}" min="0" step="100" onchange="updSrc('${src.id}','avail',this.value)">
+          <label>Somme totale (€)</label>
+          <input type="number" value="${t}" min="0" step="100" onchange="updSrc('${src.id}','total',this.value)">
         </div>
         <div class="src-field">
           <label>Virement prévu (€)</label>
           <input type="number" value="${p}" min="0" step="100" onchange="updSrc('${src.id}','planned',this.value)">
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;" onclick="togSrcOpen('${src.id}')">
-        <span style="font-size:11px;color:var(--text2);flex:1;">Virements effectués (cumul) :</span>
-        <span style="font-size:13px;font-weight:600;">${fmt(w)} €</span>
+      <div class="fin-row" style="margin-top:6px;" onclick="event.stopPropagation()">
+        <span class="fin-label">Disponible maintenant (après retraits)</span>
+        <span class="fin-value" style="color:${a>=0?'var(--green)':'#E24B4A'};font-weight:600;">${fmt(a)} €</span>
+      </div>
+      <div class="fin-row" style="cursor:pointer;" onclick="togSrcOpen('${src.id}')">
+        <span class="fin-label">Virements effectués (cumul)</span>
+        <span class="fin-value" style="font-weight:600;">${fmt(w)} €</span>
       </div>
       ${open ? `
       <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);" onclick="event.stopPropagation()">
