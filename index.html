@@ -313,9 +313,9 @@
 <script>
 // ═══ DEVIS SIGNÉS (LOTS) ═══════════════════════════════════════════════
 const LOTS = [
-  {id:'lot_maconnerie', entreprise:'La Petite Maçonnerie Rennaise', lot:'Démolition · Maçonnerie · Ravalement ITE', ttc:34170.75, c:'#D85A30'},
-  {id:'lot_vidal', entreprise:'J. VIDAL', lot:'Placo · Isolation intérieure · Plafonds', ttc:25916.33, c:'#BA7517'},
-  {id:'lot_aerochauffe', entreprise:'AEROCHAUFFE', lot:'Plomberie · Chauffage · Sanitaires', ttc:23474.94, c:'#378ADD'},
+  {id:'lot_maconnerie', entreprise:'La Petite Maçonnerie Rennaise', lot:'Démolition · Maçonnerie · Ravalement ITE', ttc:34693.25, c:'#D85A30'},
+  {id:'lot_vidal', entreprise:'J. VIDAL', lot:'Placo · Isolation intérieure · Plafonds', ttc:28486.36, c:'#BA7517'},
+  {id:'lot_aerochauffe', entreprise:'AEROCHAUFFE', lot:'Plomberie · Chauffage · Sanitaires', ttc:24974.83, c:'#378ADD'},
   {id:'lot_bizeul', entreprise:'BIZEUL Carrelage', lot:'Carrelage · Chapes · Faïence', ttc:16344.65, c:'#1D9E75'},
   {id:'lot_m2t', entreprise:'M2T Électricité', lot:'Électricité complète · Tableau', ttc:11985.06, c:'#EF9F27'},
   {id:'lot_lemoine', entreprise:'LEMOINE Benjamin', lot:'Velux · Volets solaires toiture', ttc:4691.41, c:'#7F77DD'},
@@ -347,7 +347,7 @@ const PH = [
   {id:'p2',nm:'Phase 2 — Gros œuvre & maçonnerie',tasks:[
     {id:'t10',n:'Esquisse & plans définitifs (plans du 29/07/2026 retenus)',s:'done'},{id:'t11',n:'Dallage complément sous-sol',s:'done'},
     {id:'t12',n:'Carottages en dalle',s:'done'},{id:'t13',n:'Étanchéité sous-sol',s:'done'},
-    {id:'t58',n:'Rebouchage plancher séjour/cuisine (Maçonnerie) — date d\'intervention à communiquer',s:'wip'}]},
+    {id:'t58',n:'Rebouchage plancher séjour/cuisine (Maçonnerie) — devis 0431989 signé (522,50 € TTC), date d\'intervention à communiquer',s:'wip'}]},
   {id:'p3',nm:'Phase 3 — Toiture & Velux (Lemoine)',tasks:[
     {id:'t19',n:'Pose 2 Velux GGL MK06 (Lemoine)',s:'done'},{id:'t20',n:'Volets solaires Velux SSL (Lemoine)',s:'done'},
     {id:'t59',n:'Ventilation VMC en toiture (Lemoine, en lien avec l\'électricien)',s:'wip'}]},
@@ -469,9 +469,9 @@ const STYLES = ['Moderne','Scandinave','Industriel','Classique','Bohème','Minim
 // ═══ ARTISANS RÉELS (extraits des devis) ══════════════════════════════════
 const DEFAULT_ARTISANS = [
   {i:'CF',n:'Charlie Fraleux',r:'Maître d\'œuvre — Atelier Fraleux',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'06 68 07 63 68',email:'charlie@atelierfraleux.fr',note:''},
-  {i:'MR',n:'La Petite Maçonnerie Rennaise',r:'Démolition · Maçonnerie · Ravalement',s:'Planifié',bg:'#FAC775',tc:'#854F0B',phone:'02 99 30 41 58',email:'contact@lamaconnerie.fr',note:'Devis 18237 signé — 34 170,75 € TTC'},
-  {i:'JV',n:'J. VIDAL',r:'Placo · Isolation · Plafonds',s:'Planifié',bg:'#9FE1CB',tc:'#0F6E56',phone:'06 07 58 89 44',email:'sarlj.vidal@me.com',note:'Devis DEV00002450 signé — 25 916,33 € TTC · Acompte 30% : 7 774,90 €'},
-  {i:'AE',n:'AEROCHAUFFE',r:'Plomberie · Chauffage · Sanitaires',s:'Planifié',bg:'#B5D4F4',tc:'#185FA5',phone:'02 99 60 84 13',email:'aerochauff@orange.fr',note:'Devis DE558 signé — 23 474,94 € TTC · Portable : 06 76 51 23 19'},
+  {i:'MR',n:'La Petite Maçonnerie Rennaise',r:'Démolition · Maçonnerie · Ravalement',s:'Planifié',bg:'#FAC775',tc:'#854F0B',phone:'02 99 30 41 58',email:'contact@lamaconnerie.fr',note:'Devis 18237 signé — 34 170,75 € TTC · + Devis 0431989 (10/09/2026) rebouchage chevêtres — 522,50 € TTC · Total 34 693,25 € TTC'},
+  {i:'JV',n:'J. VIDAL',r:'Placo · Isolation · Plafonds',s:'Planifié',bg:'#9FE1CB',tc:'#0F6E56',phone:'06 07 58 89 44',email:'sarlj.vidal@me.com',note:'Devis DEV00002450 signé — 25 916,33 € TTC · Acompte 30% : 7 774,90 € · + Devis DEV00002578 signé 21/09/2026 (démolition SdB + travaux suppl. RDC/combles imprévus) — 2 570,03 € TTC, acompte 30% 771,01 € dû 16/10/2026 · Total 28 486,36 € TTC'},
+  {i:'AE',n:'AEROCHAUFFE',r:'Plomberie · Chauffage · Sanitaires',s:'Planifié',bg:'#B5D4F4',tc:'#185FA5',phone:'02 99 60 84 13',email:'aerochauff@orange.fr',note:'Devis DE558 révisé (choix CEDEO, 21-23/09/2026) — 24 974,83 € TTC · Acompte facture FC5050 : 7 040 € (26/07/2026) · Portable : 06 76 51 23 19'},
   {i:'BZ',n:'BIZEUL Carrelage',r:'Carrelage · Chapes · Faïence',s:'Planifié',bg:'#CECBF6',tc:'#3C3489',phone:'02 99 68 66 79',email:'contact@bizeul-carrelage.fr',note:'Devis D202605408 signé — 19 081,36 € TTC · Acompte 30% : 5 724,41 €'},
   {i:'M2',n:'M2T Électricité',r:'Électricité complète',s:'Planifié',bg:'#C0DD97',tc:'#3B6D11',phone:'06 13 34 02 50',email:'contact@m2t-electricite.fr',note:'Devis D-000719 v2 signé — 11 985,06 € TTC'},
   {i:'LB',n:'LEMOINE Benjamin',r:'Velux · Volets toiture',s:'Planifié',bg:'#F4C0D1',tc:'#993556',phone:'',email:'',note:'Devis DEV00000148 signé — 4 691,41 € TTC · Acompte : 1 407,42 €'},
@@ -488,6 +488,7 @@ const DEFAULT_STATE = {
   addArtForm: false,
   moe: { pct: 10, base: 0, payments: [] },
   mergedBins: [],
+  deletedIds: [],
 };
 
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -583,10 +584,17 @@ async function mergeFromBin() {
     toast('Erreur — vérifiez l\'ID de ce bin');
   }
 }
-function mergePayments(localArr, remoteArr) {
+function mergePayments(localArr, remoteArr, deletedSet) {
   const map = new Map();
   (localArr || []).forEach(p => p && p.id && map.set(p.id, p));
   (remoteArr || []).forEach(p => p && p.id && map.set(p.id, p));
+  // A deleted entry must not come back just because the other side's copy
+  // of it (saved before the delete synced) is still in the union — without
+  // this, "Suppr." looked like it worked, then the row silently reappeared
+  // a moment later once the next sync re-merged in the stale remote entry.
+  if (deletedSet && deletedSet.size) {
+    Array.from(map.keys()).forEach(id => { if (deletedSet.has(id)) map.delete(id); });
+  }
   return Array.from(map.values());
 }
 function shallowMergePreferLocal(remote, local) {
@@ -601,14 +609,18 @@ function mergeState(remote) {
   if (!remote) return;
   // Union-merge virements/payments by id so a stale device can never erase
   // entries that another device already saved — additive, never destructive.
+  // Deletions are the one exception: they're tracked as tombstones (ids in
+  // deletedIds) so a "Suppr." doesn't get silently resurrected by the next
+  // sync's union with a remote copy that predates the delete.
+  const deletedIds = new Set([...(S.deletedIds || []), ...(remote.deletedIds || [])]);
   const lotIds = new Set([...Object.keys(S.lots || {}), ...Object.keys(remote.lots || {})]);
   const mergedLots = {};
   lotIds.forEach(id => {
     const loc = (S.lots || {})[id] || {};
     const rem = (remote.lots || {})[id] || {};
-    mergedLots[id] = Object.assign({}, loc, rem, { payments: mergePayments(loc.payments, rem.payments) });
+    mergedLots[id] = Object.assign({}, loc, rem, { payments: mergePayments(loc.payments, rem.payments, deletedIds) });
   });
-  const mergedMoePayments = mergePayments((S.moe || {}).payments, (remote.moe || {}).payments);
+  const mergedMoePayments = mergePayments((S.moe || {}).payments, (remote.moe || {}).payments, deletedIds);
   // Same additive protection for tasks/achats/sources/choix/ambiances: these
   // used to be a blind Object.assign(S, remote), which meant the routine
   // pull-before-push auto-sync could silently overwrite an edit you'd just
@@ -628,7 +640,7 @@ function mergeState(remote) {
     const loc = (S.sources || {})[id] || {};
     const rem = (remote.sources || {})[id] || {};
     const winner = (rem._ts || 0) > (loc._ts || 0) ? rem : loc;
-    mergedSources[id] = Object.assign({}, winner, { withdrawals: mergePayments(loc.withdrawals, rem.withdrawals) });
+    mergedSources[id] = Object.assign({}, winner, { withdrawals: mergePayments(loc.withdrawals, rem.withdrawals, deletedIds) });
   });
   const mergedChoix = shallowMergePreferLocal(remote.choix, S.choix);
   const mergedMb = shallowMergePreferLocal(remote.mb, S.mb);
@@ -645,6 +657,7 @@ function mergeState(remote) {
   S.choix = mergedChoix;
   S.mb = mergedMb;
   S.mergedBins = mergedBinsList;
+  S.deletedIds = Array.from(deletedIds);
 
   // Ensure new fields exist for older saves
   if (!S.lots) S.lots = {};
@@ -659,8 +672,11 @@ function mergeState(remote) {
   if (!S.openLots) S.openLots = {};
   if (!S.openSources) S.openSources = {};
   if (!Array.isArray(S.mergedBins)) S.mergedBins = [];
+  if (!Array.isArray(S.deletedIds)) S.deletedIds = [];
   // Choix désormais tranchés suite au devis CEDEO / Aerochauffe révisé (21/09/2026)
   ['cx15','cx16','cx17','cx18','cx19','cx20','cx21','cx22','cx23','cx25'].forEach(id => { S.choix[id] = true; });
+  // cx24 (lave-main WC R+1) confirmé sur le devis Aerochauffe annoté du 23/09/2026
+  S.choix['cx24'] = true;
   // Choix carrelage/faïence tranchés suite au devis Bizeul mis à jour (14/09/2026, fiche Mosaic)
   ['cx26','cx27','cx28','cx29','cx30','cx31','cx32'].forEach(id => { S.choix[id] = true; });
   Object.keys(S.lots || {}).forEach(id => {
@@ -891,9 +907,14 @@ function addLotPayment(lotId) {
   S.lots[lotId].payments.push({ id: 'lp'+Date.now(), date, amount, note });
   persist(); rLots(); toast('Virement ajouté');
 }
+function tombstone(id) {
+  if (!Array.isArray(S.deletedIds)) S.deletedIds = [];
+  if (!S.deletedIds.includes(id)) S.deletedIds.push(id);
+}
 function delLotPayment(lotId, paymentId) {
   if (!S.lots[lotId]?.payments) return;
   S.lots[lotId].payments = S.lots[lotId].payments.filter(p => p.id !== paymentId);
+  tombstone(paymentId);
   persist(); rLots();
 }
 
@@ -987,6 +1008,7 @@ function addSrcWithdrawal(srcId) {
 function delSrcWithdrawal(srcId, wId) {
   if (!S.sources[srcId]?.withdrawals) return;
   S.sources[srcId].withdrawals = S.sources[srcId].withdrawals.filter(w => w.id !== wId);
+  tombstone(wId);
   persist(); rSources();
 }
 
@@ -1062,6 +1084,7 @@ function addMoePayment() {
 
 function delMoePayment(id) {
   S.moe.payments = S.moe.payments.filter(p => p.id !== id);
+  tombstone(id);
   persist(); rMoe();
 }
 
@@ -1170,7 +1193,7 @@ const CHOIX_GROUPS = [
     {id:'cx21',n:'Radiateurs → Confirmé : 1 neuf Finimétal Reggane 3010 Standard 11S 600×600, les autres conservés/réemployés',prio:4},
     {id:'cx22',n:'Miroir SdB R+1 → Choisi : Alterna Vienne L120×H80 réversible, au lieu de Milan LED 50 cm',prio:4},
     {id:'cx23',n:'Lave-mains WC RDC → Choisi : Alterna Priméo blanc + Alterna Priméo chêne, mitigeurs Concerto chromé',prio:4},
-    {id:'cx24',n:'Lave-main WC R+1 → Choisi : module de raccordement Fixoconnect + robinet d\'équerre type Boku (pas de lave-main dédié) — à re-vérifier avec Aerochauffe',prio:4},
+    {id:'cx24',n:'Lave-main WC R+1 → Confirmé (devis annoté 23/09/2026) : lave-main Alterna Priméo Chêne + mitigeur Concerto chromé, relocalisé de WC Rdc vers WC R+1',prio:4},
     {id:'cx25',n:'Paroi de douche R+1 → Choisi : Alterna Domino Fixe + pivot 100 cm, au lieu de la version pivotante L70×H195',prio:4},
   ]},
   {id:'E',letter:'E',nm:'Carrelage & Faïence (Bizeul)',c:'#1D9E75',bg:'#E5F4EE',prio:5,items:[
