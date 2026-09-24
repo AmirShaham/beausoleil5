@@ -483,7 +483,7 @@ const DEFAULT_ARTISANS = [
 const DEFAULT_STATE = {
   budget: 150000,
   tasks: {}, shop: {}, lots: {}, sources: {}, choix: {},
-  openCats: {}, openArtisans: {}, openRooms: {}, mb: {}, openLots: {},
+  openCats: {}, openArtisans: {}, openRooms: {}, mb: {}, openLots: {}, openSources: {},
   artisans: JSON.parse(JSON.stringify(DEFAULT_ARTISANS)),
   addArtForm: false,
   moe: { pct: 10, base: 0, payments: [] },
@@ -616,7 +616,15 @@ function mergeState(remote) {
   // older value — the "checking one task changes others" bug.
   const mergedTasks = shallowMergePreferLocal(remote.tasks, S.tasks);
   const mergedShop = shallowMergePreferLocal(remote.shop, S.shop);
-  const mergedSources = shallowMergePreferLocal(remote.sources, S.sources);
+  // Sources also carry a withdrawals[] history now (like lots' payments) —
+  // union those by id too, on top of the local-wins merge for avail/planned.
+  const srcIds = new Set([...Object.keys(S.sources || {}), ...Object.keys(remote.sources || {})]);
+  const mergedSources = {};
+  srcIds.forEach(id => {
+    const loc = (S.sources || {})[id] || {};
+    const rem = (remote.sources || {})[id] || {};
+    mergedSources[id] = Object.assign({}, rem, loc, { withdrawals: mergePayments(loc.withdrawals, rem.withdrawals) });
+  });
   const mergedChoix = shallowMergePreferLocal(remote.choix, S.choix);
   const mergedMb = shallowMergePreferLocal(remote.mb, S.mb);
   // mergedBins is a list of bin IDs already folded in — union it too, or
@@ -644,6 +652,7 @@ function mergeState(remote) {
   if (!S.moe) S.moe = { pct: 10, base: 0, payments: [] };
   if (!Array.isArray(S.moe.payments)) S.moe.payments = [];
   if (!S.openLots) S.openLots = {};
+  if (!S.openSources) S.openSources = {};
   if (!Array.isArray(S.mergedBins)) S.mergedBins = [];
   // Choix désormais tranchés suite au devis CEDEO / Aerochauffe révisé (21/09/2026)
   ['cx15','cx16','cx17','cx18','cx19','cx20','cx21','cx22','cx23','cx25'].forEach(id => { S.choix[id] = true; });
@@ -656,6 +665,9 @@ function mergeState(remote) {
       l.payments.push({ id: 'lp'+id+'migr', date: '', amount: l.paid, note: 'Montant migré (saisie précédente)' });
     }
     delete l.paid;
+  });
+  Object.keys(S.sources || {}).forEach(id => {
+    if (!Array.isArray(S.sources[id].withdrawals)) S.sources[id].withdrawals = [];
   });
 }
 
@@ -720,6 +732,9 @@ function srcAvail(id) { return S.sources[id]?.avail ?? 0; }
 function srcPlanned(id) { return S.sources[id]?.planned ?? 0; }
 function srcTotalAvail() { return SOURCES.reduce((a,s) => a + srcAvail(s.id), 0); }
 function srcTotalPlanned() { return SOURCES.reduce((a,s) => a + srcPlanned(s.id), 0); }
+function srcWithdrawals(id) { return (S.sources[id]?.withdrawals) || []; }
+function srcWithdrawn(id) { return srcWithdrawals(id).reduce((a,w) => a + (w.amount||0), 0); }
+function srcTotalWithdrawn() { return SOURCES.reduce((a,s) => a + srcWithdrawn(s.id), 0); }
 function getMB(rid) { return S.mb[rid] || {c1:'#F5F0E8',c2:'#C8B89A',c3:'#6B5B4E',style:'',sol:'',murs:'',eclairage:'',note:''}; }
 function fmt(n) { return Math.round(n).toLocaleString('fr-FR'); }
 function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
@@ -879,6 +894,7 @@ function rSources() {
   const restantACouvrir = Math.max(budget - spent, 0);
   const covPct = restantACouvrir > 0 ? Math.round(total / restantACouvrir * 100) : 100;
 
+  const withdrawn = srcTotalWithdrawn();
   document.getElementById('src-metrics').innerHTML = `
     <div class="metric"><div class="metric-label">Disponible maintenant</div><div class="metric-value" style="color:var(--green)">${fmt(avail)} €</div><div class="metric-sub">Épargne actuelle</div></div>
     <div class="metric"><div class="metric-label">Virements prévus</div><div class="metric-value" style="color:var(--blue)">${fmt(planned)} €</div><div class="metric-sub">À venir</div></div>
@@ -887,13 +903,17 @@ function rSources() {
 
   document.getElementById('sources-list').innerHTML = SOURCES.map(src => {
     const a = srcAvail(src.id), p = srcPlanned(src.id);
+    const w = srcWithdrawn(src.id);
+    const open = S.openSources[src.id] === true;
+    const withdrawals = srcWithdrawals(src.id).slice().sort((x,y) => (y.date||'').localeCompare(x.date||''));
     return `<div class="src-card">
-      <div class="src-hdr">
+      <div class="src-hdr" style="cursor:pointer;" onclick="togSrcOpen('${src.id}')">
         <div class="src-icon" style="background:${src.c};">${src.icon}</div>
         <div class="src-name">${src.nm}</div>
         <span class="src-status" style="background:${src.c};color:${src.tc};">${src.type}</span>
+        <span style="font-size:11px;color:var(--text2);margin-left:6px;">${open?'▲':'▼'}</span>
       </div>
-      <div class="src-fields">
+      <div class="src-fields" onclick="event.stopPropagation()">
         <div class="src-field">
           <label>Disponible maintenant (€)</label>
           <input type="number" value="${a}" min="0" step="100" onchange="updSrc('${src.id}','avail',this.value)">
@@ -903,16 +923,53 @@ function rSources() {
           <input type="number" value="${p}" min="0" step="100" onchange="updSrc('${src.id}','planned',this.value)">
         </div>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;" onclick="togSrcOpen('${src.id}')">
+        <span style="font-size:11px;color:var(--text2);flex:1;">Virements effectués (cumul) :</span>
+        <span style="font-size:13px;font-weight:600;">${fmt(w)} €</span>
+      </div>
+      ${open ? `
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);" onclick="event.stopPropagation()">
+        <p style="font-size:12px;font-weight:600;margin-bottom:8px;">Virements effectués (${withdrawals.length})</p>
+        ${withdrawals.length ? withdrawals.map(wd => `
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:12px;color:var(--text2);width:88px;flex-shrink:0;">${wd.date||'—'}</span>
+            <span style="font-size:13px;font-weight:600;width:90px;flex-shrink:0;">${fmt(wd.amount)} €</span>
+            <span style="font-size:12px;color:var(--text2);flex:1;">${wd.note||''}</span>
+            <button class="btn-ghost" style="padding:3px 8px;font-size:11px;color:#E24B4A;border-color:#E24B4A;" onclick="delSrcWithdrawal('${src.id}','${wd.id}')">Suppr.</button>
+          </div>`).join('') : '<p style="font-size:12px;color:var(--text2);">Aucun virement enregistré.</p>'}
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;">
+          <div class="src-field" style="flex:0 0 130px;"><label>Date</label><input type="date" id="src-new-date-${src.id}" value="${new Date().toISOString().slice(0,10)}"></div>
+          <div class="src-field" style="flex:0 0 110px;"><label>Montant (€)</label><input type="number" id="src-new-amount-${src.id}" min="0" step="50" placeholder="0"></div>
+          <div class="src-field" style="flex:1 1 140px;"><label>Note (optionnel)</label><input type="text" id="src-new-note-${src.id}" placeholder="ex: virement vers compte travaux"></div>
+          <button class="btn-add" onclick="addSrcWithdrawal('${src.id}')">+ Ajouter</button>
+        </div>
+      </div>` : ''}
     </div>`;
   }).join('');
 
   rMoe();
 }
+function togSrcOpen(id) { S.openSources[id] = !S.openSources[id]; persist(); rSources(); }
 function updSrc(id, field, v) {
   if (!S.sources[id]) S.sources[id] = {};
   S.sources[id][field] = parseFloat(v) || 0;
   persist();
   rSources();
+}
+function addSrcWithdrawal(srcId) {
+  const date = document.getElementById(`src-new-date-${srcId}`).value;
+  const amount = parseFloat(document.getElementById(`src-new-amount-${srcId}`).value) || 0;
+  const note = document.getElementById(`src-new-note-${srcId}`).value.trim();
+  if (amount <= 0) { toast('Indiquez un montant'); return; }
+  if (!S.sources[srcId]) S.sources[srcId] = {};
+  if (!Array.isArray(S.sources[srcId].withdrawals)) S.sources[srcId].withdrawals = [];
+  S.sources[srcId].withdrawals.push({ id: 'sw'+Date.now(), date, amount, note });
+  persist(); rSources(); toast('Virement ajouté');
+}
+function delSrcWithdrawal(srcId, wId) {
+  if (!S.sources[srcId]?.withdrawals) return;
+  S.sources[srcId].withdrawals = S.sources[srcId].withdrawals.filter(w => w.id !== wId);
+  persist(); rSources();
 }
 
 // ═══ MAÎTRE D'ŒUVRE — HONORAIRES ═══════════════════════════════════════════
