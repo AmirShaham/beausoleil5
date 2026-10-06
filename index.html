@@ -172,6 +172,14 @@
   .choix-tag { font-size: 10px; padding: 2px 7px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
   .chrono-phase { font-size: 12px; font-weight: 600; color: var(--text2); padding: 12px 0 6px; border-top: 1px solid var(--border); margin-top: 6px; }
   .chrono-phase:first-child { border-top: none; margin-top: 0; }
+  /* FILES */
+  .file-cat { font-size: 11px; font-weight: 600; color: var(--text2); padding: 10px 0 6px; text-transform: uppercase; letter-spacing: .05em; border-top: 1px solid var(--border); margin-top: 6px; }
+  .file-cat:first-child { border-top: none; margin-top: 0; }
+  .file-row { display: flex; align-items: center; gap: 11px; padding: 10px 6px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 8px; }
+  .file-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .file-name { font-size: 13px; font-weight: 500; }
+  .file-meta { font-size: 11px; color: var(--text2); margin-top: 1px; }
+  .file-actions { display: flex; gap: 6px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -207,6 +215,7 @@
       <button class="nav-tab" onclick="sv('travaux',this)">Travaux</button>
       <button class="nav-tab" onclick="sv('achats',this)">Achats</button>
       <button class="nav-tab" onclick="sv('ambiances',this)">Ambiances</button>
+      <button class="nav-tab" onclick="sv('files',this)">Fichiers</button>
       <button class="nav-tab" onclick="sv('settings',this)">Réglages</button>
     </div>
   </div>
@@ -282,6 +291,15 @@
     <div class="mb-grid" id="mb-grid"></div>
   </div>
 
+  <div class="view" id="v-files">
+    <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
+      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Fichiers du projet</p>
+      <p style="font-size:12px;color:var(--text2);">Plans, devis et documents accessibles depuis PC et téléphone</p>
+    </div>
+    <input class="search-inp" type="text" placeholder="Rechercher un fichier..." id="files-search" oninput="rFiles()">
+    <div id="files-list"></div>
+  </div>
+
   <div class="view" id="v-settings">
     <div class="settings-section">
       <h3>Projet</h3>
@@ -336,6 +354,17 @@ const SOURCES = [
   {id:'src_dividendes', nm:'Dividendes Amir', icon:'📈', type:'Virement prévu', c:'#EDEAFB', tc:'#3C3489'},
 ];
 
+// ═══ FICHIERS ════════════════════════════════════════════════════════════
+// Les fichiers eux-mêmes vivent dans /files/ à côté de index.html (pas dans
+// JSONBin — trop volumineux pour le bin) ; seule cette liste est à éditer
+// (comme LOTS/PH) puis à commit+push pour qu'un nouveau fichier apparaisse.
+const FILES = [
+  {id:'f_plans_apo', nm:'Plans — Appel d\'offres aux entreprises', cat:'Plans', icon:'📐', path:'files/plans-apo-06-05-2026.pdf', date:'06/05/2026', size:'7,2 Mo', note:'Dossier de plans (phase APO) — Atelier Fraleux, 14 pages. Plan sous-sol existant + Plan RDC existant.'},
+  {id:'f_cr5', nm:'Compte-rendu de chantier n°5', cat:'Comptes-rendus', icon:'📋', path:'files/cr-chantier-n5-01-10-2026.pdf', date:'01/10/2026', size:'130 Ko', note:'Atelier Fraleux — avancement par lot, prochaine réunion le 08/10/2026 à 10h. Accès boîte à clé (code 2135).'},
+];
+const FILE_CATS = {'Plans':{c:'#E6F1FB',tc:'#185FA5'},'Devis':{c:'#FAEEDA',tc:'#854F0B'},'Contrats':{c:'#EAF3DE',tc:'#3B6D11'},'Comptes-rendus':{c:'#EDEAFB',tc:'#3C3489'},'Photos':{c:'#F4E6F1',tc:'#993556'},'Autres':{c:'#F1EFE8',tc:'#5F5E5A'}};
+const FILE_ICON_BG = {'📐':'#E6F1FB','📄':'#FAEEDA','📋':'#EDEAFB','🖼':'#F4E6F1'};
+
 // ═══ PHASES TRAVAUX ═════════════════════════════════════════════════════
 const PH = [
   {id:'p1',nm:'Phase 1 — Démolition & déblaiement',tasks:[
@@ -358,15 +387,15 @@ const PH = [
     {id:'t29',n:'Neutralisation arrivée gaz cuisine',s:'done'},
     {id:'t60',n:'Alimentations VR électriques + PC/appliques extérieurs (M2T)',s:'wip'},
     {id:'t61',n:'Renforts ventilo de plafonds Bureau + CH. Parentale (éclairage intégré)',s:'wip'},
-    {id:'t62',n:'VMC : passage des gaines en combles — faisabilité en attente',s:'todo'},
+    {id:'t62',n:'VMC : gaines passées en combles (confirmé CR n°5 du 01/10 — avancement 05/10/2026)',s:'done'},
     {id:'t63',n:'Modifs élec ponctuelles (liseuses CH. parentale à 1m, PC salle de musique, spots WC R+1)',s:'wip'}]},
   {id:'p5',nm:'Phase 5 — Placo & isolation intérieure (Vidal)',tasks:[
     {id:'t30',n:'Sous-sol : plafond rampant + isolation murs',s:'done'},{id:'t31',n:'RDC : plafonds + doublages + cloisons',s:'wip'},
-    {id:'t32',n:'R+1 : isolation toiture rampants + cloisons',s:'wip'},{id:'t33',n:'Réservations verrières',s:'todo'},
-    {id:'t34',n:'Habillage WC suspendus + coffres',s:'wip'},{id:'t35',n:'Joints placo',s:'todo'},
+    {id:'t32',n:'R+1 : isolation toiture rampants + cloisons',s:'wip'},{id:'t33',n:'Réservations verrières — pose prévue après la peinture (précision CR n°5 du 01/10/2026)',s:'todo'},
+    {id:'t34',n:'Habillage WC suspendus + coffres',s:'wip'},{id:'t35',n:'Joints placo — bandes en cours cette semaine et en partie la semaine prochaine (CR n°5, avancement 05/10/2026)',s:'wip'},
     {id:'t64',n:'Réservation douche R+1 (soubassement 45cm placo + réservation porte 99,5cm fini, plan variante du 21/09)',s:'wip'},
     {id:'t65',n:'Devis complémentaire : niche armoire de toilette SDE RDC + coffre en biais buanderie',s:'wip'},
-    {id:'t66',n:'Porte buanderie : dépose + pose bloc porte phonique (montant à confirmer)',s:'todo'},
+    {id:'t66',n:'Porte buanderie : remplacement confirmé par une porte neuve, sens d\'ouverture suivant plan chantier (CR n°5 du 01/10/2026)',s:'wip'},
     {id:'t67',n:'Évacuation gravats / nettoyage extérieur',s:'wip'},
     {id:'t77',n:'Démolition 1ère couche carrelage + découpe faïence SdB RDC (devis DEV00002578 signé 21/09)',s:'todo'},
     {id:'t78',n:'BA13 collée + plus-value placo marine RDC, 16+18m² (devis DEV00002578)',s:'todo'},
@@ -381,12 +410,15 @@ const PH = [
     {id:'t40',n:'Carrelage sols R+1 (WC + SdB) — 60×60 Beige Nat RT',s:'todo'},{id:'t41',n:'Faïence murale SdE R+1 — 35×100 Beige Nat RT + liseré mosaïque',s:'todo'},
     {id:'t42',n:'Crédences vasques (x5) — mosaïque/35×100 en R+1, Fan White Brillo en RDC',s:'todo'},{id:'t43',n:'Plinthes',s:'todo'},
     {id:'t68',n:'Réservation paillasson encastré (80×50cm, décalé porte ~15cm)',s:'todo'},
-    {id:'t69',n:'Choix carrelage/faïence validés — devis signé le 21/09, en attente de commande fournitures',s:'done'}]},
+    {id:'t69',n:'Choix carrelage/faïence validés — devis signé le 21/09, en attente de commande fournitures',s:'done'},
+    {id:'t85',n:'Nouveau choix de carrelage RDC en cours, hors délai initial — à valider rapidement avec Bizeul (CR n°5, avancement 05/10/2026)',s:'wip'},
+    {id:'t86',n:'Préparation R+1 (ponçage/ragréage) lancée (CR n°5, avancement 05/10/2026)',s:'wip'},
+    {id:'t87',n:'Confirmer une nouvelle date avec Bizeul pour le ponçage/ragréage R+1 — reporté du 05/10, étage à libérer (CR n°5)',s:'todo'}]},
   {id:'p7',nm:'Phase 7 — Sanitaires & équipements (Aerochauffe)',tasks:[
     {id:'t44',n:'3 WC suspendus Grohé/Alterna — pose en cours',s:'wip'},{id:'t45',n:'Lave-mains WC RDC (meuble blanc) + R+1 (meuble bois) — matériaux confirmés',s:'wip'},
     {id:'t46',n:'Meuble vasque SdB RDC 90cm',s:'todo'},{id:'t47',n:'Douche R+1 : receveur + paroi (réservations placo finalisées)',s:'todo'},
     {id:'t48',n:'Meuble double vasque R+1 120cm',s:'todo'},{id:'t49',n:'Miroir LED + radiateur sèche-serviettes',s:'todo'},
-    {id:'t70',n:'Commander l\'armoire de toilette (pour valider la faisabilité de la niche placo)',s:'todo'},
+    {id:'t70',n:'Armoire de toilette : implantation validée sur site avec le plaquiste — bas à 1,35m, réservation applique laissée en partie haute (CR n°5, avancement 05/10/2026)',s:'wip'},
     {id:'t84',n:'Vérifier l\'emplacement du miroir SdB R+1 (Alterna Vienne) par rapport à la sous-pente — noté sur le devis annoté du 23/09',s:'todo'}]},
   {id:'p8',nm:'Phase 8 — Menuiseries extérieures (SAB)',tasks:[
     {id:'t21',n:'Porte d\'entrée + fenêtre WC (SAB) — intervention avant mi-octobre',s:'todo'},{id:'t22',n:'Motorisation volets roulants + porte de garage (SAB) — intervention prévue le 12/10',s:'todo'},
@@ -403,7 +435,8 @@ const PH = [
   {id:'p11',nm:'Phase 11 — Sols & peinture (par vos soins)',tasks:[
     {id:'t51',n:'Parquet chambres (hors devis - à commander)',s:'todo'},{id:'t52',n:'Peinture intérieure complète (hors devis)',s:'todo'},
     {id:'t53',n:'Menuiserie intérieure : portes (Vidal)',s:'todo'},
-    {id:'t76',n:'Peinture et remise en état de l\'escalier (par vos soins)',s:'todo'}]},
+    {id:'t76',n:'Peinture et remise en état de l\'escalier (par vos soins)',s:'todo'},
+    {id:'t88',n:'Raccord sol chambre d\'amis à l\'emplacement du placard — à trancher : socle de placard ou placard couvrant l\'espace ? (CR n°5, 05/10/2026)',s:'todo'}]},
   {id:'p12',nm:'Phase 12 — Finitions & réception',tasks:[
     {id:'t54',n:'Réglages électricité finaux',s:'todo'},{id:'t55',n:'Réglages plomberie finale',s:'todo'},
     {id:'t56',n:'Nettoyage chantier',s:'todo'},{id:'t57',n:'Réception des travaux',s:'todo'}]},
@@ -749,7 +782,7 @@ function sv(v, btn) {
   document.querySelectorAll('.view').forEach(el => el.classList.remove('on'));
   if (btn) btn.classList.add('on');
   document.getElementById('v-' + v)?.classList.add('on');
-  ({dash:rDash, lots:rLots, sources:rSources, choix:rChoix, travaux:rTravaux, achats:rAchats, ambiances:rAmbiances}[v] || (()=>{}))();
+  ({dash:rDash, lots:rLots, sources:rSources, choix:rChoix, travaux:rTravaux, achats:rAchats, ambiances:rAmbiances, files:rFiles}[v] || (()=>{}))();
 }
 
 // ═══ HELPERS ═════════════════════════════════════════════════════════════
@@ -1392,6 +1425,38 @@ function rTaskList() {
   document.getElementById('travaux-list').innerHTML = h || '<p style="color:var(--text2);font-size:13px;padding:1rem 0;">Aucune tâche.</p>';
 }
 function cycleTask(id, def) { const c = ts(id,def); S.tasks[id] = c==='todo'?'wip':c==='wip'?'done':'todo'; persist(); rTaskList(); }
+
+// ═══ FICHIERS ════════════════════════════════════════════════════════════
+function rFiles() {
+  const srch = (document.getElementById('files-search')?.value||'').toLowerCase();
+  const byCat = {};
+  FILES.filter(f => !srch || f.nm.toLowerCase().includes(srch) || (f.note||'').toLowerCase().includes(srch)).forEach(f => {
+    (byCat[f.cat] = byCat[f.cat] || []).push(f);
+  });
+  const cats = Object.keys(byCat);
+  if (!cats.length) {
+    document.getElementById('files-list').innerHTML = '<p style="color:var(--text2);font-size:13px;padding:1rem 0;">Aucun fichier.</p>';
+    return;
+  }
+  let h = '';
+  cats.forEach(cat => {
+    h += `<div class="file-cat">${cat}</div>`;
+    byCat[cat].forEach(f => {
+      h += `<div class="file-row">
+        <div class="file-icon" style="background:${FILE_ICON_BG[f.icon]||'var(--bg3)'};">${f.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="file-name">${f.nm}</div>
+          <div class="file-meta">${f.date?f.date+' · ':''}${f.size?f.size+' · ':''}${f.note||''}</div>
+        </div>
+        <div class="file-actions">
+          <a class="art-link" href="${f.path}" target="_blank" rel="noopener">Ouvrir</a>
+          <a class="art-link" href="${f.path}" download>⬇</a>
+        </div>
+      </div>`;
+    });
+  });
+  document.getElementById('files-list').innerHTML = h;
+}
 
 // ═══ ACHATS ══════════════════════════════════════════════════════════════
 function rAchats() {
