@@ -31,8 +31,8 @@
   body { font-family: var(--font-body); background: var(--bg2); color: var(--text); min-height: 100vh;
     background-image: linear-gradient(rgba(53,97,123,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(53,97,123,0.05) 1px, transparent 1px);
     background-size: 28px 28px; }
-  #app { max-width: 1100px; margin: 0 auto; background: transparent; min-height: 100vh; }
-  .app-header { background: var(--spine); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 16px; position: sticky; top: 0; z-index: 100; }
+  #app { max-width: 1180px; margin: 0 auto; background: transparent; min-height: 100vh; display: flex; flex-wrap: wrap; align-items: flex-start; }
+  .app-header { background: var(--spine); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 16px; position: sticky; top: 0; z-index: 100; flex: 1 1 100%; }
   .app-brand { display: flex; align-items: center; gap: 10px; padding: 14px 0 10px; }
   .app-brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--spine-accent); }
   .app-brand h1 { font-family: var(--font-head); font-style: italic; font-size: 17px; font-weight: 500; color: var(--spine-text-on); }
@@ -46,6 +46,18 @@
   .nav-tab.on { color: var(--spine-text-on); font-weight: 600; border-bottom-color: var(--spine-accent); }
   .view { display: none; padding: 16px; }
   .view.on { display: block; }
+
+  /* Desktop / wide viewport: side nav instead of top bar */
+  @media (min-width: 760px) {
+    .app-header { flex: 0 0 240px; min-width: 210px; min-height: 100vh; border-bottom: none; border-right: 1px solid rgba(255,255,255,0.08); padding: 28px 0 20px; display: flex; flex-direction: column; }
+    .app-brand { flex-direction: column; align-items: flex-start; gap: 4px; padding: 0 22px 22px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 14px; }
+    .app-brand-dot { display: none; }
+    .nav-tabs { flex-direction: column; overflow-x: visible; overflow-y: auto; gap: 2px; padding: 0 10px; flex: 1; }
+    .nav-tab { text-align: left; padding: 10px 12px; border-bottom: none; border-left: 3px solid transparent; border-radius: 0 3px 3px 0; margin-left: -10px; padding-left: 19px; }
+    .nav-tab.on { border-left-color: var(--spine-accent); border-bottom-color: transparent; background: rgba(255,255,255,0.05); }
+    .sync-status { margin: 14px 22px 0; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); }
+    .view.on { flex: 999 1 560px; min-width: 0; }
+  }
   #setup-screen { position: fixed; inset: 0; background: var(--bg); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .setup-box { max-width: 420px; width: 100%; }
   .setup-box h2 { font-family: var(--font-head); font-size: 22px; font-weight: 500; margin-bottom: 6px; }
