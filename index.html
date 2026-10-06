@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#D85A30">
+<meta name="theme-color" content="#1C2F3B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Beausoleil 5">
@@ -12,37 +12,43 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Karla:wght@400;500;600;700&display=swap">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --accent: #D85A30; --accent2: #BA7517; --green: #1D9E75; --blue: #378ADD; --purple: #7F77DD;
-    --bg: #ffffff; --bg2: #f5f4f0; --bg3: #edecea;
-    --text: #1a1a18; --text2: #6b6b68; --text3: #9a9a97;
-    --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
-    --radius: 10px; --radius-lg: 14px;
+    --accent: #35617B; --accent2: #B9862E; --green: #5F6F5A; --blue: #2E82A8; --purple: #7F77DD;
+    --spine: #1C2F3B; --spine-text: rgba(244,240,230,0.62); --spine-text-on: #F4F0E6; --spine-accent: #7FB2C9;
+    --bg: #ffffff; --bg2: #F4F0E6; --bg3: #EEE8D8;
+    --text: #241F1A; --text2: #6B6358; --text3: #8A8273;
+    --border: #E6DFCD; --border2: rgba(36,31,26,0.18);
+    --radius: 4px; --radius-lg: 6px;
+    --font-head: 'Spectral', Georgia, serif; --font-body: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg:#1c1c1a; --bg2:#262624; --bg3:#2e2e2c; --text:#f0ede8; --text2:#a0a09d; --text3:#6a6a68; --border:rgba(255,255,255,0.10); --border2:rgba(255,255,255,0.18); }
+    :root { --bg:#1b2228; --bg2:#141a1f; --bg3:#1f262c; --text:#EDE9DD; --text2:#9CA6AC; --text3:#687278; --border:rgba(255,255,255,0.10); --border2:rgba(255,255,255,0.18); }
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg2); color: var(--text); min-height: 100vh; }
-  #app { max-width: 960px; margin: 0 auto; background: var(--bg); min-height: 100vh; }
-  .app-header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 0 16px; position: sticky; top: 0; z-index: 100; }
-  .app-brand { display: flex; align-items: center; gap: 10px; padding: 12px 0 8px; }
-  .app-brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
-  .app-brand h1 { font-size: 15px; font-weight: 600; }
-  .sync-status { margin-left: auto; font-size: 11px; color: var(--text3); display: flex; align-items: center; gap: 5px; }
-  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); }
-  .sync-dot.ok { background: var(--green); } .sync-dot.syncing { background: var(--accent2); animation: pulse 1s infinite; } .sync-dot.error { background: #E24B4A; }
+  body { font-family: var(--font-body); background: var(--bg2); color: var(--text); min-height: 100vh;
+    background-image: linear-gradient(rgba(53,97,123,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(53,97,123,0.05) 1px, transparent 1px);
+    background-size: 28px 28px; }
+  #app { max-width: 1100px; margin: 0 auto; background: transparent; min-height: 100vh; }
+  .app-header { background: var(--spine); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 16px; position: sticky; top: 0; z-index: 100; }
+  .app-brand { display: flex; align-items: center; gap: 10px; padding: 14px 0 10px; }
+  .app-brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--spine-accent); }
+  .app-brand h1 { font-family: var(--font-head); font-style: italic; font-size: 17px; font-weight: 500; color: var(--spine-text-on); }
+  .sync-status { margin-left: auto; font-size: 11px; color: var(--spine-text); display: flex; align-items: center; gap: 5px; }
+  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--spine-text); }
+  .sync-dot.ok { background: var(--spine-accent); } .sync-dot.syncing { background: var(--accent2); animation: pulse 1s infinite; } .sync-dot.error { background: #E26A5A; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
   .nav-tabs { display: flex; overflow-x: auto; scrollbar-width: none; }
   .nav-tabs::-webkit-scrollbar { display: none; }
-  .nav-tab { flex-shrink: 0; font-size: 13px; padding: 8px 13px 10px; border: none; background: transparent; color: var(--text2); cursor: pointer; border-bottom: 2.5px solid transparent; white-space: nowrap; }
-  .nav-tab.on { color: var(--text); font-weight: 500; border-bottom-color: var(--accent); }
+  .nav-tab { flex-shrink: 0; font-size: 13px; padding: 8px 13px 10px; border: none; background: transparent; color: var(--spine-text); cursor: pointer; border-bottom: 2.5px solid transparent; white-space: nowrap; }
+  .nav-tab.on { color: var(--spine-text-on); font-weight: 600; border-bottom-color: var(--spine-accent); }
   .view { display: none; padding: 16px; }
   .view.on { display: block; }
   #setup-screen { position: fixed; inset: 0; background: var(--bg); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .setup-box { max-width: 420px; width: 100%; }
-  .setup-box h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+  .setup-box h2 { font-family: var(--font-head); font-size: 22px; font-weight: 500; margin-bottom: 6px; }
   .setup-box p { font-size: 13px; color: var(--text2); margin-bottom: 20px; line-height: 1.6; }
   .setup-steps { background: var(--bg2); border-radius: var(--radius); padding: 14px; margin-bottom: 20px; font-size: 12px; color: var(--text2); line-height: 2; }
   .setup-steps a { color: var(--accent); }
@@ -235,7 +241,7 @@
 
   <div class="view" id="v-lots">
     <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
-      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Devis signés & Lots</p>
+      <p style="font-family:var(--font-head);font-size:17px;font-weight:500;margin-bottom:3px;">Devis signés & Lots</p>
       <p style="font-size:12px;color:var(--text2);">Montants TTC des devis signés · Suivez les acomptes et paiements</p>
     </div>
     <div id="lots-list"></div>
@@ -244,7 +250,7 @@
 
   <div class="view" id="v-sources">
     <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
-      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Sources de financement</p>
+      <p style="font-family:var(--font-head);font-size:17px;font-weight:500;margin-bottom:3px;">Sources de financement</p>
       <p style="font-size:12px;color:var(--text2);">Épargne disponible et virements prévus · Renseignez les montants</p>
     </div>
     <div class="metrics" id="src-metrics"></div>
@@ -254,7 +260,7 @@
 
   <div class="view" id="v-choix">
     <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
-      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Choix & sélections à faire</p>
+      <p style="font-family:var(--font-head);font-size:17px;font-weight:500;margin-bottom:3px;">Choix & sélections à faire</p>
       <p style="font-size:12px;color:var(--text2);">Tous les éléments à choisir avant commandes · Cochez quand c'est validé</p>
     </div>
     <div class="metrics" id="choix-metrics"></div>
@@ -288,7 +294,7 @@
 
   <div class="view" id="v-ambiances">
     <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
-      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Tableaux d'ambiance</p>
+      <p style="font-family:var(--font-head);font-size:17px;font-weight:500;margin-bottom:3px;">Tableaux d'ambiance</p>
       <p style="font-size:12px;color:var(--text2);">6 paramètres clés par pièce</p>
     </div>
     <div class="mb-grid" id="mb-grid"></div>
@@ -296,7 +302,7 @@
 
   <div class="view" id="v-files">
     <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
-      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Fichiers du projet</p>
+      <p style="font-family:var(--font-head);font-size:17px;font-weight:500;margin-bottom:3px;">Fichiers du projet</p>
       <p style="font-size:12px;color:var(--text2);">Plans, devis et documents accessibles depuis PC et téléphone</p>
     </div>
     <input class="search-inp" type="text" placeholder="Rechercher un fichier..." id="files-search" oninput="rFiles()">
@@ -1398,7 +1404,7 @@ function rTravaux() {
   const wip = tasks.filter(t => ts(t.id,t.s)==='wip').length;
   document.getElementById('travaux-header').innerHTML = `
     <div style="padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:12px;">
-      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Suivi des travaux</p>
+      <p style="font-family:var(--font-head);font-size:17px;font-weight:500;margin-bottom:3px;">Suivi des travaux</p>
       <p style="font-size:12px;color:var(--text2);">${done} terminés · ${wip} en cours · ${tasks.length-done-wip} à faire</p>
     </div>
     <div class="filters">
@@ -1467,7 +1473,7 @@ function rAchats() {
   const paid = shopPd(), est = shopEst();
   document.getElementById('achats-header').innerHTML = `
     <div style="padding:4px 0 12px;border-bottom:1px solid var(--border);margin-bottom:12px;">
-      <p style="font-size:15px;font-weight:600;margin-bottom:3px;">Liste des achats</p>
+      <p style="font-family:var(--font-head);font-size:17px;font-weight:500;margin-bottom:3px;">Liste des achats</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
         <span style="font-size:12px;color:var(--text2);">Estimé <b>${fmt(est)} €</b></span>
         <span style="font-size:12px;color:var(--text2);">Payé <b style="color:var(--green)">${fmt(paid)} €</b></span>
