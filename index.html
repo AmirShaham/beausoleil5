@@ -353,13 +353,14 @@
 // ═══ DEVIS SIGNÉS (LOTS) ═══════════════════════════════════════════════
 const LOTS = [
   {id:'lot_maconnerie', entreprise:'La Petite Maçonnerie Rennaise', lot:'Démolition · Maçonnerie · Ravalement ITE', ttc:34693.25, c:'#D85A30'},
-  {id:'lot_vidal', entreprise:'J. VIDAL', lot:'Placo · Isolation intérieure · Plafonds', ttc:28486.36, c:'#BA7517'},
+  {id:'lot_vidal', entreprise:'J. VIDAL', lot:'Placo · Isolation intérieure · Plafonds', ttc:28635.43, c:'#BA7517'},
   {id:'lot_aerochauffe', entreprise:'AEROCHAUFFE', lot:'Plomberie · Chauffage · Sanitaires', ttc:24974.83, c:'#378ADD'},
   {id:'lot_bizeul', entreprise:'BIZEUL Carrelage', lot:'Carrelage · Chapes · Faïence', ttc:16344.65, c:'#1D9E75'},
   {id:'lot_m2t', entreprise:'M2T Électricité', lot:'Électricité complète · Tableau', ttc:11985.06, c:'#EF9F27'},
   {id:'lot_lemoine', entreprise:'LEMOINE Benjamin', lot:'Velux · Volets solaires toiture', ttc:4691.41, c:'#7F77DD'},
   {id:'lot_sab_volets', entreprise:'SAB Menuiseries', lot:'Motorisation volets roulants', ttc:3324.96, c:'#0F6E56'},
   {id:'lot_sab_porte', entreprise:'SAB Menuiseries', lot:'Porte d\'entrée · Fenêtre WC', ttc:1167.90, c:'#185FA5'},
+  {id:'lot_clermont', entreprise:'Menuiserie CLERMONT', lot:'Agencements sur mesure · Verrières chêne · Parquet massif chambre parentale', ttc:11414.51, c:'#A0522D'},
   {id:'lot_chatel', entreprise:'Gabrielle Chatel', lot:'Peinture intérieure — murs et plafonds · Pose parquet à l\'étage', ttc:0, c:'#D4537E'},
 ];
 
@@ -396,19 +397,19 @@ const PH = [
   {id:'p2',nm:'Phase 2 — Gros œuvre & maçonnerie',tasks:[
     {id:'t10',n:'Esquisse & plans définitifs (plans du 29/07/2026 retenus)',s:'done'},{id:'t11',n:'Dallage complément sous-sol',s:'done'},
     {id:'t12',n:'Carottages en dalle',s:'done'},{id:'t13',n:'Étanchéité sous-sol',s:'done'},
-    {id:'t58',n:'Rebouchage plancher séjour/cuisine (Maçonnerie) — devis 0431989 signé (522,50 € TTC), date d\'intervention à communiquer',s:'wip'}]},
+    {id:'t58',n:'Rebouchage plancher séjour/cuisine (Maçonnerie) — devis 0431989 (522,50 € TTC), facture 5916 émise le 06/10/2026',s:'done'}]},
   {id:'p3',nm:'Phase 3 — Toiture & Velux (Lemoine)',tasks:[
     {id:'t19',n:'Pose 2 Velux GGL MK06 (Lemoine)',s:'done'},{id:'t20',n:'Volets solaires Velux SSL (Lemoine)',s:'done'},
     {id:'t59',n:'Ventilation VMC en toiture (Lemoine, en lien avec l\'électricien)',s:'wip'}]},
   {id:'p4',nm:'Phase 4 — Réseaux électricité & plomberie (M2T + Aerochauffe)',tasks:[
     {id:'t23',n:'Réseau électrique complet + tableau (M2T)',s:'done'},{id:'t24',n:'Saignées et rebouchage (M2T)',s:'done'},
-    {id:'t25',n:'Dépose réseau chauffage existant (Aerochauffe)',s:'done'},{id:'t26',n:'Nouveau réseau chauffage 14 radiateurs',s:'wip'},
+    {id:'t25',n:'Dépose réseau chauffage existant (Aerochauffe)',s:'done'},{id:'t26',n:'Nouveau réseau chauffage 14 radiateurs — mise en service du chauffage prévue en S46 (CR n°9)',s:'wip'},
     {id:'t27',n:'Réseau eau chaude/froide sanitaire',s:'done'},{id:'t28',n:'Évacuations eaux usées',s:'done'},
     {id:'t29',n:'Neutralisation arrivée gaz cuisine',s:'done'},
     {id:'t60',n:'Alimentations VR électriques + PC/appliques extérieurs (M2T)',s:'wip'},
     {id:'t61',n:'Renforts ventilo de plafonds Bureau + CH. Parentale (éclairage intégré)',s:'wip'},
     {id:'t62',n:'VMC : gaines passées en combles (confirmé CR n°5 du 01/10 — avancement 05/10/2026)',s:'done'},
-    {id:'t63',n:'Modifs élec ponctuelles (liseuses CH. parentale à 1m, PC salle de musique, spots WC R+1)',s:'wip'}]},
+    {id:'t63',n:'Modifs élec ponctuelles (liseuses CH. parentale à 1m, PC salle de musique, spots WC R+1)',s:'wip'},{id:'t96',n:'Finitions électricité M2T mardi 03/11 + vérifier la hauteur des prises basses de la chambre 4 (CR n°9)',s:'todo'},{id:'t97',n:'Boucher la ventilation cuisine (grille remise) + entrées d\'air dans les coffres de chambres selon besoin VMC (M2T, CR n°8)',s:'todo'},{id:'t98',n:'Climatisation : lot à voir en direct avec vous, à phaser avec l\'ITE — sorti des honoraires MOE (devis I-26-10-8)',s:'todo'}]},
   {id:'p5',nm:'Phase 5 — Placo & isolation intérieure (Vidal)',tasks:[
     {id:'t30',n:'Sous-sol : plafond rampant + isolation murs',s:'done'},{id:'t31',n:'RDC : plafonds + doublages + cloisons',s:'wip'},
     {id:'t32',n:'R+1 : isolation toiture rampants + cloisons',s:'wip'},{id:'t33',n:'Réservations verrières — pose prévue après la peinture (précision CR n°5 du 01/10/2026)',s:'todo'},
@@ -423,41 +424,49 @@ const PH = [
     {id:'t80',n:'Création d\'un chevêtre bois pour la future trappe d\'accès combles (devis DEV00002578)',s:'todo'},
     {id:'t81',n:'Coffre placo en combles, 6 ml (devis DEV00002578)',s:'todo'},
     {id:'t82',n:'Modification de l\'ossature métallique pour la future douche R+1 (devis DEV00002578)',s:'todo'},
-    {id:'t83',n:'Reprises de plâtres cloison CH1/CH2 + plafond plâtre (devis DEV00002578)',s:'todo'}]},
+    {id:'t83',n:'Reprises de plâtres cloison CH1/CH2 + plafond plâtre (devis DEV00002578)',s:'todo'},{id:'t95',n:'Champlats sur les menuiseries neuves (S45) + retournement de la porte buanderie suivant plans (Vidal, CR n°9)',s:'todo'}]},
   {id:'p6',nm:'Phase 6 — Chapes & carrelage (Bizeul)',tasks:[
-    {id:'t36',n:'Ragréage RDC complet',s:'todo'},{id:'t37',n:'Chape liquide salle de jeux R+1',s:'todo'},
-    {id:'t38',n:'Ragréage R+1',s:'todo'},{id:'t39',n:'Carrelage sol RDC — 20×120 Golden Oak Matt RT (budget dépassé vs 80×80 initial, cf. devis 16 344,65 €)',s:'todo'},
-    {id:'t40',n:'Carrelage sols R+1 (WC + SdB) — 60×60 Beige Nat RT',s:'todo'},{id:'t41',n:'Faïence murale SdE R+1 — 35×100 Beige Nat RT + liseré mosaïque',s:'todo'},
-    {id:'t42',n:'Crédences vasques (x5) — mosaïque/35×100 en R+1, Fan White Brillo en RDC',s:'todo'},{id:'t43',n:'Plinthes',s:'todo'},
+    {id:'t36',n:'Ragréage RDC complet',s:'done'},{id:'t37',n:'Chape liquide salle de jeux R+1',s:'todo'},
+    {id:'t38',n:'Ragréage R+1 (ponçage/ragréage en cours le 09/10, CR n°6) — point à voir sur le ragréage du bureau (CR n°9)',s:'wip'},{id:'t39',n:'Carrelage sol RDC — 20×120 Golden Oak Matt RT (budget dépassé vs 80×80 initial, cf. devis 16 344,65 €) — pose en cours de finition (CR n°9)',s:'wip'},
+    {id:'t40',n:'Carrelage sols R+1 (WC + SdB) — 60×60 Beige Nat RT — pose en cours (CR n°9)',s:'wip'},{id:'t41',n:'Faïence murale SdE R+1 — 35×100 Beige Nat RT + liseré mosaïque — pose suivant l\'appro (CR n°9)',s:'todo'},
+    {id:'t42',n:'Crédences vasques (x5) — mosaïque/35×100 en R+1, Fan White Brillo en RDC — après passage du plombier en S46 (CR n°9)',s:'todo'},{id:'t43',n:'Plinthes — pose en cours (CR n°9)',s:'wip'},
     {id:'t68',n:'Réservation paillasson encastré (80×50cm, décalé porte ~15cm)',s:'todo'},
     {id:'t69',n:'Choix carrelage/faïence validés — devis signé le 21/09, en attente de commande fournitures',s:'done'},
-    {id:'t85',n:'Nouveau choix de carrelage RDC en cours, hors délai initial — à valider rapidement avec Bizeul (CR n°5, avancement 05/10/2026)',s:'wip'},
-    {id:'t86',n:'Préparation R+1 (ponçage/ragréage) lancée (CR n°5, avancement 05/10/2026)',s:'wip'},
-    {id:'t87',n:'Confirmer une nouvelle date avec Bizeul pour le ponçage/ragréage R+1 — reporté du 05/10, étage à libérer (CR n°5)',s:'todo'}]},
+    {id:'t85',n:'Nouveau choix de carrelage RDC (hors délai initial) — pose désormais en cours (CR n°9)',s:'done'},
+    {id:'t86',n:'Préparation R+1 (ponçage/ragréage) lancée le 09/10 (CR n°6)',s:'done'},
+    {id:'t87',n:'Nouvelle date de ponçage/ragréage R+1 confirmée par Bizeul — intervention en cours le 09/10 (CR n°6)',s:'done'}]},
   {id:'p7',nm:'Phase 7 — Sanitaires & équipements (Aerochauffe)',tasks:[
-    {id:'t44',n:'3 WC suspendus Grohé/Alterna — pose en cours',s:'wip'},{id:'t45',n:'Lave-mains WC RDC (meuble blanc) + R+1 (meuble bois) — matériaux confirmés',s:'wip'},
-    {id:'t46',n:'Meuble vasque SdB RDC 90cm',s:'todo'},{id:'t47',n:'Douche R+1 : receveur + paroi (réservations placo finalisées)',s:'todo'},
+    {id:'t44',n:'3 WC suspendus Grohé/Alterna — pose en cours',s:'wip'},{id:'t45',n:'Lave-mains WC RDC (meuble blanc) + R+1 (meuble bois) — pose meubles, lave-mains et robinetteries prévue en S46 (CR n°9)',s:'wip'},
+    {id:'t46',n:'Meuble vasque SdB RDC 90cm',s:'todo'},{id:'t47',n:'Douche R+1 : receveur + paroi (réservations placo finalisées) — robinetterie à poser selon l\'appro de la faïence (CR n°9)',s:'todo'},
     {id:'t48',n:'Meuble double vasque R+1 120cm',s:'todo'},{id:'t49',n:'Miroir LED + radiateur sèche-serviettes',s:'todo'},
     {id:'t70',n:'Armoire de toilette : implantation validée sur site avec le plaquiste — bas à 1,35m, réservation applique laissée en partie haute (CR n°5, avancement 05/10/2026)',s:'wip'},
     {id:'t84',n:'Vérifier l\'emplacement du miroir SdB R+1 (Alterna Vienne) par rapport à la sous-pente — noté sur le devis annoté du 23/09',s:'todo'}]},
   {id:'p8',nm:'Phase 8 — Menuiseries extérieures (SAB)',tasks:[
-    {id:'t21',n:'Porte d\'entrée + fenêtre WC (SAB) — intervention avant mi-octobre',s:'todo'},{id:'t22',n:'Motorisation volets roulants + porte de garage (SAB) — intervention prévue le 12/10',s:'todo'},
+    {id:'t21',n:'Porte d\'entrée (SAB) — intervention prévue le 19/10/2026 (CR n°6), tâche clôturée au CR n°8',s:'done'},{id:'t22',n:'Motorisation volets roulants + porte de garage (SAB) — intervention du 12/10 (facture VR du 09/10, tâche clôturée au CR n°8)',s:'done'},
     {id:'t72',n:'Entrées d\'air : compatibilité avec la VMC à valider sur place',s:'todo'},
     {id:'t73',n:'Remplacement montant baie salon (reprise montant intérieur)',s:'todo'},
-    {id:'t74',n:'Pose baie des WC (date d\'intervention à transmettre)',s:'todo'}]},
+    {id:'t74',n:'Baie des WC (SAB) — livraison début novembre, pose le 27/11/2026 au matin (CR n°9)',s:'todo'}]},
   {id:'p9',nm:'Phase 9 — Façade & ITE (Maçonnerie Rennaise) — reportée en second temps',tasks:[
     {id:'t14',n:'Préparation façade (dépose, traitement)',s:'todo'},{id:'t15',n:'Échafaudage',s:'todo'},
     {id:'t16',n:'Isolation thermique extérieure 140mm',s:'todo'},{id:'t17',n:'Enduit de finition Thermolook',s:'todo'},
     {id:'t18',n:'Peinture soubassement & appuis',s:'todo'}]},
   {id:'p10',nm:'Phase 10 — Cuisine (MCA)',tasks:[
     {id:'t50',n:'Installation cuisine équipée',s:'todo'},
-    {id:'t75',n:'Pose cuisine MCA — prévue semaine 46 (mi-novembre)',s:'todo'}]},
+    {id:'t75',n:'Pose cuisine MCA — livraison des meubles les 10 et 11/11, pose jeudi 12 et vendredi 13/11 (S46, CR n°8)',s:'todo'}]},
   {id:'p11',nm:'Phase 11 — Sols & peinture (par vos soins)',tasks:[
-    {id:'t51',n:'Parquet chambres (hors devis - à commander)',s:'todo'},{id:'t52',n:'Peinture intérieure complète (hors devis)',s:'todo'},
+    {id:'t51',n:'Parquet flottant R+1 + plinthes (par vos soins) — S46, accès au R+1 restreint ; à commander',s:'todo'},{id:'t52',n:'Peinture intérieure complète (hors devis)',s:'todo'},
     {id:'t53',n:'Menuiserie intérieure : portes (Vidal)',s:'todo'},
-    {id:'t76',n:'Peinture et remise en état de l\'escalier (par vos soins)',s:'todo'},
+    {id:'t76',n:'Peinture et remise en état de l\'escalier (par vos soins) — S47, pas d\'accès à l\'étage (CR n°8)',s:'todo'},
     {id:'t88',n:'Raccord sol chambre d\'amis à l\'emplacement du placard — à trancher : socle de placard ou placard couvrant l\'espace ? (CR n°5, 05/10/2026)',s:'todo'}]},
-  {id:'p12',nm:'Phase 12 — Finitions & réception',tasks:[
+  {id:'p13',nm:'Phase 12 — Agencements, verrières & parquet massif (Menuiserie Clermont)',tasks:[
+    {id:'t89',n:"Devis DE098601 (29/09/2026) — 11 414,51 € TTC : verrières chêne, agencements entrée + salon, parquet massif chambre parentale — validité au 29/10, signature à confirmer",s:'todo'},
+    {id:'t90',n:"Dossier de plans d'exécution des agencements transmis le 21/10/2026 (CR n°8)",s:'done'},
+    {id:'t91',n:"Retour en attente de Clermont : faisabilité de reprise du sol du bureau (parquet massif) (CR n°8)",s:'todo'},
+    {id:'t92',n:"Parquet massif chêne chambre parentale (mosaïque 480×480, ponçage + vitrification, plinthes) — intervention S47",s:'todo'},
+    {id:'t93',n:"Pose des agencements sur mesure Entrée + Salon — S47 à 49",s:'todo'},
+    {id:'t94',n:"Pose des verrières chêne (cuisine + entrée selon le devis ; cuisine + salon selon les CR) — S47 à 49, après peinture",s:'todo'},
+    {id:'t99',n:"Devis DE1069 (22/10/2026) : remplacement des 4 portes vitrées de l'étage — 1 077,78 € TTC, valable jusqu'au 21/11 — à valider",s:'todo'}]},
+  {id:'p12',nm:'Phase 13 — Finitions & réception',tasks:[
     {id:'t54',n:'Réglages électricité finaux',s:'todo'},{id:'t55',n:'Réglages plomberie finale',s:'todo'},
     {id:'t56',n:'Nettoyage chantier',s:'todo'},{id:'t57',n:'Réception des travaux',s:'todo'}]},
 ];
@@ -529,14 +538,15 @@ const STYLES = ['Moderne','Scandinave','Industriel','Classique','Bohème','Minim
 
 // ═══ ARTISANS RÉELS (extraits des devis) ══════════════════════════════════
 const DEFAULT_ARTISANS = [
-  {i:'CF',n:'Charlie Fraleux',r:'Maître d\'œuvre — Atelier Fraleux',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'06 68 07 63 68',email:'charlie@atelierfraleux.fr',note:''},
-  {i:'MR',n:'La Petite Maçonnerie Rennaise',r:'Démolition · Maçonnerie · Ravalement',s:'Planifié',bg:'#FAC775',tc:'#854F0B',phone:'02 99 30 41 58',email:'contact@lamaconnerie.fr',note:'Devis 18237 signé — 34 170,75 € TTC · + Devis 0431989 (10/09/2026) rebouchage chevêtres — 522,50 € TTC · Total 34 693,25 € TTC'},
-  {i:'JV',n:'J. VIDAL',r:'Placo · Isolation · Plafonds',s:'Planifié',bg:'#9FE1CB',tc:'#0F6E56',phone:'06 07 58 89 44',email:'sarlj.vidal@me.com',note:'Devis DEV00002450 signé — 25 916,33 € TTC · Acompte 30% : 7 774,90 € · + Devis DEV00002578 signé 21/09/2026 (démolition SdB + travaux suppl. RDC/combles imprévus) — 2 570,03 € TTC, acompte 30% 771,01 € dû 16/10/2026 · Total 28 486,36 € TTC'},
-  {i:'AE',n:'AEROCHAUFFE',r:'Plomberie · Chauffage · Sanitaires',s:'Planifié',bg:'#B5D4F4',tc:'#185FA5',phone:'02 99 60 84 13',email:'aerochauff@orange.fr',note:'Devis DE558 révisé (choix CEDEO, 21-23/09/2026) — 24 974,83 € TTC · Acompte facture FC5050 : 7 040 € (26/07/2026) · Portable : 06 76 51 23 19'},
-  {i:'BZ',n:'BIZEUL Carrelage',r:'Carrelage · Chapes · Faïence',s:'Planifié',bg:'#CECBF6',tc:'#3C3489',phone:'02 99 68 66 79',email:'contact@bizeul-carrelage.fr',note:'Devis D202605408 signé — 19 081,36 € TTC · Acompte 30% : 5 724,41 €'},
-  {i:'M2',n:'M2T Électricité',r:'Électricité complète',s:'Planifié',bg:'#C0DD97',tc:'#3B6D11',phone:'06 13 34 02 50',email:'contact@m2t-electricite.fr',note:'Devis D-000719 v2 signé — 11 985,06 € TTC'},
-  {i:'LB',n:'LEMOINE Benjamin',r:'Velux · Volets toiture',s:'Planifié',bg:'#F4C0D1',tc:'#993556',phone:'',email:'',note:'Devis DEV00000148 signé — 4 691,41 € TTC · Acompte : 1 407,42 €'},
-  {i:'SB',n:'SAB Menuiseries',r:'Porte entrée · Fenêtres · Volets',s:'Planifié',bg:'#F5C4B3',tc:'#993C1D',phone:'02 99 85 73 63',email:'contact@sab-menuiseries.fr',note:'2 devis signés — 4 492,86 € TTC · Contacts : Julien HUET 06 12 81 65 86 / Vincent BLOT 06 45 14 27 54'},
+  {i:'CF',n:'Charlie Fraleux',r:'Maître d\'œuvre — Atelier Fraleux',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'06 68 07 63 68',email:'charlie@atelierfraleux.fr',note:'Devis MOE I-26-10-8 signé le 16/10/2026 (remplace I-26-10-2 du 09/10) — 9 454,08 € HT · 10 338,88 € TTC (10 % de 81 072,95 € HT à 10 % de TVA + 10 % de 13 467,91 € HT à 5,5 %) · Climatisation M2T sortie du périmètre MOE · Facture de situation 26-10-157 du 28/10/2026 : 75 % facturé, 3 409,16 € TTC à régler à réception (après acomptes F26-06-133 2 500 € HT et F26-09-149 1 450 € HT)'},
+  {i:'MR',n:'La Petite Maçonnerie Rennaise',r:'Démolition · Maçonnerie · Ravalement',s:'Planifié',bg:'#FAC775',tc:'#854F0B',phone:'02 99 30 41 58',email:'contact@lamaconnerie.fr',note:'Devis 18237 signé — 34 170,75 € TTC · + Devis 0431989 (10/09/2026) rebouchage chevêtres — 522,50 € TTC, facture 5916 du 06/10/2026 (522,50 € TTC, comptant) · Total 34 693,25 € TTC · ITE/façade reportée dans un second temps'},
+  {i:'JV',n:'J. VIDAL',r:'Placo · Isolation · Plafonds',s:'En cours',bg:'#9FE1CB',tc:'#0F6E56',phone:'06 07 58 89 44',email:'sarlj.vidal@me.com',note:'DEV00002450 (devis signé 25 916,33 € TTC) : facture FAC00001826 du 21/10/2026 — 26 065,40 € TTC à régler le 20/11/2026, aucun acompte déduit sur la facture (l\'acompte 30 % de 7 774,90 € noté auparavant est à vérifier) · DEV00002578 signé 21/09/2026 (démolition SdB + travaux suppl. RDC/combles) — 2 570,03 € TTC : acompte 771,01 € réglé le 22/09/2026, facture de solde FAC00001827 du 21/10/2026 de 1 799,02 € TTC à régler le 20/11/2026 · Total facturé 28 635,43 € TTC · CR n°9 : champlats sur menuiseries neuves en S45, retournement de la porte buanderie'},
+  {i:'AE',n:'AEROCHAUFFE',r:'Plomberie · Chauffage · Sanitaires',s:'En cours',bg:'#B5D4F4',tc:'#185FA5',phone:'02 99 60 84 13',email:'aerochauff@orange.fr',note:'Devis DE558 révisé (choix CEDEO, 21-23/09/2026) — 24 974,83 € TTC · Acompte facture FC5050 : 7 040 € (26/07/2026) · Portable : 06 76 51 23 19 · CR n°9 : pose meubles + lave-mains + robinetteries et mise en service du chauffage en S46'},
+  {i:'BZ',n:'BIZEUL Carrelage',r:'Carrelage · Chapes · Faïence',s:'En cours',bg:'#CECBF6',tc:'#3C3489',phone:'02 99 68 66 79',email:'contact@bizeul-carrelage.fr',note:'Devis D202605408 signé — 19 081,36 € TTC · Acompte 30% : 5 724,41 € · CR n°9 (29/10) : pose carrelage + joints + plinthes en cours de finition, faïence douche suivant appro, crédences après passage du plombier (S46), point ragréage bureau à voir'},
+  {i:'M2',n:'M2T Électricité',r:'Électricité complète',s:'En cours',bg:'#C0DD97',tc:'#3B6D11',phone:'06 13 34 02 50',email:'contact@m2t-electricite.fr',note:'Devis D-000719 v2 signé — 11 985,06 € TTC · Acompte F-000719 de 3 595,51 € TTC réglé le 12/09/2026 · Situation n°1 F-000734 du 07/10/2026 (70 %) : 5 766,01 € TTC en attente de règlement · Travaux suppl. F-000733 (devis D-000775 du 22/09) : 1 938,86 € TTC, alors que le récapitulatif de F-000734 en indique 1 388,53 € TTC (à réconcilier) · Reste à facturer selon F-000734 : 4 012,07 € TTC · CR n°9 : finitions mardi 03/11 · Climatisation à voir en direct, à phaser avec l\'ITE'},
+  {i:'LB',n:'LEMOINE Benjamin',r:'Velux · Volets toiture',s:'En cours',bg:'#F4C0D1',tc:'#993556',phone:'',email:'',note:'Devis DEV00000148 signé — 4 691,41 € TTC · Facture FAC00000255 du 01/08/2026 : 4 691,40 € TTC, chèque à échéance 31/08/2026, sans acompte déduit (acompte de 1 407,42 € noté auparavant, à vérifier) · Ventilation VMC en toiture encore à poser (CR n°8)'},
+  {i:'SB',n:'SAB Menuiseries',r:'Porte entrée · Fenêtres · Volets',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'02 99 85 73 63',email:'contact@sab-menuiseries.fr',note:'2 devis signés — 4 492,86 € TTC · Volets roulants : facture 1020261000095 du 09/10/2026 — 3 324,96 € TTC, acompte de 1 329,98 € reçu, solde de 1 994,98 € TTC à régler à la réception du chantier · CR n°9 : pose de la baie des WC le 27/11/2026 au matin · Contacts : Julien HUET 06 12 81 65 86 / Vincent BLOT 06 45 14 27 54'},
+  {i:'MC',n:'Menuiserie CLERMONT',r:'Agencements · Verrières · Parquet massif',s:'Planifié',bg:'#F1D9B5',tc:'#7A4A12',phone:'07 82 62 33 88',email:'vincentclermont.btp@gmail.com',note:'Devis DE098601 du 29/09/2026 — 11 414,51 € TTC (10 376,83 € HT) : verrières chêne cuisine + entrée, agencements entrée + salon, parquet massif chambre parentale · Validité jusqu\'au 29/10/2026, signature à confirmer · Acompte 30 % à la signature : 3 424,35 € · Devis DE1069 du 22/10/2026 (remplacement des 4 portes vitrées de l\'étage) — 1 077,78 € TTC, valable jusqu\'au 21/11/2026, non inclus dans le total des lots · CR n°8/n°9 : interventions en S47 (parquet) et S47 à 49 (agencements, verrières) ; retour en attente sur la reprise du sol du bureau'},
   {i:'GC',n:'Gabrielle Chatel',r:'Peinture · Pose parquet',s:'À contacter',bg:'#F9D7E3',tc:'#99295A',phone:'06 24 94 39 54',email:'',note:'Devis à venir — 0 € TTC'},
 ];
 
@@ -728,6 +738,15 @@ function mergeState(remote) {
   if (!S.artisans.some(a => a.n === 'Gabrielle Chatel')) {
     S.artisans.push({i:'GC',n:'Gabrielle Chatel',r:'Peinture · Pose parquet',s:'À contacter',bg:'#F9D7E3',tc:'#99295A',phone:'06 24 94 39 54',email:'',note:'Devis à venir — 0 € TTC'});
   }
+  // Mise à jour des fiches artisans d'après les devis/factures/CR d'octobre 2026 : le statut + la note
+  // par défaut sont appliqués une seule fois par fiche (marqueur "rev" porté par la fiche elle-même, donc
+  // il suit la fiche lors des fusions local/bin), et les artisans manquants (Clermont) sont ajoutés.
+  const ART_REV = 20261030;
+  DEFAULT_ARTISANS.forEach(d => {
+    const cur = S.artisans.find(a => a.n === d.n);
+    if (!cur) S.artisans.push(Object.assign(JSON.parse(JSON.stringify(d)), { rev: ART_REV }));
+    else if ((cur.rev || 0) < ART_REV) { cur.note = d.note; cur.s = d.s; cur.rev = ART_REV; }
+  });
   if (!S.moe) S.moe = { pct: 10, base: 0, payments: [] };
   if (!Array.isArray(S.moe.payments)) S.moe.payments = [];
   if (!S.openLots) S.openLots = {};
@@ -854,7 +873,7 @@ function rDash() {
   document.getElementById('dash-finance-card').innerHTML = `
     <div class="card">
       <div class="card-title">Synthèse financière</div>
-      <div class="fin-row"><span class="fin-label">Devis signés (9 lots)</span><span class="fin-value">${fmt(engaged)} €</span></div>
+      <div class="fin-row"><span class="fin-label">Devis signés (${LOTS.length} lots)</span><span class="fin-value">${fmt(engaged)} €</span></div>
       <div class="fin-row"><span class="fin-label">Payé sur lots (acomptes + factures)</span><span class="fin-value" style="color:var(--accent)">${fmt(lotsP)} €</span></div>
       <div class="fin-row"><span class="fin-label">Achats mobilier/équipement estimés</span><span class="fin-value">${fmt(shopEst())} €</span></div>
       <div class="fin-row"><span class="fin-label">Achats payés</span><span class="fin-value" style="color:var(--accent2)">${fmt(shopPaid)} €</span></div>
@@ -907,7 +926,7 @@ function rLots() {
   const paid = lotsPaidTotal();
   document.getElementById('lots-list').innerHTML = `
     <div class="metrics" style="grid-template-columns:repeat(3,1fr);">
-      <div class="metric"><div class="metric-label">Total engagé TTC</div><div class="metric-value" style="color:var(--accent)">${fmt(total)} €</div><div class="metric-sub">9 devis signés</div></div>
+      <div class="metric"><div class="metric-label">Total engagé TTC</div><div class="metric-value" style="color:var(--accent)">${fmt(total)} €</div><div class="metric-sub">${LOTS.length} lots · devis signés</div></div>
       <div class="metric"><div class="metric-label">Déjà payé</div><div class="metric-value" style="color:var(--green)">${fmt(paid)} €</div><div class="metric-sub">${total>0?Math.round(paid/total*100):0}%</div></div>
       <div class="metric"><div class="metric-label">Reste à payer</div><div class="metric-value" style="color:var(--accent2)">${fmt(total-paid)} €</div><div class="metric-sub">sur les lots</div></div>
     </div>
@@ -1102,6 +1121,11 @@ function rMoe() {
       <div class="fin-row"><span class="fin-label">Commission due (${S.moe.pct}%)</span><span class="fin-value" style="color:var(--accent)">${fmt(due)} €</span></div>
       <div class="fin-row"><span class="fin-label">Total déjà versé</span><span class="fin-value" style="color:var(--green)">${fmt(paid)} €</span></div>
       <div class="fin-row bold"><span class="fin-label">Reste à verser</span><span class="fin-value" style="color:${remaining<=0?'var(--green)':'var(--accent2)'}">${fmt(Math.max(remaining,0))} €</span></div>
+      <div style="margin-top:10px;padding:10px;border-radius:8px;background:rgba(0,0,0,.04);font-size:12px;color:var(--text2);line-height:1.5;">
+        <b>Devis MOE I-26-10-8 (signé le 16/10/2026)</b> : 9 454,08 € HT · 10 338,88 € TTC<br>
+        Facturé à 75 % : acomptes F26-06-133 + F26-09-149, puis situation 26-10-157 du 28/10 (3 409,16 € TTC à régler à réception)<br>
+        Reste 25 % à facturer (≈ 2 363,52 € HT) · climatisation M2T hors périmètre
+      </div>
       <div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>Versé</span><span>${pct}%</span></div><div class="pbar"><div class="pfill" style="width:${pct}%"></div></div></div>
 
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
