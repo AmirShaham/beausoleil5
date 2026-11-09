@@ -485,7 +485,6 @@ const SH = [
     {id:'c4',n:'Réfrigérateur-congélateur (hors commande MCA — estimation)',p:1400},
     {id:'c5',n:'Four encastrable (hors commande MCA — estimation)',p:800},
     {id:'c7',n:'Lave-vaisselle intégrable (hors commande MCA — estimation)',p:700},
-    {id:'c8',n:'Micro-ondes / combi (hors commande MCA — estimation)',p:300},
     {id:'c10',n:'Petit électroménager (estimation)',p:300}]},
   {id:'sa',nm:'Salon / Séjour',c:'#378ADD',it:[
     {id:'s1',n:'Canapé-lit 1',p:1200},{id:'s2',n:'Canapé-lit 2',p:1200},
@@ -556,7 +555,7 @@ const DEFAULT_ARTISANS = [
   {i:'SB',n:'SAB Menuiseries',r:'Porte entrée · Fenêtres · Volets',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'02 99 85 73 63',email:'contact@sab-menuiseries.fr',note:'2 devis signés — 4 492,86 € TTC · Volets roulants : facture 1020261000095 du 09/10/2026 — 3 324,96 € TTC, acompte de 1 329,98 € reçu, solde de 1 994,98 € TTC à régler à la réception du chantier · CR n°9 : pose de la baie des WC le 27/11/2026 au matin · Contacts : Julien HUET 06 12 81 65 86 / Vincent BLOT 06 45 14 27 54'},
   {i:'MC',n:'Menuiserie CLERMONT',r:'Agencements · Verrières · Parquet massif',s:'Planifié',bg:'#F1D9B5',tc:'#7A4A12',phone:'07 82 62 33 88',email:'vincentclermont.btp@gmail.com',note:'Devis DE098601 du 29/09/2026 — 11 414,51 € TTC (10 376,83 € HT) : verrières chêne cuisine + entrée, agencements entrée + salon, parquet massif chambre parentale · Facture d\'acompte FA1164 du 06/11/2026 (virement) : 3 629,06 € HT / 3 991,97 € TTC, à régler — supérieure aux 30 % attendus (3 424,35 € TTC), à vérifier avec Clermont · Devis DE1069 du 22/10/2026 (remplacement des 4 portes vitrées de l\'étage) — 1 077,78 € TTC, valable jusqu\'au 21/11/2026, non inclus dans le total des lots · CR n°10 : parquet chambre parentale en S47 (+ barre de seuil complémentaire dégagement/bureau RDC), agencements et verrières en S47 et 48 ; retour en attente sur la reprise du sol du bureau (CR n°8)'},
   {i:'GC',n:'Gabrielle Chatel',r:'Peinture · Pose parquet',s:'À contacter',bg:'#F9D7E3',tc:'#99295A',phone:'06 24 94 39 54',email:'',note:'Devis à venir — 0 € TTC'},
-  {i:'MA',n:'MCA Création',r:'Cuisine équipée (Rennes)',s:'Planifié',bg:'#F8D3C4',tc:'#993C1D',phone:'02 99 29 71 02',email:'',note:'Bon de commande BDC20260721-255 signé le 21/07/2026 (vendeuse : Léa Perrot) — 10 800,00 € TTC net (9 763,95 € HT, remise de bloc de 8 009,51 € TTC incluse) · Acompte 5 400 € versé à la commande + solde de 5 400 € par virement 10 jours avant la livraison · Livraison des meubles les 10–11/11, pose les 12–13/11 (CR n°10) · Hors commande : frigo, four, lave-vaisselle, micro-ondes · Suivi des paiements : onglet Achats › Cuisine complète'},
+  {i:'MA',n:'MCA Création',r:'Cuisine équipée (Rennes)',s:'Planifié',bg:'#F8D3C4',tc:'#993C1D',phone:'02 99 29 71 02',email:'',note:'Bon de commande BDC20260721-255 signé le 21/07/2026 (vendeuse : Léa Perrot) — 10 800,00 € TTC net (9 763,95 € HT, remise de bloc de 8 009,51 € TTC incluse) · Acompte 5 400 € versé à la commande + solde de 5 400 € par virement 10 jours avant la livraison · Livraison des meubles les 10–11/11, pose les 12–13/11 (CR n°10) · Hors commande : frigo, four, lave-vaisselle · Suivi des paiements : onglet Achats › Cuisine complète'},
 ];
 
 // ═══ STATE ═══════════════════════════════════════════════════════════════
@@ -932,7 +931,7 @@ function mcaPanelHTML() {
         <div class="src-field" style="flex:1 1 140px;"><label>Note (optionnel)</label><input type="text" id="kit-new-note" placeholder="ex: solde avant livraison"></div>
         <button class="btn-add" onclick="addKitchenPayment()">+ Ajouter</button>
       </div>
-      <p style="font-size:11px;color:var(--text2);margin-top:10px;">Détail : 9 763,95 € HT · TVA 10 % 916,75 € + TVA 20 % 119,30 € · remise de bloc incluse. Électroménager (frigo, four, lave-vaisselle, micro-ondes) non compris dans la commande.</p>
+      <p style="font-size:11px;color:var(--text2);margin-top:10px;">Détail : 9 763,95 € HT · TVA 10 % 916,75 € + TVA 20 % 119,30 € · remise de bloc incluse. Électroménager (frigo, four, lave-vaisselle) non compris dans la commande.</p>
     </div>` : ''}
   </div>`;
 }
