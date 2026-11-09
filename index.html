@@ -474,11 +474,19 @@ const PH = [
 // ═══ ACHATS ══════════════════════════════════════════════════════════════
 const SH = [
   {id:'cu',nm:'Cuisine complète',c:'#D85A30',it:[
-    {id:'c1',n:'Ensemble meubles cuisine',p:6000},{id:'c2',n:'Plan de travail',p:1200},
-    {id:'c3',n:'Évier + robinetterie',p:450},{id:'c4',n:'Réfrigérateur-congélateur',p:1400},
-    {id:'c5',n:'Four encastrable',p:800},{id:'c6',n:'Plaque induction',p:600},
-    {id:'c7',n:'Lave-vaisselle',p:700},{id:'c8',n:'Micro-ondes / combi',p:300},
-    {id:'c9',n:'Hotte aspirante',p:450},{id:'c10',n:'Petit électroménager',p:300}]},
+    {id:'m1',n:'MCA — Meubles cuisine (caissons, façades, joues, fileurs, plinthes)',p:13343.50,mca:true},
+    {id:'m2',n:'MCA — Plan de travail La Morlaisienne',p:1546.70,mca:true},
+    {id:'m3',n:'MCA — Évier Bradano sous plan + mitigeur Gessi noir mat',p:679.80,mca:true},
+    {id:'m4',n:'MCA — Table de cuisson Elica NT Essential avec hotte aspirante intégrée',p:1287.28,mca:true},
+    {id:'m5',n:'MCA — Accessoires (range-couverts, poubelle intégrée, supports)',p:157.12,mca:true},
+    {id:'m6',n:'MCA — Installation / pose',p:1501.78,mca:true},
+    {id:'m7',n:'MCA — Livraison',p:293.33,mca:true},
+    {id:'m8',n:'MCA — Remise sur le bloc de commande',p:-8009.51,mca:true},
+    {id:'c4',n:'Réfrigérateur-congélateur (hors commande MCA — estimation)',p:1400},
+    {id:'c5',n:'Four encastrable (hors commande MCA — estimation)',p:800},
+    {id:'c7',n:'Lave-vaisselle intégrable (hors commande MCA — estimation)',p:700},
+    {id:'c8',n:'Micro-ondes / combi (hors commande MCA — estimation)',p:300},
+    {id:'c10',n:'Petit électroménager (estimation)',p:300}]},
   {id:'sa',nm:'Salon / Séjour',c:'#378ADD',it:[
     {id:'s1',n:'Canapé-lit 1',p:1200},{id:'s2',n:'Canapé-lit 2',p:1200},
     {id:'s3',n:'Table basse',p:400},{id:'s4',n:'Table à diner',p:900},
@@ -548,6 +556,7 @@ const DEFAULT_ARTISANS = [
   {i:'SB',n:'SAB Menuiseries',r:'Porte entrée · Fenêtres · Volets',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'02 99 85 73 63',email:'contact@sab-menuiseries.fr',note:'2 devis signés — 4 492,86 € TTC · Volets roulants : facture 1020261000095 du 09/10/2026 — 3 324,96 € TTC, acompte de 1 329,98 € reçu, solde de 1 994,98 € TTC à régler à la réception du chantier · CR n°9 : pose de la baie des WC le 27/11/2026 au matin · Contacts : Julien HUET 06 12 81 65 86 / Vincent BLOT 06 45 14 27 54'},
   {i:'MC',n:'Menuiserie CLERMONT',r:'Agencements · Verrières · Parquet massif',s:'Planifié',bg:'#F1D9B5',tc:'#7A4A12',phone:'07 82 62 33 88',email:'vincentclermont.btp@gmail.com',note:'Devis DE098601 du 29/09/2026 — 11 414,51 € TTC (10 376,83 € HT) : verrières chêne cuisine + entrée, agencements entrée + salon, parquet massif chambre parentale · Facture d\'acompte FA1164 du 06/11/2026 (virement) : 3 629,06 € HT / 3 991,97 € TTC, à régler — supérieure aux 30 % attendus (3 424,35 € TTC), à vérifier avec Clermont · Devis DE1069 du 22/10/2026 (remplacement des 4 portes vitrées de l\'étage) — 1 077,78 € TTC, valable jusqu\'au 21/11/2026, non inclus dans le total des lots · CR n°10 : parquet chambre parentale en S47 (+ barre de seuil complémentaire dégagement/bureau RDC), agencements et verrières en S47 et 48 ; retour en attente sur la reprise du sol du bureau (CR n°8)'},
   {i:'GC',n:'Gabrielle Chatel',r:'Peinture · Pose parquet',s:'À contacter',bg:'#F9D7E3',tc:'#99295A',phone:'06 24 94 39 54',email:'',note:'Devis à venir — 0 € TTC'},
+  {i:'MA',n:'MCA Création',r:'Cuisine équipée (Rennes)',s:'Planifié',bg:'#F8D3C4',tc:'#993C1D',phone:'02 99 29 71 02',email:'',note:'Bon de commande BDC20260721-255 signé le 21/07/2026 (vendeuse : Léa Perrot) — 10 800,00 € TTC net (9 763,95 € HT, remise de bloc de 8 009,51 € TTC incluse) · Acompte 5 400 € versé à la commande + solde de 5 400 € par virement 10 jours avant la livraison · Livraison des meubles les 10–11/11, pose les 12–13/11 (CR n°10) · Hors commande : frigo, four, lave-vaisselle, micro-ondes · Suivi des paiements : onglet Achats › Cuisine complète'},
 ];
 
 // ═══ STATE ═══════════════════════════════════════════════════════════════
@@ -558,6 +567,7 @@ const DEFAULT_STATE = {
   artisans: JSON.parse(JSON.stringify(DEFAULT_ARTISANS)),
   addArtForm: false,
   moe: { pct: 10, base: 0, payments: [] },
+  kitchen: { payments: [] },
   mergedBins: [],
   deletedIds: [],
 };
@@ -692,6 +702,7 @@ function mergeState(remote) {
     mergedLots[id] = Object.assign({}, loc, rem, { payments: mergePayments(loc.payments, rem.payments, deletedIds) });
   });
   const mergedMoePayments = mergePayments((S.moe || {}).payments, (remote.moe || {}).payments, deletedIds);
+  const mergedKitchenPayments = mergePayments((S.kitchen || {}).payments, (remote.kitchen || {}).payments, deletedIds);
   // Same additive protection for tasks/achats/sources/choix/ambiances: these
   // used to be a blind Object.assign(S, remote), which meant the routine
   // pull-before-push auto-sync could silently overwrite an edit you'd just
@@ -722,6 +733,7 @@ function mergeState(remote) {
   Object.assign(S, remote);
   S.lots = mergedLots;
   S.moe = Object.assign({ pct: 10, base: 0 }, S.moe, remote.moe, { payments: mergedMoePayments });
+  S.kitchen = { payments: mergedKitchenPayments };
   S.tasks = mergedTasks;
   S.shop = mergedShop;
   S.sources = mergedSources;
@@ -753,6 +765,13 @@ function mergeState(remote) {
   if (!S.openSources) S.openSources = {};
   if (!Array.isArray(S.mergedBins)) S.mergedBins = [];
   if (!Array.isArray(S.deletedIds)) S.deletedIds = [];
+  if (!S.kitchen) S.kitchen = { payments: [] };
+  if (!Array.isArray(S.kitchen.payments)) S.kitchen.payments = [];
+  // Acompte de 5 400 € versé à la commande (bon de commande MCA BDC20260721-255, 21/07/2026) — ajouté une fois ;
+  // s'il est supprimé, la pierre tombale (deletedIds) l'empêche de revenir.
+  if (!S.kitchen.payments.some(p => p.id === 'kp_acompte') && !S.deletedIds.includes('kp_acompte')) {
+    S.kitchen.payments.push({ id: 'kp_acompte', date: '2026-07-21', amount: 5400, note: 'Acompte à la signature (BDC20260721-255)' });
+  }
   // Choix désormais tranchés suite au devis CEDEO / Aerochauffe révisé (21/09/2026)
   ['cx15','cx16','cx17','cx18','cx19','cx20','cx21','cx22','cx23','cx25'].forEach(id => { S.choix[id] = true; });
   // cx24 (lave-main WC R+1) confirmé sur le devis Aerochauffe annoté du 23/09/2026
@@ -831,7 +850,92 @@ function spd(id) { return S.shop[id]?.paid ?? false; }
 function allT() { return PH.flatMap(p => p.tasks); }
 function allI() { return SH.flatMap(c => c.it); }
 function shopEst() { return allI().reduce((a,i) => a + sp(i.id, i.p), 0); }
-function shopPd() { return allI().filter(i => spd(i.id)).reduce((a,i) => a + sp(i.id, i.p), 0); }
+function shopPd() { return allI().filter(i => spd(i.id) && !i.mca).reduce((a,i) => a + sp(i.id, i.p), 0) + kitchenPaid(); }
+
+// ═══ CUISINE MCA — ÉCHÉANCIER ═══════════════════════════════════════════
+// Bon de commande BDC20260721-255 (MCA Création), signé le 21/07/2026 — 10 800,00 € TTC net
+const MCA_SCHEDULE = [
+  {id:'mca_s0', label:'Acompte à la signature', amount:5400, due:'2026-07-21'},
+  {id:'mca_s1', label:'Solde par virement, 10 jours avant la livraison (livraison prévue 10–11/11)', amount:5400, due:'2026-10-31'},
+];
+function kitchenPayments() { return (S.kitchen && S.kitchen.payments) || []; }
+function kitchenPaid() { return kitchenPayments().reduce((a,p) => a + (p.amount||0), 0); }
+function mcaTotal() { return allI().filter(i => i.mca).reduce((a,i) => a + sp(i.id, i.p), 0); }
+function togMca() { S.openLots.mca = (S.openLots.mca === false); persist(); rShopList(); }
+function addKitchenPayment() {
+  const date = document.getElementById('kit-new-date').value;
+  const amount = parseFloat(document.getElementById('kit-new-amount').value) || 0;
+  const note = document.getElementById('kit-new-note').value.trim();
+  if (amount <= 0) { toast('Indiquez un montant'); return; }
+  if (!S.kitchen) S.kitchen = { payments: [] };
+  S.kitchen.payments.push({ id: 'kp'+Date.now(), date, amount, note });
+  persist(); rShopList(); rAchats(); toast('Virement ajouté');
+}
+function delKitchenPayment(id) {
+  if (!S.kitchen) return;
+  S.kitchen.payments = S.kitchen.payments.filter(p => p.id !== id);
+  tombstone(id);
+  persist(); rShopList(); rAchats();
+}
+function mcaPanelHTML() {
+  const total = mcaTotal(), paid = kitchenPaid();
+  const pct = total > 0 ? Math.min(100, Math.round(paid / total * 100)) : 0;
+  const open = S.openLots.mca !== false;
+  const today = new Date().toISOString().slice(0,10);
+  const pays = kitchenPayments().slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  let cum = 0, nextAmt = 0;
+  const rows = MCA_SCHEDULE.map(e => {
+    cum += e.amount;
+    const ok = paid >= cum - 0.5;
+    if (!ok && !nextAmt) nextAmt = Math.min(e.amount, Math.max(cum - paid, 0));
+    const late = !ok && e.due < today;
+    const st = ok ? '<span style="color:var(--green);font-weight:600;">✓ Payé</span>'
+                  : (late ? '<span style="color:#E24B4A;font-weight:600;">À payer — échéance dépassée</span>' : '<span style="color:var(--accent2);font-weight:600;">À payer</span>');
+    return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;color:var(--text2);width:88px;flex-shrink:0;">${e.due}</span>
+      <span style="font-size:13px;font-weight:600;width:90px;flex-shrink:0;">${fmt(e.amount)} €</span>
+      <span style="font-size:12px;color:var(--text2);flex:1;">${e.label}</span>
+      <span style="font-size:12px;">${st}</span></div>`;
+  }).join('');
+  return `<div class="card" style="margin:10px 0 12px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer;" onclick="togMca()">
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;">MCA Création — commande cuisine</div>
+        <div style="font-size:11px;color:var(--text2);">Bon de commande BDC20260721-255 signé le 21/07/2026 · pose prévue 12–13/11</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:14px;font-weight:600;">${fmt(total)} €</div>
+        <div style="font-size:10px;color:var(--text2);">TTC net signé${Math.abs(total-10800)>0.5?' (⚠ ≠ 10 800 €)':''}</div>
+      </div>
+      <span style="font-size:11px;color:var(--text2);margin-left:4px;">${open?'▲':'▼'}</span>
+    </div>
+    <div class="pbar" style="height:5px;margin-bottom:8px;"><div class="pfill" style="width:${pct}%;background:#D85A30;"></div></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:11px;color:var(--text2);flex:1;">Payé (acompte + solde) :</span>
+      <span style="font-size:13px;font-weight:600;">${fmt(paid)} €</span>
+      <span style="font-size:11px;color:var(--text2);">(${pct}%) · reste ${fmt(Math.max(total-paid,0))} €</span>
+    </div>
+    ${open ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+      <p style="font-size:12px;font-weight:600;margin-bottom:4px;">Échéancier convenu</p>
+      ${rows}
+      <p style="font-size:12px;font-weight:600;margin:14px 0 8px;">Virements versés (${pays.length})</p>
+      ${pays.length ? pays.map(pm => `
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+          <span style="font-size:12px;color:var(--text2);width:88px;flex-shrink:0;">${pm.date||'—'}</span>
+          <span style="font-size:13px;font-weight:600;width:90px;flex-shrink:0;">${fmt(pm.amount)} €</span>
+          <span style="font-size:12px;color:var(--text2);flex:1;">${pm.note||''}</span>
+          <button class="btn-ghost" style="padding:3px 8px;font-size:11px;color:#E24B4A;border-color:#E24B4A;" onclick="delKitchenPayment('${pm.id}')">Suppr.</button>
+        </div>`).join('') : '<p style="font-size:12px;color:var(--text2);">Aucun virement enregistré.</p>'}
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;">
+        <div class="src-field" style="flex:0 0 130px;"><label>Date</label><input type="date" id="kit-new-date" value="${today}"></div>
+        <div class="src-field" style="flex:0 0 110px;"><label>Montant (€)</label><input type="number" id="kit-new-amount" min="0" step="50" value="${nextAmt||''}" placeholder="0"></div>
+        <div class="src-field" style="flex:1 1 140px;"><label>Note (optionnel)</label><input type="text" id="kit-new-note" placeholder="ex: solde avant livraison"></div>
+        <button class="btn-add" onclick="addKitchenPayment()">+ Ajouter</button>
+      </div>
+      <p style="font-size:11px;color:var(--text2);margin-top:10px;">Détail : 9 763,95 € HT · TVA 10 % 916,75 € + TVA 20 % 119,30 € · remise de bloc incluse. Électroménager (frigo, four, lave-vaisselle, micro-ondes) non compris dans la commande.</p>
+    </div>` : ''}
+  </div>`;
+}
 function lotPaid(id) { return (S.lots[id]?.payments || []).reduce((a,p) => a + (p.amount||0), 0); }
 function lotsTotal() { return LOTS.reduce((a,l) => a + l.ttc, 0); }
 function lotsPaidTotal() { return LOTS.reduce((a,l) => a + lotPaid(l.id), 0); }
@@ -893,6 +997,10 @@ function rDash() {
           <div class="pbar" style="height:4px;"><div class="pfill" style="width:${lp}%;background:${l.c};"></div></div>
         </div>`;
       }).join('')}
+      <div style="margin-bottom:9px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:3px;"><span>MCA Création (cuisine)</span><span>${fmt(kitchenPaid())} / ${fmt(mcaTotal())} €</span></div>
+        <div class="pbar" style="height:4px;"><div class="pfill" style="width:${mcaTotal()>0?Math.min(100,Math.round(kitchenPaid()/mcaTotal()*100)):0}%;background:#D85A30;"></div></div>
+      </div>
     </div>`;
 
   const fundsPct = totalFunds > 0 ? Math.round(spent / totalFunds * 100) : 0;
@@ -1531,7 +1639,7 @@ function rShopList() {
     });
     if (!vis.length) return;
     const cEst = cat.it.reduce((a,i)=>a+sp(i.id,i.p),0);
-    const cPaid = cat.it.filter(i=>spd(i.id)).reduce((a,i)=>a+sp(i.id,i.p),0);
+    const cPaid = cat.it.filter(i=>spd(i.id)&&!i.mca).reduce((a,i)=>a+sp(i.id,i.p),0) + (cat.id==='cu'?kitchenPaid():0);
     const cPct = cEst>0?Math.round(cPaid/cEst*100):0;
     const isOpen = S.openCats[cat.id] !== false;
     h += `<div class="shop-cat">
@@ -1543,12 +1651,13 @@ function rShopList() {
       </div>
       <div class="cat-pbar"><div style="width:${cPct}%;height:100%;background:${cat.c};opacity:.7;"></div></div>
       <div style="display:${isOpen?'block':'none'};">
+        ${cat.id==='cu'?mcaPanelHTML():''}
         ${vis.map(item => {
-          const pd = spd(item.id), pr = sp(item.id,item.p);
+          const pd = spd(item.id) && !item.mca, pr = sp(item.id,item.p);
           return `<div class="shop-item ${pd?'paid':''}">
-            <div class="checkbox ${pd?'on':''}" onclick="togPaid('${item.id}')">✓</div>
+            ${item.mca ? '<div style="width:18px;flex-shrink:0;"></div>' : `<div class="checkbox ${pd?'on':''}" onclick="togPaid('${item.id}')">✓</div>`}
             <span style="flex:1;font-size:13px;${pd?'color:var(--text3);text-decoration:line-through;':''}">${item.n}</span>
-            <input class="price-inp" type="number" value="${pr}" min="0" step="50" onchange="updPrice('${item.id}',${item.p},this.value)" onclick="event.stopPropagation()">
+            <input class="price-inp" type="number" value="${pr}" ${item.mca?'':'min="0" '}step="${item.mca?'0.01':'50'}" onchange="updPrice('${item.id}',${item.p},this.value)" onclick="event.stopPropagation()">
             <span style="font-size:12px;color:var(--text2);">€</span>
           </div>`;
         }).join('')}
