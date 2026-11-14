@@ -791,6 +791,82 @@ function mergeState(remote) {
     if (typeof src.total !== 'number') src.total = src.avail ?? 0;
     delete src.avail;
   });
+  applyBankPayments();
+}
+
+// ═══ VIREMENTS RELEVÉS BANQUE POSTALE (relevés n°8 à 11 — 03/07 → 04/11/2026) ═══
+// Paiements aux artisans/MOE relevés sur les relevés du CCP. Chaque entrée a un id fixe « bk_… » :
+// ajoutée une seule fois, et une suppression (« Suppr. ») est respectée grâce à deletedIds.
+// Anti-doublon : si un virement du même montant a déjà été saisi à la main dans le lot (montant
+// total, ou chacun des virements qui le composent), l'entrée bancaire n'est pas ajoutée.
+// Exécuté à la fin de chaque mergeState (local + bin), donc l'anti-doublon tient aussi
+// lorsqu'une saisie manuelle arrive plus tard d'un autre appareil.
+const BANK_PAYMENTS = [
+  // SAB Menuiseries
+  {id:'bk_20260710_sab_20260135', lot:'lot_sab_porte', date:'2026-07-10', parts:[467.16], note:'Facture 20260135 — virement du 10/07/2026'},
+  {id:'bk_20260710_sab_20260136', lot:'lot_sab_volets', date:'2026-07-10', parts:[1329.98], note:'Acompte volets — facture 20260136 — virement du 10/07/2026'},
+  {id:'bk_20261019_sab_solde', lot:'lot_sab_volets', date:'2026-10-19', parts:[1994.98], note:'Solde facture 1020261000095 — virement du 19/10/2026'},
+  // AEROCHAUFFE
+  {id:'bk_20260728_aero_fc5050', lot:'lot_aerochauffe', date:'2026-07-28', parts:[2040, 5000], note:'Acompte facture FC5050 — 2 virements du 28/07/2026 (2 040 + 5 000)'},
+  {id:'bk_20260923_aero_fc5063', lot:'lot_aerochauffe', date:'2026-09-23', parts:[4800, 4000], note:'Facture FC5063 — 2 virements du 23/09/2026 (4 800 + 4 000)'},
+  // MCA Création (déjà couvert par l'acompte 5 400 € « kp_acompte » → l'anti-doublon l'écarte)
+  {id:'bk_20260806_mca_acompte', lot:'lot_mca', date:'2026-08-06', parts:[5000, 400], note:'Acompte BDC20260721-255 — virements du 05/08 (5 000) et 06/08/2026 (400)'},
+  // Gabrielle Chatel
+  {id:'bk_20260806_chatel', lot:'lot_chatel', date:'2026-08-06', parts:[276], note:'Virement du 06/08/2026'},
+  {id:'bk_20260810_chatel', lot:'lot_chatel', date:'2026-08-10', parts:[202.22], note:'Virement du 10/08/2026'},
+  {id:'bk_20260916_chatel', lot:'lot_chatel', date:'2026-09-16', parts:[315.25], note:'Virement du 16/09/2026'},
+  {id:'bk_20261014_chatel_mat', lot:'lot_chatel', date:'2026-10-14', parts:[242.05], note:'Matériel — virement du 14/10/2026'},
+  {id:'bk_20261020_chatel_mat', lot:'lot_chatel', date:'2026-10-20', parts:[251.20], note:'Matériel — virement du 20/10/2026'},
+  {id:'bk_20261027_chatel_mat', lot:'lot_chatel', date:'2026-10-27', parts:[339.07], note:'Matériel — virement du 27/10/2026'},
+  {id:'bk_20261029_chatel_mat', lot:'lot_chatel', date:'2026-10-29', parts:[669.84], note:'Matériel — virement du 29/10/2026'},
+  // M2T Électricité
+  {id:'bk_20260911_m2t_acompte', lot:'lot_m2t', date:'2026-09-11', parts:[3595.51], note:'Acompte devis D-000719 — virement du 11/09/2026'},
+  {id:'bk_20261012_m2t_f733', lot:'lot_m2t', date:'2026-10-12', parts:[1938.86], note:'Facture F-000733 — virement du 12/10/2026'},
+  {id:'bk_20261014_m2t_f734', lot:'lot_m2t', date:'2026-10-14', parts:[5000, 766.01], note:'Facture F-000734 — virements du 13/10 (5 000) et 14/10/2026 (766,01)'},
+  // La Petite Maçonnerie Rennaise
+  {id:'bk_20260915_mac_18354', lot:'lot_maconnerie', date:'2026-09-15', parts:[4207.91], note:'Facture 18354 — virement du 15/09/2026'},
+  {id:'bk_20261012_mac_5916', lot:'lot_maconnerie', date:'2026-10-12', parts:[522.50], note:'Facture 5916 (rebouchage chevêtres) — virement du 12/10/2026'},
+  // BIZEUL Carrelage
+  {id:'bk_20260921_biz_acompte', lot:'lot_bizeul', date:'2026-09-21', parts:[4903.39], note:'Acompte devis D202605408 — virement du 21/09/2026'},
+  // J. VIDAL
+  {id:'bk_20260922_vid_2578', lot:'lot_vidal', date:'2026-09-22', parts:[771.01], note:'Devis 2578 — virement du 22/09/2026'},
+  {id:'bk_20261027_vid_1827', lot:'lot_vidal', date:'2026-10-27', parts:[1799.02], note:'Facture FAC00001827 — virement du 27/10/2026'},
+  {id:'bk_20261104_vid_1826', lot:'lot_vidal', date:'2026-11-04', parts:[5000, 5000, 5000, 5000, 5000, 1065.40], note:'Facture FAC00001826 — 6 virements du 30/10 au 04/11/2026 (5 × 5 000 + 1 065,40)'},
+  // LEMOINE Benjamin
+  {id:'bk_20261028_lem_255', lot:'lot_lemoine', date:'2026-10-28', parts:[4691.40], note:'Facture FAC00000255 — virement du 28/10/2026'},
+  // Maître d'œuvre — Atelier Fraleux (honoraires)
+  {id:'bk_20261012_moe_acompte', lot:'moe', date:'2026-10-12', parts:[1595], note:'Acompte honoraires Atelier Fraleux — virement du 12/10/2026'},
+  {id:'bk_20261029_moe_n2610157', lot:'moe', date:'2026-10-29', parts:[3409.16], note:'Facture N26-10-157 Atelier Fraleux — virement du 29/10/2026'},
+];
+function applyBankPayments() {
+  const deleted = new Set(S.deletedIds || []);
+  const near = (a, b) => Math.abs((a || 0) - b) < 0.01;
+  const byLot = {};
+  BANK_PAYMENTS.forEach(g => { (byLot[g.lot] = byLot[g.lot] || []).push(g); });
+  Object.keys(byLot).forEach(lotId => {
+    let arr;
+    if (lotId === 'moe') arr = S.moe.payments;
+    else {
+      if (!S.lots[lotId]) S.lots[lotId] = {};
+      if (!Array.isArray(S.lots[lotId].payments)) S.lots[lotId].payments = [];
+      arr = S.lots[lotId].payments;
+    }
+    const manual = arr.filter(p => p && !String(p.id || '').startsWith('bk_'));
+    const claimed = new Set();
+    const claim = amt => { const m = manual.find(p => !claimed.has(p.id) && near(p.amount, amt)); if (m) claimed.add(m.id); return m; };
+    byLot[lotId].forEach(g => {
+      const total = Math.round(g.parts.reduce((a, b) => a + b, 0) * 100) / 100;
+      let dup = !!claim(total);
+      if (!dup && g.parts.length > 1) {
+        const before = new Set(claimed);
+        dup = g.parts.every(a => claim(a));
+        if (!dup) { claimed.clear(); before.forEach(id => claimed.add(id)); }
+      }
+      const idx = arr.findIndex(p => p && p.id === g.id);
+      if (dup || deleted.has(g.id)) { if (idx >= 0) arr.splice(idx, 1); }
+      else if (idx < 0) arr.push({ id: g.id, date: g.date, amount: total, note: g.note + ' (relevé Banque Postale)' });
+    });
+  });
 }
 
 async function init() {
