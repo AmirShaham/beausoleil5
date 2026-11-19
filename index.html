@@ -361,7 +361,8 @@ const LOTS = [
   {id:'lot_sab_volets', entreprise:'SAB Menuiseries', lot:'Motorisation volets roulants', ttc:3324.96, c:'#0F6E56'},
   {id:'lot_sab_porte', entreprise:'SAB Menuiseries', lot:'Porte d\'entrée · Fenêtre WC', ttc:1167.90, c:'#185FA5'},
   {id:'lot_clermont', entreprise:'Menuiserie CLERMONT', lot:'Agencements sur mesure · Verrières chêne · Parquet massif chambre parentale', ttc:11414.51, c:'#A0522D'},
-  {id:'lot_mca', entreprise:'MCA Création', lot:'Cuisine équipée (BDC20260721-255) · acompte 5 400 € signature + solde 5 400 € avant livraison', ttc:10800, c:'#D85A30', noMoe:true},
+  {id:'lot_mca', entreprise:'MCA Création', lot:'Cuisine équipée (BDC20260721-255) · acompte 5 400 € + solde 5 400 € réglés · posée les 12–13/11/2026', ttc:10800, c:'#D85A30', noMoe:true},
+  {id:'lot_concept', entreprise:'Concept Achat (Chantepie)', lot:'Électroménager & mobilier — BDC CC12147 du 17/11/2026 : frigo Samsung 849 · four AEG 563 · lave-linge Bosch 473 · sèche-linge Bosch 633 · frigo cave Candy 223 · table Tonneau 1 713 · lit 160 (matelas + sommier) 1 810 · banquette BZ 915 · livraison 99 € (éco-participations incluses) · acompte 2 278 € versé, reste 5 000 €', ttc:7278, c:'#5F5E5A', noMoe:true},
   {id:'lot_chatel', entreprise:'Gabrielle Chatel', lot:'Peinture intérieure — murs et plafonds · Pose parquet à l\'étage', ttc:0, c:'#D4537E'},
 ];
 
@@ -454,8 +455,8 @@ const PH = [
     {id:'t16',n:'Isolation thermique extérieure 140mm',s:'todo'},{id:'t17',n:'Enduit de finition Thermolook',s:'todo'},
     {id:'t18',n:'Peinture soubassement & appuis',s:'todo'}]},
   {id:'p10',nm:'Phase 10 — Cuisine (MCA)',tasks:[
-    {id:'t50',n:'Installation cuisine équipée',s:'todo'},
-    {id:'t75',n:'Pose cuisine MCA — livraison des meubles les 10 et 11/11, pose jeudi 12 et vendredi 13/11 (S46, CR n°8)',s:'todo'}]},
+    {id:'t50',n:'Installation cuisine équipée',s:'done'},
+    {id:'t75',n:'Pose cuisine MCA — livraison des meubles les 10 et 11/11, pose jeudi 12 et vendredi 13/11 (S46) — posée comme prévu',s:'done'}]},
   {id:'p11',nm:'Phase 11 — Sols & peinture (par vos soins)',tasks:[
     {id:'t51',n:'Parquet flottant R+1 + plinthes (par vos soins) — S46, accès au R+1 restreint (CR n°11)',s:'todo'},{id:'t52',n:'Peinture intérieure complète (hors devis)',s:'todo'},
     {id:'t53',n:'Menuiserie intérieure : portes (Vidal)',s:'todo'},
@@ -476,22 +477,22 @@ const PH = [
 
 // ═══ ACHATS ══════════════════════════════════════════════════════════════
 const SH = [
-  {id:'cu',nm:'Cuisine complète',c:'#D85A30',it:[
-    {id:'c4',n:'Réfrigérateur-congélateur (hors commande MCA — estimation)',p:1400},
-    {id:'c5',n:'Four encastrable (hors commande MCA — estimation)',p:800},
+  {id:'cu',nm:'Cuisine — électroménager & petit équipement',c:'#D85A30',it:[
+    {id:'c4',n:'Réfrigérateur-congélateur Samsung RB50DG601ES9 (garantie 3 ans)',p:849,lot:'lot_concept'},
+    {id:'c5',n:'Four pyrolyse AEG TA5PB53XAB (garantie 3 ans)',p:563,lot:'lot_concept'},
     {id:'c7',n:'Lave-vaisselle intégrable (hors commande MCA — estimation)',p:700},
     {id:'c11',n:'Robot vacuum (estimation)',p:400},
     {id:'c12',n:'Ninja multicuiseur (estimation)',p:250},
     {id:'c13',n:'Toaster (estimation)',p:50}]},
   {id:'sa',nm:'Salon / Séjour',c:'#378ADD',it:[
     {id:'s1',n:'Canapé-lit',p:1200},
-    {id:'s3',n:'Table basse',p:400},{id:'s4',n:'Table à diner',p:900},
+    {id:'s3',n:'Table basse',p:400},{id:'s4',n:'Table à dîner céramique Tonneau 200–280 cm, bois pieds PH (garantie 3 ans)',p:1713,lot:'lot_concept'},
     {id:'s5',n:'Chaises à diner (x6)',p:900},{id:'s6',n:'Télévision',p:1400},
     {id:'s7',n:'Meuble TV / bibliothèque',p:600},{id:'s8',n:'Système de son',p:900},
     {id:'s9',n:'Luminaires salon',p:450},{id:'s10',n:'Tapis salon',p:350},
     {id:'s11',n:'Rideaux / stores salon',p:400}]},
   {id:'cp',nm:'Chambre parents',c:'#7F77DD',it:[
-    {id:'p1',n:'Lit 160×200 + matelas',p:1600},{id:'p2',n:'Tête de lit',p:300},
+    {id:'p1',n:'Lit 160×200 : matelas ressorts Duvivier Hausman + sommier Déco H20 tissu CA01 + pieds bois 10 cm offerts (garantie 5 ans)',p:1810,lot:'lot_concept'},{id:'p2',n:'Tête de lit',p:300},
     {id:'p3',n:'Tables de chevet (x2)',p:400},{id:'p4',n:'Dressing / armoire',p:2500},
     {id:'p5',n:'Commode',p:450},{id:'p6',n:'Luminaires',p:250},{id:'p7',n:'Rideaux / stores',p:200}]},
   {id:'c1',nm:'Chambre enfant 1',c:'#1D9E75',it:[
@@ -503,18 +504,18 @@ const SH = [
     {id:'e2c',n:'Chaise bureau',p:150},{id:'e2d',n:'Armoire / placard',p:900},
     {id:'e2e',n:'Étagères',p:150},{id:'e2f',n:'Luminaires',p:150},{id:'e2g',n:'Rideaux',p:150}]},
   {id:'ch',nm:'Chambres étage haut',c:'#BA7517',it:[
-    {id:'s2',n:'Canapé-lit',p:1200},{id:'h2',n:'Armoires / placards',p:1800},
+    {id:'s2',n:'Canapé-lit — banquette BZ Coline 140 cm, tissu 704 (garantie 3 ans)',p:915,lot:'lot_concept'},{id:'h2',n:'Armoires / placards',p:1800},
     {id:'h3',n:'Luminaires',p:350},{id:'h4',n:'Rideaux',p:300}]},
   {id:'sb',nm:'Salle de bain bas',c:'#0F6E56',it:[
     {id:'sb5',n:'Miroir',p:200},{id:'sb7',n:'Luminaires',p:200},{id:'sb8',n:'Accessoires',p:150}]},
   {id:'sh',nm:'Salle de bain haut',c:'#185FA5',it:[
     {id:'sh7',n:'Luminaires',p:200},{id:'sh8',n:'Accessoires',p:150}]},
   {id:'bu',nm:'Buanderie haut',c:'#3B6D11',it:[
-    {id:'bu1',n:'Lave-linge',p:750},{id:'bu2',n:'Sèche-linge',p:650},
+    {id:'bu1',n:'Lave-linge Bosch WAN2827TFR (garantie 3 ans)',p:473,lot:'lot_concept'},{id:'bu2',n:'Sèche-linge Bosch WQJ24203FR (garantie 3 ans)',p:633,lot:'lot_concept'},
     {id:'bu4',n:'Rangements / étagères',p:350}]},
   {id:'ss',nm:'Sous-sol / Cave',c:'#5F5E5A',it:[
     {id:'ss3',n:'Rangements',p:400},{id:'ss4',n:'Luminaires',p:200},
-    {id:'c14',n:'Petit frigo cave (estimation)',p:300}]},
+    {id:'c14',n:'Petit frigo cave — Candy top CNOQ2S58EW (garantie 3 ans)',p:223,lot:'lot_concept'}]},
   {id:'pe',nm:'Peinture (hors devis)',c:'#D4537E',it:[
     {id:'pt1',n:'Peinture salon / cuisine',p:400},{id:'pt2',n:'Peinture chambre parents',p:200},
     {id:'pt3',n:'Peinture chambres enfants',p:360},{id:'pt4',n:'Peinture chambres haut',p:350},
@@ -553,7 +554,7 @@ const DEFAULT_ARTISANS = [
   {i:'SB',n:'SAB Menuiseries',r:'Porte entrée · Fenêtres · Volets',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'02 99 85 73 63',email:'contact@sab-menuiseries.fr',note:'2 devis signés — 4 492,86 € TTC · Volets roulants : facture 1020261000095 du 09/10/2026 — 3 324,96 € TTC, acompte de 1 329,98 € reçu, solde de 1 994,98 € TTC à régler à la réception du chantier · CR n°11 : pose de la baie des WC le 27/11/2026 au matin · Contacts : Julien HUET 06 12 81 65 86 / Vincent BLOT 06 45 14 27 54'},
   {i:'MC',n:'Menuiserie CLERMONT',r:'Agencements · Verrières · Parquet massif',s:'Planifié',bg:'#F1D9B5',tc:'#7A4A12',phone:'07 82 62 33 88',email:'vincentclermont.btp@gmail.com',note:'Devis DE098601 du 29/09/2026 — 11 414,51 € TTC (10 376,83 € HT) : verrières chêne cuisine + entrée, agencements entrée + salon, parquet massif chambre parentale · Facture d\'acompte FA1164 du 06/11/2026 (virement) : 3 629,06 € HT / 3 991,97 € TTC, à régler — supérieure aux 30 % attendus (3 424,35 € TTC), à vérifier avec Clermont · Devis DE1069 du 22/10/2026 (remplacement des 4 portes vitrées de l\'étage) — 1 077,78 € TTC, valable jusqu\'au 21/11/2026, non inclus dans le total des lots · CR n°11 (12/11) : parquet chambre parentale en S47 (+ barre de seuil complémentaire dégagement/bureau RDC), agencements et verrières en S47 et 48 ; montant attendu pour la reprise du parquet du bureau taché par le ragréage'},
   {i:'GC',n:'Gabrielle Chatel',r:'Peinture · Pose parquet',s:'À contacter',bg:'#F9D7E3',tc:'#99295A',phone:'06 24 94 39 54',email:'',note:'Devis à venir — 0 € TTC'},
-  {i:'MA',n:'MCA Création',r:'Cuisine équipée (Rennes)',s:'Planifié',bg:'#F8D3C4',tc:'#993C1D',phone:'02 99 29 71 02',email:'',note:'Bon de commande BDC20260721-255 signé le 21/07/2026 (vendeuse : Léa Perrot) — 10 800,00 € TTC net (9 763,95 € HT, remise de bloc de 8 009,51 € TTC incluse) · Acompte 5 400 € versé à la commande + solde de 5 400 € par virement 10 jours avant la livraison · Livraison des meubles les 10–11/11, pose les 12–13/11 (CR n°10) · Hors commande : frigo, four, lave-vaisselle · Suivi des paiements : onglet Devis & Lots'},
+  {i:'MA',n:'MCA Création',r:'Cuisine équipée (Rennes)',s:'Terminé',bg:'#F8D3C4',tc:'#993C1D',phone:'02 99 29 71 02',email:'',note:'Bon de commande BDC20260721-255 signé le 21/07/2026 (vendeuse : Léa Perrot) — 10 800,00 € TTC net (9 763,95 € HT, remise de bloc de 8 009,51 € TTC incluse) · Acompte 5 400 € versé à la commande + solde de 5 400 € réglé avant la livraison — commande soldée · Livraison des meubles les 10–11/11, cuisine posée les 12–13/11 comme prévu · Hors commande : frigo Samsung + four AEG achetés chez Concept Achat (BDC CC12147 du 17/11), lave-vaisselle encore à acheter · Suivi des paiements : onglet Devis & Lots'},
 ];
 
 // ═══ STATE ═══════════════════════════════════════════════════════════════
@@ -747,7 +748,7 @@ function mergeState(remote) {
   // Mise à jour des fiches artisans d'après les devis/factures/CR d'octobre 2026 : le statut + la note
   // par défaut sont appliqués une seule fois par fiche (marqueur "rev" porté par la fiche elle-même, donc
   // il suit la fiche lors des fusions local/bin), et les artisans manquants (Clermont) sont ajoutés.
-  const ART_REV = 20261116;
+  const ART_REV = 20261119;
   DEFAULT_ARTISANS.forEach(d => {
     const cur = S.artisans.find(a => a.n === d.n);
     if (!cur) S.artisans.push(Object.assign(JSON.parse(JSON.stringify(d)), { rev: ART_REV }));
@@ -816,6 +817,9 @@ const BANK_PAYMENTS = [
   {id:'bk_20260923_aero_fc5063', lot:'lot_aerochauffe', date:'2026-09-23', parts:[4800, 4000], note:'Facture FC5063 — 2 virements du 23/09/2026 (4 800 + 4 000)'},
   // MCA Création (déjà couvert par l'acompte 5 400 € « kp_acompte » → l'anti-doublon l'écarte)
   {id:'bk_20260806_mca_acompte', lot:'lot_mca', date:'2026-08-06', parts:[5000, 400], note:'Acompte BDC20260721-255 — virements du 05/08 (5 000) et 06/08/2026 (400)'},
+  {id:'bk_mca_solde', lot:'lot_mca', date:'2026-10-31', parts:[5400], note:'Solde BDC20260721-255 avant livraison — réglé (date exacte à préciser)'},
+  // Concept Achat — BDC CC12147 du 17/11/2026
+  {id:'bk_20261117_concept_acompte', lot:'lot_concept', date:'2026-11-17', parts:[2278], note:'Acompte à la commande CC12147 — reste 5 000 € à régler'},
   // Gabrielle Chatel
   {id:'bk_20260806_chatel', lot:'lot_chatel', date:'2026-08-06', parts:[276], note:'Virement du 06/08/2026'},
   {id:'bk_20260810_chatel', lot:'lot_chatel', date:'2026-08-10', parts:[202.22], note:'Virement du 10/08/2026'},
@@ -926,8 +930,9 @@ function sp(id, def) { return S.shop[id]?.price ?? def; }
 function spd(id) { return S.shop[id]?.paid ?? false; }
 function allT() { return PH.flatMap(p => p.tasks); }
 function allI() { return SH.flatMap(c => c.it); }
-function shopEst() { return allI().reduce((a,i) => a + sp(i.id, i.p), 0); }
-function shopPd() { return allI().filter(i => spd(i.id)).reduce((a,i) => a + sp(i.id, i.p), 0); }
+// Articles commandés et suivis comme un lot (lot:'…') : comptés dans Devis & Lots, exclus des totaux Achats
+function shopEst() { return allI().filter(i => !i.lot).reduce((a,i) => a + sp(i.id, i.p), 0); }
+function shopPd() { return allI().filter(i => !i.lot && spd(i.id)).reduce((a,i) => a + sp(i.id, i.p), 0); }
 function lotPaid(id) { return (S.lots[id]?.payments || []).reduce((a,p) => a + (p.amount||0), 0); }
 function lotsTotal() { return LOTS.reduce((a,l) => a + l.ttc, 0); }
 function lotsPaidTotal() { return LOTS.reduce((a,l) => a + lotPaid(l.id), 0); }
@@ -1620,26 +1625,35 @@ function rShopList() {
   let h = '';
   SH.forEach(cat => {
     const vis = cat.it.filter(i => {
-      if (sFilter==='paid' && !spd(i.id)) return false;
-      if (sFilter==='todo' && spd(i.id)) return false;
+      const got = i.lot || spd(i.id);
+      if (sFilter==='paid' && !got) return false;
+      if (sFilter==='todo' && got) return false;
       if (srch && !i.n.toLowerCase().includes(srch)) return false;
       return true;
     });
     if (!vis.length) return;
-    const cEst = cat.it.reduce((a,i)=>a+sp(i.id,i.p),0);
-    const cPaid = cat.it.filter(i=>spd(i.id)).reduce((a,i)=>a+sp(i.id,i.p),0);
+    const cEst = cat.it.filter(i=>!i.lot).reduce((a,i)=>a+sp(i.id,i.p),0);
+    const cPaid = cat.it.filter(i=>!i.lot && spd(i.id)).reduce((a,i)=>a+sp(i.id,i.p),0);
+    const cOrd = cat.it.filter(i=>i.lot).reduce((a,i)=>a+i.p,0);
     const cPct = cEst>0?Math.round(cPaid/cEst*100):0;
     const isOpen = S.openCats[cat.id] !== false;
     h += `<div class="shop-cat">
       <div class="shop-cat-hdr" onclick="togCat('${cat.id}')">
         <div class="cat-dot" style="background:${cat.c};"></div>
         <span style="font-size:13px;font-weight:500;flex:1;">${cat.nm}</span>
-        <span style="font-size:12px;color:var(--text2);">${cPct>0?fmt(cPaid)+' / ':''}${fmt(cEst)} €</span>
+        <span style="font-size:12px;color:var(--text2);">${cOrd?'<b style="color:var(--green)">'+fmt(cOrd)+' € acheté</b>'+(cEst?' · ':''):''}${cEst?(cPct>0?fmt(cPaid)+' / ':'')+fmt(cEst)+' € estimé':''}</span>
         <span class="arrow" style="margin-left:6px;">${isOpen?'▾':'▸'}</span>
       </div>
       <div class="cat-pbar"><div style="width:${cPct}%;height:100%;background:${cat.c};opacity:.7;"></div></div>
       <div style="display:${isOpen?'block':'none'};">
         ${vis.map(item => {
+          if (item.lot) { const lt = LOTS.find(l => l.id === item.lot);
+            return `<div class="shop-item paid">
+            <div class="checkbox on" style="cursor:default;" title="Acheté">✓</div>
+            <span style="flex:1;font-size:13px;">${item.n}<br><span style="font-size:11px;color:var(--text2);">Acheté — ${lt ? lt.entreprise : ''} · paiements suivis dans Devis & Lots</span></span>
+            <span style="font-size:13px;font-weight:500;">${fmt(item.p)}</span>
+            <span style="font-size:12px;color:var(--text2);">€</span>
+          </div>`; }
           const pd = spd(item.id), pr = sp(item.id,item.p);
           return `<div class="shop-item ${pd?'paid':''}">
             <div class="checkbox ${pd?'on':''}" onclick="togPaid('${item.id}')">✓</div>
