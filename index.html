@@ -480,7 +480,7 @@ const SH = [
   {id:'cu',nm:'Cuisine — électroménager & petit équipement',c:'#D85A30',it:[
     {id:'c4',n:'Réfrigérateur-congélateur Samsung RB50DG601ES9 (garantie 3 ans)',p:849,lot:'lot_concept'},
     {id:'c5',n:'Four pyrolyse AEG TA5PB53XAB (garantie 3 ans)',p:563,lot:'lot_concept'},
-    {id:'c7',n:'Lave-vaisselle intégrable (hors commande MCA — estimation)',p:700},
+    {id:'c7',n:'Lave-vaisselle intégrable (acheté séparément, éco-participation incluse)',p:543},
     {id:'c11',n:'Robot vacuum (estimation)',p:400},
     {id:'c12',n:'Ninja multicuiseur (estimation)',p:250},
     {id:'c13',n:'Toaster (estimation)',p:50}]},
@@ -554,7 +554,7 @@ const DEFAULT_ARTISANS = [
   {i:'SB',n:'SAB Menuiseries',r:'Porte entrée · Fenêtres · Volets',s:'En cours',bg:'#F5C4B3',tc:'#993C1D',phone:'02 99 85 73 63',email:'contact@sab-menuiseries.fr',note:'2 devis signés — 4 492,86 € TTC · Volets roulants : facture 1020261000095 du 09/10/2026 — 3 324,96 € TTC, acompte de 1 329,98 € reçu, solde de 1 994,98 € TTC à régler à la réception du chantier · CR n°11 : pose de la baie des WC le 27/11/2026 au matin · Contacts : Julien HUET 06 12 81 65 86 / Vincent BLOT 06 45 14 27 54'},
   {i:'MC',n:'Menuiserie CLERMONT',r:'Agencements · Verrières · Parquet massif',s:'Planifié',bg:'#F1D9B5',tc:'#7A4A12',phone:'07 82 62 33 88',email:'vincentclermont.btp@gmail.com',note:'Devis DE098601 du 29/09/2026 — 11 414,51 € TTC (10 376,83 € HT) : verrières chêne cuisine + entrée, agencements entrée + salon, parquet massif chambre parentale · Facture d\'acompte FA1164 du 06/11/2026 (virement) : 3 629,06 € HT / 3 991,97 € TTC, à régler — supérieure aux 30 % attendus (3 424,35 € TTC), à vérifier avec Clermont · Devis DE1069 du 22/10/2026 (remplacement des 4 portes vitrées de l\'étage) — 1 077,78 € TTC, valable jusqu\'au 21/11/2026, non inclus dans le total des lots · CR n°11 (12/11) : parquet chambre parentale en S47 (+ barre de seuil complémentaire dégagement/bureau RDC), agencements et verrières en S47 et 48 ; montant attendu pour la reprise du parquet du bureau taché par le ragréage'},
   {i:'GC',n:'Gabrielle Chatel',r:'Peinture · Pose parquet',s:'À contacter',bg:'#F9D7E3',tc:'#99295A',phone:'06 24 94 39 54',email:'',note:'Devis à venir — 0 € TTC'},
-  {i:'MA',n:'MCA Création',r:'Cuisine équipée (Rennes)',s:'Terminé',bg:'#F8D3C4',tc:'#993C1D',phone:'02 99 29 71 02',email:'',note:'Bon de commande BDC20260721-255 signé le 21/07/2026 (vendeuse : Léa Perrot) — 10 800,00 € TTC net (9 763,95 € HT, remise de bloc de 8 009,51 € TTC incluse) · Acompte 5 400 € versé à la commande + solde de 5 400 € réglé avant la livraison — commande soldée · Livraison des meubles les 10–11/11, cuisine posée les 12–13/11 comme prévu · Hors commande : frigo Samsung + four AEG achetés chez Concept Achat (BDC CC12147 du 17/11), lave-vaisselle encore à acheter · Suivi des paiements : onglet Devis & Lots'},
+  {i:'MA',n:'MCA Création',r:'Cuisine équipée (Rennes)',s:'Terminé',bg:'#F8D3C4',tc:'#993C1D',phone:'02 99 29 71 02',email:'',note:'Bon de commande BDC20260721-255 signé le 21/07/2026 (vendeuse : Léa Perrot) — 10 800,00 € TTC net (9 763,95 € HT, remise de bloc de 8 009,51 € TTC incluse) · Acompte 5 400 € versé à la commande + solde de 5 400 € réglé avant la livraison — commande soldée · Livraison des meubles les 10–11/11, cuisine posée les 12–13/11 comme prévu · Hors commande : frigo Samsung + four AEG achetés chez Concept Achat (BDC CC12147 du 17/11), lave-vaisselle acheté séparément (543 €) · Suivi des paiements : onglet Devis & Lots'},
 ];
 
 // ═══ STATE ═══════════════════════════════════════════════════════════════
@@ -748,6 +748,9 @@ function mergeState(remote) {
   // Mise à jour des fiches artisans d'après les devis/factures/CR d'octobre 2026 : le statut + la note
   // par défaut sont appliqués une seule fois par fiche (marqueur "rev" porté par la fiche elle-même, donc
   // il suit la fiche lors des fusions local/bin), et les artisans manquants (Clermont) sont ajoutés.
+  // Lave-vaisselle acheté séparément : 543 € TTC éco-part. incluse, payé — appliqué une seule fois (marqueur rev)
+  if (!S.shop) S.shop = {};
+  if (!S.shop.c7 || (S.shop.c7.rev || 0) < 20261119) S.shop.c7 = { paid: true, price: 543, rev: 20261119 };
   const ART_REV = 20261119;
   DEFAULT_ARTISANS.forEach(d => {
     const cur = S.artisans.find(a => a.n === d.n);
